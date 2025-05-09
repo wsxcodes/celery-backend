@@ -32,5 +32,12 @@ def init_db():
             file_size INTEGER
         )
     """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS customers (
+            customer_id TEXT PRIMARY KEY,
+            output_language TEXT DEFAULT 'Czech',
+            file_count INTEGER NOT NULL
+        )
+    """)
     conn.commit()
     conn.close()
