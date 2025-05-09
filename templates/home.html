@@ -227,7 +227,7 @@
   
       Array.from(files).forEach(file => {
         if (!allowedTypes.includes(file.type)) {
-          showStatus(`File ${file.name} not supported.`, 'text-red-400');
+          showStatus(`File ${file.name} not supported.<br/>Please choose a supported file type.`, 'text-red-400', true);
           return;
         }
   
@@ -235,19 +235,37 @@
       });
     }
   
-    function showStatus(message, className) {
-      uploadStatus.textContent = message;
+    function showStatus(message, className, isError = false) {
+      // Clear any existing message
+      uploadStatus.innerHTML = '';
       uploadStatus.className = `mt-4 text-sm ${className}`;
+      
+      // Use innerHTML for errors to support HTML tags like <br/>
+      if (isError) {
+        uploadStatus.innerHTML = message;
+      } else {
+        uploadStatus.textContent = message;
+      }
+      
       uploadStatus.classList.remove('hidden');
-      setTimeout(() => {
-        uploadStatus.classList.add('hidden');
-      }, 5000);
+      
+      // Only non-error messages fade out
+      if (!isError) {
+        setTimeout(() => {
+          uploadStatus.classList.add('hidden');
+          uploadStatus.textContent = '';
+        }, 5000);
+      }
     }
   
     async function uploadFile(file) {
       const formData = new FormData();
       formData.append('file', file);
   
+      // Clear any existing error message when starting a new upload
+      uploadStatus.classList.add('hidden');
+      uploadStatus.innerHTML = '';
+      
       showStatus(`Uploading ${file.name}...`, 'text-yellow-400');
   
       try {
@@ -263,10 +281,11 @@
           showStatus(`File ${file.name} uploaded successfully!`, 'text-green-400');
         } else {
           const error = await response.json();
-          showStatus(`Failed to upload ${file.name}: ${error.message || 'Unknown error'}`, 'text-red-400');
+          const errorMessage = error.detail || error.message || 'Unknown error';
+          showStatus(`Failed to upload ${file.name}:<br/><b><font size=6>${errorMessage}</font></b>`, 'text-red-400', true);
         }
       } catch (error) {
-        showStatus(`Error uploading ${file.name}: ${error.message}`, 'text-red-400');
+        showStatus(`Error uploading ${file.name}:<br/><b><font size=6>${error.message}</font></b>`, 'text-red-400', true);
       }
     }
   });
