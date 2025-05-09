@@ -146,6 +146,40 @@
     .chat-input button:hover {
       background-color: #2563eb;
     }
+    .chat-dialog {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      background-color: #2d3748;
+      border-radius: 0.5rem;
+    }
+    .chat-dialog-question {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+    .chat-dialog-question svg {
+      flex-shrink: 0;
+      margin-right: 0.5rem;
+      margin-top: 0.25rem;
+    }
+    .chat-dialog-question p {
+      color: #e5e7eb;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    .chat-dialog-answer {
+      display: flex;
+      align-items: flex-start;
+    }
+    .chat-dialog-answer svg {
+      flex-shrink: 0;
+      margin-right: 0.5rem;
+      margin-top: 0.25rem;
+    }
+    .chat-dialog-answer p {
+      color: #d1d5db;
+      font-size: 0.875rem;
+    }
   </style>
 {% endblock %}
 
@@ -203,7 +237,7 @@
     </header>
 
     <!-- Upload Modal -->
-    <div id="upload-modal™modal" class="modal">
+    <div id="upload-modal" class="modal">
       <div class="modal-content">
         <svg id="close-modal" class="modal-close h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -313,7 +347,7 @@
           </div>
         </div>
 
-        <!-- Alerts & Party Actions -->
+        <!-- Alerts & Actions -->
         <div class="section-card p-6 bg-gray-800 rounded-xl">
           <h2 class="text-2xl font-bold text-white mb-4">Alerts & Actions</h2>
           <div class="space-y-4">
@@ -418,7 +452,7 @@
             <!-- Contract Comparison -->
             <div class="feature-item flex items-center justify-between p-4 bg-gray-700 rounded-lg">
               <div class="flex items-center space-x-3">
-                <svg class="h-6 wribbon-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg class="h-6 w-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                 </svg>
                 <div>
@@ -431,7 +465,7 @@
             <!-- Succession Planning AI -->
             <div class="feature-item flex items-center justify-between p-4 bg-gray-700 rounded-lg">
               <div class="flex items-center space-x-3">
-                <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 29" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6"></path>
                 </svg>
                 <div>
@@ -509,6 +543,34 @@
                 <button type="submit">Ask</button>
               </div>
             </form>
+            <div class="chat-dialog">
+              <div class="chat-dialog-answer">
+                <svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>
+                </svg>
+                <p>The penalty for early termination is a fee equivalent to two months' rent, as specified in Section 4.3 of the agreement.</p>
+              </div>
+              <br/>
+              <div class="chat-dialog-question">
+                <svg class="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <p>What is the penalty for early termination of the lease?</p>
+              </div>
+              <div class="chat-dialog-answer">
+                <svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>
+                </svg>
+                <p>The penalty for early termination is a fee equivalent to two months' rent, as specified in Section 4.3 of the agreement.</p>
+              </div>
+              <br/>
+              <div class="chat-dialog-question">
+                <svg class="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <p>What is the penalty for early termination of the lease?</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
