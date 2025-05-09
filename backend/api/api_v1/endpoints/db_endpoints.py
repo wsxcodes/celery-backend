@@ -3,7 +3,8 @@ from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from backend.db.schemas.files_schemas import Customer, FileRecord, FileUpdate
+from backend.db.schemas.documents_schemas import (Customer, Document,
+                                                  DocumentUpdate)
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
 
@@ -30,7 +31,7 @@ async def list_customers(db=Depends(get_db)):
     return [dict(row) for row in rows]
 
 
-@router.get("/files/{customer_id}", response_model=List[FileRecord])
+@router.get("/files/{customer_id}", response_model=List[Document])
 @log_endpoint
 async def list_files(customer_id: str, db=Depends(get_db)):
     cursor = db.execute("""
@@ -46,7 +47,7 @@ async def list_files(customer_id: str, db=Depends(get_db)):
 
 @router.patch("/files/{file_id}")
 @log_endpoint
-async def update_file_metadata(file_id: int, update: FileUpdate, db=Depends(get_db)):
+async def update_file_metadata(file_id: int, update: DocumentUpdate, db=Depends(get_db)):
     fields = []
     values = []
 
