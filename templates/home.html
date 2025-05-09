@@ -23,7 +23,7 @@
         <br/>
         as well as common image formats like PNG, JPEG, WEBP, and GIF.
       </p>
-      <p id="uploadStatus" class="mt-4 text-sm text-gray-400 hidden"></p>
+      <div id="uploadStatus" class="mt-4 text-sm text-gray-400 hidden"></div>
     </div>
 
     {% if files %}
@@ -109,7 +109,7 @@
                     <div class="flex items-center space-x-2 mt-1 text-xs">
                     <span class="flex items-center text-green-400">
                         <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13 l4 4L19 7"></path>
                         </svg>
                         Processed
                     </span>
@@ -236,24 +236,28 @@
     }
   
     function showStatus(message, className, isError = false) {
-      // Clear any existing message
-      uploadStatus.innerHTML = '';
-      uploadStatus.className = `mt-4 text-sm ${className}`;
+      // Create a new status message element
+      const statusMessage = document.createElement('p');
+      statusMessage.className = `text-sm ${className}`;
       
       // Use innerHTML for errors to support HTML tags like <br/>
       if (isError) {
-        uploadStatus.innerHTML = message;
+        statusMessage.innerHTML = message;
       } else {
-        uploadStatus.textContent = message;
+        statusMessage.textContent = message;
       }
       
+      // Append the message to the uploadStatus container
+      uploadStatus.appendChild(statusMessage);
       uploadStatus.classList.remove('hidden');
       
-      // Only non-error messages fade out
+      // Non-error messages persist until cleared manually or new upload starts
       if (!isError) {
         setTimeout(() => {
-          uploadStatus.classList.add('hidden');
-          uploadStatus.textContent = '';
+          statusMessage.remove();
+          if (!uploadStatus.hasChildNodes()) {
+            uploadStatus.classList.add('hidden');
+          }
         }, 5000);
       }
     }
@@ -262,9 +266,9 @@
       const formData = new FormData();
       formData.append('file', file);
   
-      // Clear any existing error message when starting a new upload
-      uploadStatus.classList.add('hidden');
+      // Clear existing messages when starting a new upload
       uploadStatus.innerHTML = '';
+      uploadStatus.classList.add('hidden');
       
       showStatus(`Uploading ${file.name}...`, 'text-yellow-400');
   
