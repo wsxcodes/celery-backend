@@ -1,3 +1,5 @@
+import hashlib
+import uuid
 import logging
 import os
 import shutil
@@ -29,18 +31,30 @@ async def upload_file(
     customer_dir = os.path.join(BASE_UPLOAD_DIR, customer_id)
     os.makedirs(customer_dir, exist_ok=True)
     file_path = os.path.join(customer_dir, file.filename)
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
 
-    logger.info(f"Uploaded file for customer {customer_id}: {file.filename}")
+    # Save and compute hash
+    hasher = hashlib.sha256()
+    with open(file_path, "wb") as buffer:
+        while chunk := await file.read(8192):
+            buffer.write(chunk)
+            hasher.update(chunk)
+    file_hash = hasher.hexdigest()
+    file_uuid = str(uuid.uuid4())
 
     db.execute(
-        "INSERT INTO files (customer_id, filename, uploaded_at) VALUES (?, ?, ?)",
-        (customer_id, file.filename, datetime.utcnow().isoformat())
+        "INSERT INTO files (uuid, customer_id, filename, file_hash, uploaded_at) VALUES (?, ?, ?, ?, ?)",
+        (file_uuid, customer_id, file.filename, file_hash, datetime.utcnow().isoformat())
     )
     db.commit()
 
-    return {"status": "success", "customer_id": customer_id, "filename": file.filename}
+    logger.info(f"Uploaded file for customer {customer_id}: {file.filename}")
+    return {
+        "status": "success",
+        "customer_id": customer_id,
+        "filename": file.filename,
+        "uuid": file_uuid,
+        "file_hash": file_hash
+    }
 
 
 @router.put("/update/{customer_id}/{filename}")
