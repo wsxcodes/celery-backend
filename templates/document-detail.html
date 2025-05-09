@@ -79,6 +79,34 @@
       right: 0.5rem;
       cursor: pointer;
     }
+    .timeline {
+      position: relative;
+      padding-left: 2.5rem;
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -1.75rem;
+      top: 0.5rem;
+      width: 0.75rem;
+      height: 0.75rem;
+      background-color: #3b82f6;
+      border-radius: 50%;
+      z-index: 1;
+    }
+    .timeline-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: -1.625rem;
+      top: 1.25rem;
+      bottom: -1.5rem;
+      width: 0.125rem;
+      background-color: #4b5563;
+    }
   </style>
 </head>
 <body class="min-h-screen bg-gray-900 text-gray-100 font-sans">
@@ -390,8 +418,8 @@
         <div class="section-card p-6 bg-gray-800 rounded-xl">
           <h2 class="text-2xl font-bold text-white mb-4">Change History</h2>
           <div class="p-4 bg-gray-700 rounded-lg">
-            <ul class="text-sm space-y-4">
-              <li>
+            <ul class="timeline text-sm">
+              <li class="timeline-item">
                 <div class="space-y-1">
                   <div>
                     <span class="text-gray-300">Apr 16, 2025: </span>
@@ -402,7 +430,7 @@
                   <p class="text-gray-400">File Size: 2.4 MB</p>
                 </div>
               </li>
-              <li>
+              <li class="timeline-item">
                 <div class="space-y-1">
                   <div>
                     <span class="text-gray-300">Apr 15, 2025: </span>
@@ -464,7 +492,9 @@
       // Placeholder for form submission logic
       alert('Document uploaded successfully!'); // Replace with actual upload logic
       uploadModal.style.display = 'none';
-      uploadForm.reset();
+      uploadForm
+
+      .reset();
     });
   </script>
 </body>
