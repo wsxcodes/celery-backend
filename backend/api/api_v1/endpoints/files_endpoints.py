@@ -16,6 +16,9 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger.setLevel(logging.INFO)
 
 
+# XXX incorporate customer_id
+
+
 @router.post("/upload")
 @log_endpoint
 async def upload_file(file: UploadFile = File(...)) -> Dict[str, str]:
