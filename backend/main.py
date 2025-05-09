@@ -1,5 +1,7 @@
+import datetime
 import logging
 
+import humanize
 from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -84,7 +86,16 @@ async def read_home(request: Request, db=Depends(get_db)):
     logger.info("Customer data retrieved: %s", customer)
 
     logger.info("Rendering index page with session_id: %s", session_id)
-    return templates.TemplateResponse("home.html", {"request": request, "session_id": session_id, "customer": customer, "categorized_documents": categorized_documents, "output_language": customer["output_language"]})
+    return templates.TemplateResponse(
+        "home.html",
+        {
+            "request": request,
+            "session_id": session_id,
+            "customer": customer,
+            "categorized_documents": categorized_documents,
+            "output_language": customer["output_language"]
+        }
+    )
 
 
 @app.get("/categories", response_class=HTMLResponse, include_in_schema=False)
