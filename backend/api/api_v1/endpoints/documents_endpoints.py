@@ -23,7 +23,7 @@ logger.setLevel(logging.INFO)
 
 @router.post("/upload/{customer_id}")
 @log_endpoint
-async def upload_file(
+async def upload_document(
     customer_id: str,
     file: UploadFile = File(...),
     db=Depends(get_db)
@@ -82,7 +82,7 @@ async def upload_file(
 
 @router.put("/update/{customer_id}/{filename}")
 @log_endpoint
-async def update_file(customer_id: str, filename: str, file: UploadFile = File(...)) -> Dict[str, str]:
+async def update_document(customer_id: str, filename: str, file: UploadFile = File(...)) -> Dict[str, str]:
     customer_dir = os.path.join(BASE_UPLOAD_DIR, customer_id)
     file_path = os.path.join(customer_dir, filename)
     if not os.path.exists(file_path):
@@ -95,7 +95,7 @@ async def update_file(customer_id: str, filename: str, file: UploadFile = File(.
 
 @router.delete("/delete/{customer_id}/{filename}")
 @log_endpoint
-async def delete_file(customer_id: str, filename: str) -> Dict[str, str]:
+async def delete_document(customer_id: str, filename: str) -> Dict[str, str]:
     file_path = os.path.join(BASE_UPLOAD_DIR, customer_id, filename)
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File not found")
