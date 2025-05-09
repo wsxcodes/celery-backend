@@ -92,7 +92,7 @@ async def update_customer(customer_id: str, update: UpdateCustomer = Body(...), 
     return dict(updated)
 
 
-@router.get("/documents/{customer_id}", response_model=List[Document])
+@router.get("/documents/{customer_id}", response_model=dict)
 @log_endpoint
 async def list_customer_documents(customer_id: str, db=Depends(get_db)):
     cursor = db.execute("""
@@ -104,4 +104,23 @@ async def list_customer_documents(customer_id: str, db=Depends(get_db)):
         ORDER BY uploaded_at DESC
     """, (customer_id,))
     rows = cursor.fetchall()
-    return [dict(row) for row in rows]
+
+    docs = [dict(row) for row in rows]
+
+    from collections import defaultdict
+
+    category_map = defaultdict(list)
+    for doc in docs:
+        category_map[doc["ai_category"]].append(doc)
+
+    sorted_categories = sorted(category_map.keys(), key=lambda x: (x is not None and x != "", x or ""))
+
+    categorized_documents = [
+        {"category": cat or None, "documents": category_map[cat]}
+        for cat in sorted_categories
+    ]
+
+    return {
+        "documents": docs,
+        "categorized_documents": categorized_documents
+    }
