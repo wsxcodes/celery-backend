@@ -154,3 +154,5 @@ xxx.py
 
 # Database
 data/file_records.db
+data/uploads/*
+
