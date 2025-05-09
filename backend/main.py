@@ -1,5 +1,5 @@
-from datetime import datetime
 import logging
+from datetime import datetime
 
 import humanize
 from fastapi import Depends, FastAPI, Request
@@ -87,7 +87,7 @@ async def read_home(request: Request, db=Depends(get_db)):
         logger.info("Category %d: %s", cat_index + 1, cat.get("category", "Unknown"))
         for doc_index, doc in enumerate(cat.get("documents", [])):
             logger.info("Doc %d in category %d keys: %s", doc_index + 1, cat_index + 1, list(doc.keys()))
-            
+
             # Log raw file_size before humanizing
             if "file_size" in doc:
                 logger.info("Raw file size for doc %d in category %d: %s", doc_index + 1, cat_index + 1, doc["file_size"])
