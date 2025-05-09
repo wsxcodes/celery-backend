@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
-from backend.api.api_v1.endpoints import generic_endpoints, files_endpoints, db_endpoints
+from backend.api.api_v1.endpoints import (db_endpoints, files_endpoints,
+                                          generic_endpoints)
 
 api_router = APIRouter()
 
