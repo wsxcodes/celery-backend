@@ -29,7 +29,7 @@ async def add_new_customer(customer_id: str, output_language: str = "Czech", db=
     if existing:
         raise HTTPException(status_code=400, detail="Customer already registered")
 
-    db.execute(
+    cursor = db.execute(
         """
         INSERT INTO customers (customer_id, output_language, file_count)
         VALUES (?, ?, ?)
@@ -37,14 +37,20 @@ async def add_new_customer(customer_id: str, output_language: str = "Czech", db=
         (customer_id, output_language, 0)
     )
     db.commit()
-    return {"status": "registered", "customer_id": customer_id, "output_language": output_language}
+    customer_id_int = cursor.lastrowid
+    return {
+        "status": "registered",
+        "id": customer_id_int,
+        "customer_id": customer_id,
+        "output_language": output_language
+    }
 
 
 @router.get("/all", response_model=List[Customer])
 @log_endpoint
 async def list_customers(db=Depends(get_db)):
     cursor = db.execute("""
-        SELECT customer_id, output_language, file_count
+        SELECT id, customer_id, output_language, file_count
         FROM customers
         ORDER BY customer_id
     """)
@@ -56,7 +62,7 @@ async def list_customers(db=Depends(get_db)):
 @log_endpoint
 async def get_customer(customer_id: str, db=Depends(get_db)):
     cursor = db.execute("""
-        SELECT customer_id, output_language, file_count
+        SELECT id, customer_id, output_language, file_count
         FROM customers
         WHERE customer_id = ?
     """, (customer_id,))
@@ -84,7 +90,7 @@ async def update_customer(customer_id: str, update: UpdateCustomer = Body(...), 
     db.commit()
 
     updated = db.execute("""
-        SELECT customer_id, output_language, file_count
+        SELECT id, customer_id, output_language, file_count
         FROM customers
         WHERE customer_id = ?
     """, (customer_id,)).fetchone()
