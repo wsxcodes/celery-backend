@@ -91,8 +91,9 @@ async def read_categories(request: Request):
 @app.get("/{full_path:path}", response_class=HTMLResponse, include_in_schema=False)
 @log_endpoint
 async def read_document(request: Request, full_path: str):
+    filename = "example.txt"
     logger.info("Rendering document page for path: %s", full_path)
-    return templates.TemplateResponse("document.html", {"request": request, "path": full_path})
+    return templates.TemplateResponse("document.html", {"request": request, "filename": filename})
 
 
 if __name__ == "__main__":
