@@ -151,3 +151,6 @@ xxx.py
 
 # Env
 .env
+
+# Database
+data/file_records.db
