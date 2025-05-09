@@ -109,7 +109,7 @@
                     <div class="flex items-center space-x-2 mt-1 text-xs">
                     <span class="flex items-center text-green-400">
                         <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13 l4 4L19 7"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
                         Processed
                     </span>
@@ -252,7 +252,7 @@
       uploadStatus.classList.remove('hidden');
       
       // Non-error messages persist until cleared manually or new upload starts
-      if (!isError) {
+      if (!isError && !message.includes('Uploading')) {
         setTimeout(() => {
           statusMessage.remove();
           if (!uploadStatus.hasChildNodes()) {
@@ -270,7 +270,11 @@
       uploadStatus.innerHTML = '';
       uploadStatus.classList.add('hidden');
       
-      showStatus(`Uploading ${file.name}...`, 'text-yellow-400');
+      const uploadingMessage = document.createElement('p');
+      uploadingMessage.className = 'text-sm text-yellow-400';
+      uploadingMessage.textContent = `Uploading ${file.name}...`;
+      uploadStatus.appendChild(uploadingMessage);
+      uploadStatus.classList.remove('hidden');
   
       try {
         const response = await fetch(endpoint, {
@@ -281,6 +285,12 @@
           body: formData,
         });
   
+        // Remove the "Uploading" message immediately
+        uploadingMessage.remove();
+        if (!uploadStatus.hasChildNodes()) {
+          uploadStatus.classList.add('hidden');
+        }
+  
         if (response.ok) {
           showStatus(`File ${file.name} uploaded successfully!`, 'text-green-400');
         } else {
@@ -289,6 +299,12 @@
           showStatus(`Failed to upload ${file.name}:<br/><b><font size=6>${errorMessage}</font></b>`, 'text-red-400', true);
         }
       } catch (error) {
+        // Remove the "Uploading" message immediately
+        uploadingMessage.remove();
+        if (!uploadStatus.hasChildNodes()) {
+          uploadStatus.classList.add('hidden');
+        }
+        
         showStatus(`Error uploading ${file.name}:<br/><b><font size=6>${error.message}</font></b>`, 'text-red-400', true);
       }
     }
