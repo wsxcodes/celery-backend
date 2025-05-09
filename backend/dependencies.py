@@ -17,8 +17,10 @@ def init_db():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS files (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            uuid TEXT NOT NULL UNIQUE,
             customer_id TEXT NOT NULL,
             filename TEXT NOT NULL,
+            file_hash TEXT NOT NULL,
             uploaded_at TEXT NOT NULL
         )
     """)
