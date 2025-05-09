@@ -33,6 +33,11 @@ async def add_new_document(
     os.makedirs(customer_dir, exist_ok=True)
     file_path = os.path.join(customer_dir, file.filename)
 
+    # Check if file already exists for customer
+    if os.path.exists(file_path):
+        logger.info(f"File already exists for customer {customer_id}: {file.filename}")
+        raise HTTPException(status_code=409, detail="File already exists for this customer")
+
     # Read entire file content into memory
     contents = await file.read()
 
@@ -126,14 +131,8 @@ async def update_document_metadata(document_id: int, update: DocumentUpdate, db=
 @router.put("/version/{customer_id}/{filename}")
 @log_endpoint
 async def update_document_version(customer_id: str, filename: str, file: UploadFile = File(...)) -> Dict[str, str]:
-    customer_dir = os.path.join(BASE_UPLOAD_DIR, customer_id)
-    file_path = os.path.join(customer_dir, filename)
-    if not os.path.exists(file_path):
-        raise HTTPException(status_code=404, detail="File not found")
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
-    logger.info(f"Updated file for customer {customer_id}: {filename}")
-    return {"status": "updated", "customer_id": customer_id, "filename": filename}
+    # XXX TODO
+    return {"status": "XXX TODO"}
 
 
 @router.delete("/delete/{customer_id}/{filename}")
