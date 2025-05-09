@@ -75,14 +75,23 @@ async def read_index(request: Request):
         request.session["session_id"] = session_id
         logger.info("** Generated new session_id: %s", session_id)
 
+    files = 1
+
     logger.info("Rendering index page with session_id: %s", session_id)
-    return templates.TemplateResponse("index.html", {"request": request, "session_id": session_id})
+    return templates.TemplateResponse("index.html", {"request": request, "session_id": session_id, "files": files})
 
 
 @app.get("/categories", response_class=HTMLResponse, include_in_schema=False)
 @log_endpoint
 async def read_categories(request: Request):
     return templates.TemplateResponse("categories.html", {"request": request})
+
+
+@app.get("/{full_path:path}", response_class=HTMLResponse, include_in_schema=False)
+@log_endpoint
+async def read_document(request: Request, full_path: str):
+    logger.info("Rendering document page for path: %s", full_path)
+    return templates.TemplateResponse("document.html", {"request": request, "path": full_path})
 
 
 if __name__ == "__main__":
