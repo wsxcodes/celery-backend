@@ -21,3 +21,5 @@ else:
     CORS_ORIGINS = []
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "MISSING-OPENAI_API_KEY")
+
+DB_PATH = os.getenv("DB_PATH", os.path.join(ROOT_DIR, "data", "file_records.db"))
