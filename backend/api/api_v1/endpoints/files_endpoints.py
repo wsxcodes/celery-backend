@@ -3,6 +3,10 @@ from fastapi import APIRouter, UploadFile, File, HTTPException
 from typing import Dict
 import shutil
 import os
+from fastapi import Depends
+from datetime import datetime
+from backend.dependencies import get_db
+
 
 from backend.decorators import log_endpoint
 
@@ -16,18 +20,27 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger.setLevel(logging.INFO)
 
 
-# XXX incorporate customer_id
-
-
 @router.post("/upload/{customer_id}")
 @log_endpoint
-async def upload_file(customer_id: str, file: UploadFile = File(...)) -> Dict[str, str]:
+async def upload_file(
+    customer_id: str,
+    file: UploadFile = File(...),
+    db=Depends(get_db)
+) -> Dict[str, str]:
     customer_dir = os.path.join(BASE_UPLOAD_DIR, customer_id)
     os.makedirs(customer_dir, exist_ok=True)
     file_path = os.path.join(customer_dir, file.filename)
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
+
     logger.info(f"Uploaded file for customer {customer_id}: {file.filename}")
+
+    db.execute(
+        "INSERT INTO files (customer_id, filename, uploaded_at) VALUES (?, ?, ?)",
+        (customer_id, file.filename, datetime.utcnow().isoformat())
+    )
+    db.commit()
+
     return {"status": "success", "customer_id": customer_id, "filename": file.filename}
 
 
