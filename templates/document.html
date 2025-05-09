@@ -133,9 +133,13 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+    }
+    .chat-header:hover {
+      background-color: #2d3748;
     }
     .chat-toggle {
-      cursor: pointer;
       transition: transform 0.3s ease-in-out;
     }
     .chat-toggle.minimized {
@@ -553,7 +557,7 @@
                     <span class="text-gray-300">Apr 16, 2025: </span>
                     <a href="https://eternyiq.com/docs/12345/versions/2025-04-16" class="text-blue-400 hover:underline">Updated with tenant signature</a>
                   </div>
-                  <p class="text-gray-400">Comment: Added tenant signature to comply with compliance requirements.</p>
+                  <p class="text-gray-400">Comment: Added tenant signature to comply with compliance cabine requirements.</p>
                   <p class="text-gray-400">File Hash: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6</p>
                   <p class="text-gray-400">File Size: 2.4 MB</p>
                 </div>
@@ -591,7 +595,7 @@
 
     <!-- Chat with Document -->
     <div class="chat-container minimized" id="chat-container">
-      <div class="chat-header">
+      <div class="chat-header" id="chat-header">
         <h3 class="text-lg font-semibold text-white">Chat with this Document</h3>
         <svg id="chat-toggle" class="chat-toggle minimized h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -645,6 +649,7 @@
   const uploadForm = document.getElementById('upload-form');
   const chatForm = document.getElementById('chat-form');
   const chatContainer = document.getElementById('chat-container');
+  const chatHeader = document.getElementById('chat-header');
   const chatToggle = document.getElementById('chat-toggle');
 
   uploadButton.addEventListener('click', () => {
@@ -681,7 +686,7 @@
     chatForm.reset();
   });
 
-  chatToggle.addEventListener('click', () => {
+  chatHeader.addEventListener('click', () => {
     if (chatContainer.classList.contains('maximized')) {
       chatContainer.classList.remove('maximized');
       chatContainer.classList.add('minimized');
