@@ -1,6 +1,7 @@
 import sqlite3
-from fastapi import Depends
+
 from backend.config import DB_PATH
+
 
 def get_db():
     conn = sqlite3.connect(DB_PATH)
