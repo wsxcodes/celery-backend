@@ -122,6 +122,12 @@ async def read_home(request: Request, db=Depends(get_db)):
         }
     )
 
+# XXX TEMP devel
+@app.get("/devel-document", response_class=HTMLResponse, include_in_schema=False)
+@log_endpoint
+async def read_categories(request: Request, db=Depends(get_db)):
+    return templates.TemplateResponse("document-1.html", {"request": request})
+
 
 @app.get("/categories", response_class=HTMLResponse, include_in_schema=False)
 @log_endpoint
