@@ -79,6 +79,12 @@ async def read_index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request, "session_id": session_id})
 
 
+@app.get("/categories", response_class=HTMLResponse, include_in_schema=False)
+@log_endpoint
+async def read_categories(request: Request):
+    return templates.TemplateResponse("categories.html", {"request": request})
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
