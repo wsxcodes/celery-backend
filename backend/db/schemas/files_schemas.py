@@ -1,5 +1,5 @@
-from typing import Optional
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel
 
@@ -20,3 +20,11 @@ class FileRecord(BaseModel):
     analysis_started_at: Optional[datetime] = None
     analysis_completed_at: Optional[datetime] = None
     analysis_cost: int = 0
+    file_size: Optional[int] = None
+
+
+class FileUpdate(BaseModel):
+    analysis_status: Optional[str] = None
+    analysis_started_at: Optional[datetime] = None
+    analysis_completed_at: Optional[datetime] = None
+    analysis_cost: Optional[int] = None
