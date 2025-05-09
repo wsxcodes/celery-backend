@@ -81,6 +81,9 @@ async def read_home(request: Request, db=Depends(get_db)):
     customer = await get_customer(customer_id=session_id, db=db)
     logger.info("Customer data retrieved: %s", customer)
 
+    # XXX temp
+    files = 1
+
     logger.info("Rendering index page with session_id: %s", session_id)
     return templates.TemplateResponse("home.html", {"request": request, "session_id": session_id, "files": files, "output_language": customer["output_language"]})
 
@@ -91,7 +94,7 @@ async def read_categories(request: Request, db=Depends(get_db)):
     return templates.TemplateResponse("categories.html", {"request": request})
 
 
-@app.get("/reset-customer", response_class=HTMLResponse, include_in_schema=False)
+@app.get("/reset", response_class=HTMLResponse, include_in_schema=False)
 @log_endpoint
 async def reset_customer(request: Request, db=Depends(get_db)):
     import uuid
