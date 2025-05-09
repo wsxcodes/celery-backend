@@ -1,7 +1,16 @@
+from enum import Enum
 from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
+
+
+class AIAlert(str, Enum):
+    none = None
+    insights_available = "insights_available"
+    action_required = "action_required"
+    reminder = "reminder"
+    alert = "alert"
 
 
 class Document(BaseModel):
@@ -16,7 +25,7 @@ class Document(BaseModel):
     analysis_started_at: Optional[datetime] = None
     analysis_completed_at: Optional[datetime] = None
     analysis_cost: int = 0
-    ai_alert: Optional[str] = ""
+    ai_alert: Optional[AIAlert] = AIAlert.none
     ai_category: Optional[str] = ""
     ai_summary_short: Optional[str] = ""
     ai_summary_long: Optional[str] = ""
@@ -27,7 +36,7 @@ class DocumentUpdate(BaseModel):
     analysis_started_at: Optional[datetime] = None
     analysis_completed_at: Optional[datetime] = None
     analysis_cost: Optional[int] = None
-    ai_alert: Optional[str] = None
+    ai_alert: Optional[AIAlert] = None
     ai_category: Optional[str] = None
     ai_summary_short: Optional[str] = None
     ai_summary_long: Optional[str] = None
