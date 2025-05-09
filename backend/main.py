@@ -6,7 +6,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
-
+from backend.dependencies import init_db
 from backend import config
 from backend.api.api_v1.routers import api_router
 from backend.decorators import log_endpoint
@@ -49,6 +49,11 @@ app.include_router(api_router, prefix=API_V1_STR)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
+
+
+@app.on_event("startup")
+def startup_event():
+    init_db()
 
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
