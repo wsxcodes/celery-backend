@@ -52,7 +52,11 @@
                     <div>
                           <p class="text-base font-medium text-white"> {{customer.id}} {{ doc.filename }}</p>
 
-                          <p class="text-sm text-gray-400">{{ doc.ai_summary_short }}</p>
+                          {% if doc.ai_summary_short %}
+                            <p class="text-sm text-gray-400">{{ doc.ai_summary_short }}</p>
+                          {% endif %}
+
+
                           <div class="flex items-center space-x-2 mt-1 text-xs">
 
                           {% if doc.analysis_status == "processed" %}
@@ -72,8 +76,8 @@
                             </span>
                           {% endif %}
                         </span>
-                        <span class="text-gray-500">{{doc.file_size}} Bytes</span>
-                        <span class="text-gray-500">{{doc.uploaded_at}} XXX todo time-ago</span>
+                        <span class="text-gray-500">{{doc.file_size_human}}</span>
+                        <span class="text-gray-500">{{doc.uploaded_at_human}}</span>
                         </div>
                     </div>
                     </div>
