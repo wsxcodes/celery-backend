@@ -26,9 +26,25 @@
       <div id="uploadStatus" class="mt-4 text-sm text-gray-400 hidden"></div>
     </div>
 
-    {% if files %}
+    {% if categorized_documents %}
+      {% for category_group in categorized_documents %}
+        <h2 class="text-2xl font-bold text-white mb-6">{{ category_group.category if category_group.category else "" }}</h2>
+        <ul>
+          {% for doc in category_group.documents %}
+            <li>{{ doc.filename }}</li>
+          {% endfor %}
+        </ul>
+        <br/>
+        <br/>
+        {% endfor %}
+    {% endif %}
 
-    {{files}}
+    <br/>
+    <br/>
+    <hr/>
+    <hr/>
+
+    {% if categorized_documents %}
 
         <!-- Categories and Files -->
         <div class="mt-12">
