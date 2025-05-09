@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EternyIQ - AI Document Analysis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(to bottom, #111827, #030712);
+        color: #e5e7eb;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+
+      header {
+        padding: 1.5rem 0;
+        border-bottom: 1px solid #1f2937;
+      }
+
+      .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .logo-icon {
+        background: rgba(30, 58, 138, 0.3);
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+      }
+
+      .upload-area {
+        margin: 2rem auto;
+        max-width: 32rem;
+        border: 2px dashed #374151;
+        border-radius: 0.75rem;
+        padding: 2rem;
+        text-align: center;
+        background: rgba(17, 24, 39, 0.4);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .upload-area:hover {
+        border-color: #4b5563;
+        background: rgba(17, 24, 39, 0.6);
+      }
+
+      .main-content {
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+
+      .sidebar {
+        background: rgba(17, 24, 39, 0.4);
+        border: 1px solid #374151;
+        border-radius: 0.5rem;
+        padding: 1rem;
+      }
+
+      .dropdown {
+        margin-bottom: 1rem;
+      }
+
+      .dropdown select {
+        width: 100%;
+        background: #1f2937;
+        border: 1px solid #374151;
+        color: #e5e7eb;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.875rem;
+      }
+
+      .document-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .document-item {
+        padding: 0.75rem;
+        background: rgba(30, 58, 138, 0.2);
+        border: 1px solid rgba(30, 58, 138, 0.3);
+        border-radius: 0.5rem;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .document-item:hover {
+        background: rgba(30, 58, 138, 0.4);
+        border-color: #4b5563;
+      }
+
+      .document-item p {
+        margin: 0;
+        font-size: 0.875rem;
+        color: #e5e7eb;
+      }
+
+      .features-section {
+        background: rgba(17, 24, 39, 0.4);
+        border: 1px solid #374151;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1rem;
+      }
+
+      .feature-card {
+        background: rgba(17, 24, 39, 0.4);
+        border: 1px solid #374151;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+      }
+
+      .feature-card:hover {
+        background: rgba(17, 24, 39, 0.6);
+        border-color: #4b5563;
+      }
+
+      .feature-card h4 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.125rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .feature-card p {
+        margin: 0;
+        color: #9ca3af;
+        font-size: 0.875rem;
+      }
+
+      footer {
+        margin-top: 3rem;
+        padding: 1rem 0;
+        text-align: center;
+        border-top: 1px solid #1f2937;
+        color: #6b7280;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <div class="logo">
+            <div class="logo-icon">🧠</div>
+            <div>
+              <h1 style="margin: 0; font-size: 1.25rem;">EternyIQ</h1>
+              <p style="margin: 0; font-size: 0.75rem; color: #9ca3af;">AI-Powered Document Analysis</p>
+            </div>
+          </div>
+          <div>
+            <button style="background: #1f2937; border: none; color: #e5e7eb; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer;">
+              Documentation
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <div style="text-align: center; margin: 2rem 0;">
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Document Analysis</h2>
+        <p style="color: #9ca3af;">Upload a document to start the AI analysis process</p>
+      </div>
+
+      <div class="upload-area">
+        <div style="margin-bottom: 1rem;">📄</div>
+        <h3 style="margin: 0 0 0.5rem 0;">Upload Document</h3>
+        <p style="margin: 0; color: #9ca3af; font-size: 0.875rem;">Drag and drop your document here, or click to browse</p>
+        <p style="margin: 0.5rem 0 0 0; color: #6b7280; font-size: 0.75rem;">Supports PDF, DOC, DOCX, TXT</p>
+      </div>
+
+      <div class="main-content">
+        <div class="sidebar">
+          <div class="dropdown">
+            <select>
+              <option value="all">All Documents</option>
+              <option value="wills">Wills</option>
+              <option value="insurance">Insurance</option>
+              <option value="leases">Leases</option>
+              <option value="employment">Employment</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <ul class="document-list">
+            <li class="document-item">
+              <p>contract_2025.pdf</p>
+            </li>
+            <li class="document-item">
+              <p>will_updated.docx</p>
+            </li>
+            <li class="document-item">
+              <p>insurance_policy.txt</p>
+            </li>
+          </ul>
+        </div>
+
+        <div class="features-section">
+          <h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Analysis Features</h2>
+          <div class="features-grid">
+            <div class="feature-card">
+              <h4>
+                <span style="width: 0.5rem; height: 0.5rem; background: #60a5fa; border-radius: 9999px; display: inline-block;"></span>
+                Expiry/Deadline Management
+              </h4>
+              <p>Detect contract end dates, renewal clauses, trial periods. Send reminders for expiration, automatic renewals, cancellation windows. Sync with Google/Outlook/iCal.</p>
+            </div>
+            <div class="feature-card">
+              <h4>
+                <span style="width: 0.5rem; height: 0.5rem; background: #60a5fa; border-radius: 9999px; display: inline-block;"></span>
+                Smart Summaries
+              </h4>
+              <p>TL;DR of each document in human-readable form. Highlight key obligations, penalties, rights, and deadlines.</p>
+            </div>
+            <div class="feature-card">
+              <h4>
+                <span style="width: 0.5rem; height: 0.5rem; background: #60a5fa; border-radius: 9999px; display: inline-block;"></span>
+                Compliance Alerts
+              </h4>
+              <p>Identify missing signatures, outdated IDs, unfulfilled clauses. GDPR/CCPA compliance checks for stored documents.</p>
+            </div>
+            <div class="feature-card">
+              <h4>
+                <span style="width: 0.5rem; height: 0.5rem; background: #60a5fa; border-radius: 9999px; display: inline-block;"></span>
+                Smart Categorization
+              </h4>
+              <p>Auto-tagging by document type: wills, insurance, leases, employment, etc. Separate personal vs business assets.</p>
+            </div>
+            <div class="feature-card">
+              <h4>
+                <span style="width: 0.5rem; height: 0.5rem; background: #34d399; border-radius: 9999px; display: inline-block;"></span>
+                Risk Analysis
+              </h4>
+              <p>Highlight risky clauses (e.g., high penalties, non-compete traps, vague language). Compare clauses to industry norms.</p>
+            </div>
+            <div class="feature-card">
+              <h4>
+                <span style="width: 0.5rem; height: 0.5rem; background: #34d399; border-radius: 9999px; display: inline-block;"></span>
+                Beneficiary & Heir Auditing
+              </h4>
+              <p>Check if wills, accounts, policies list outdated or missing beneficiaries. Ensure all heirs are accounted for.</p>
+            </div>
+            <div class="feature-card">
+              <h4>
+                <span style="width: 0.5rem; height: 0.5rem; background: #34d399; border-radius: 9999px; display: inline-block;"></span>
+                Contract Comparison
+              </h4>
+              <p>Compare new contracts to older ones to identify changes and stricter terms.</p>
+            </div>
+            <div class="feature-card">
+              <h4>
+                <span style="width: 0.5rem; height: 0.5rem; background: #34d399; border-radius: 9999px; display: inline-block;"></span>
+                Action Suggestions
+              </h4>
+              <p>Receive proactive suggestions like reviewing expiring insurance or updating outdated medical proxies.</p>
+            </div>
+            <div class="feature-card">
+              <h4>
+                <span style="width: 0.5rem; height: 0.5rem; background: #f59e0b; border-radius: 9999px; display: inline-block;"></span>
+                Succession Planning AI
+              </h4>
+              <p>Create a digital vault for heirs with essential document summaries for family or legal counsel.</p>
+            </div>
+            <div class="feature-card">
+              <h4>
+                <span style="width: 0.5rem; height: 0.5rem; background: #f59e0b; border-radius: 9999px; display: inline-block;"></span>
+                Timeline & Audit Trails
+              </h4>
+              <p>Track the evolution of key documents, such as trust updates or revised contracts, with version history.</p>
+            </div>
+            <div class="feature-card">
+              <h4>
+                <span style="width: 0.5rem; height: 0.5rem; background: #f59e0b; border-radius: 9999px; display: inline-block;"></span>
+                Document Health Score
+              </h4>
+              <p>Rate completeness, legal soundness, and currency of important files.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p style="margin: 0;">EternyIQ • AI-Powered Document Analysis • 2025</p>
+      </div>
+    </footer>
+  </body>
+</html>
