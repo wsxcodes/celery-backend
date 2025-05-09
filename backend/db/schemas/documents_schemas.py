@@ -16,6 +16,7 @@ class Document(BaseModel):
     analysis_started_at: Optional[datetime] = None
     analysis_completed_at: Optional[datetime] = None
     analysis_cost: int = 0
+    ai_alert: Optional[str] = None
     ai_summary_short: Optional[str] = None
     ai_summary_long: Optional[str] = None
 
@@ -25,5 +26,6 @@ class DocumentUpdate(BaseModel):
     analysis_started_at: Optional[datetime] = None
     analysis_completed_at: Optional[datetime] = None
     analysis_cost: Optional[int] = None
+    ai_alert: Optional[str] = None
     ai_summary_short: Optional[str] = None
     ai_summary_long: Optional[str] = None
