@@ -36,7 +36,8 @@ def init_db():
     """)
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS customers (
-            customer_id TEXT PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            customer_id TEXT NOT NULL UNIQUE,
             output_language TEXT DEFAULT 'Czech',
             file_count INTEGER NOT NULL
         )
