@@ -22,7 +22,11 @@ def init_db():
             customer_id TEXT NOT NULL,
             filename TEXT NOT NULL,
             file_hash TEXT NOT NULL,
-            uploaded_at TEXT NOT NULL
+            uploaded_at TEXT NOT NULL,
+            analysis_status TEXT NOT NULL DEFAULT 'pending',
+            analysis_started_at TEXT,
+            analysis_completed_at TEXT,
+            analysis_cost INTEGER NOT NULL DEFAULT 0
         )
     """)
     conn.commit()
