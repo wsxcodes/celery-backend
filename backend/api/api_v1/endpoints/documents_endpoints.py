@@ -8,6 +8,7 @@ from typing import Dict
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
+from backend.db.schemas.documents_schemas import DocumentUpdate
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
 
@@ -23,7 +24,7 @@ logger.setLevel(logging.INFO)
 
 @router.post("/upload/{customer_id}")
 @log_endpoint
-async def upload_document(
+async def add_new_document(
     customer_id: str,
     file: UploadFile = File(...),
     db=Depends(get_db)
@@ -80,9 +81,44 @@ async def upload_document(
     }
 
 
-@router.put("/update/{customer_id}/{filename}")
+@router.patch("/metadata/{document_id}")
 @log_endpoint
-async def update_document(customer_id: str, filename: str, file: UploadFile = File(...)) -> Dict[str, str]:
+async def update_document_metadata(document_id: int, update: DocumentUpdate, db=Depends(get_db)):
+    fields = []
+    values = []
+    file_id = document_id
+
+    if update.analysis_status is not None:
+        fields.append("analysis_status = ?")
+        values.append(update.analysis_status)
+
+    if update.analysis_started_at is not None:
+        fields.append("analysis_started_at = ?")
+        values.append(update.analysis_started_at.isoformat())
+
+    if update.analysis_completed_at is not None:
+        fields.append("analysis_completed_at = ?")
+        values.append(update.analysis_completed_at.isoformat())
+
+    if update.analysis_cost is not None:
+        fields.append("analysis_cost = ?")
+        values.append(update.analysis_cost)
+
+    if not fields:
+        raise HTTPException(status_code=400, detail="No valid fields to update")
+
+    values.append(file_id)
+
+    query = f"UPDATE files SET {', '.join(fields)} WHERE id = ?"
+    db.execute(query, values)
+    db.commit()
+
+    return {"status": "updated", "file_id": file_id}
+
+
+@router.put("/version/{customer_id}/{filename}")
+@log_endpoint
+async def update_document_version(customer_id: str, filename: str, file: UploadFile = File(...)) -> Dict[str, str]:
     customer_dir = os.path.join(BASE_UPLOAD_DIR, customer_id)
     file_path = os.path.join(customer_dir, filename)
     if not os.path.exists(file_path):
