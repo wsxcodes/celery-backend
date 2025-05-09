@@ -28,6 +28,7 @@ def init_db():
             analysis_completed_at TEXT,
             analysis_cost INTEGER NOT NULL DEFAULT 0,
             ai_alert TEXT,
+            ai_category TEXT,
             ai_summary_short TEXT,
             ai_summary_text TEXT,
             file_size INTEGER
