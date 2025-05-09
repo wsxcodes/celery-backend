@@ -32,15 +32,18 @@ async def upload_file(
     os.makedirs(customer_dir, exist_ok=True)
     file_path = os.path.join(customer_dir, file.filename)
 
-    # Save and compute hash
-    hasher = hashlib.sha256()
-    with open(file_path, "wb") as buffer:
-        while chunk := await file.read(8192):
-            buffer.write(chunk)
-            hasher.update(chunk)
-    file_hash = hasher.hexdigest()
+    # Read entire file content into memory
+    contents = await file.read()
+
+    # Hash it
+    file_hash = hashlib.sha256(contents).hexdigest()
     file_uuid = str(uuid.uuid4())
 
+    # Write it to disk
+    with open(file_path, "wb") as buffer:
+        buffer.write(contents)
+
+    # Save metadata to DB
     db.execute(
         "INSERT INTO files (uuid, customer_id, filename, file_hash, uploaded_at) VALUES (?, ?, ?, ?, ?)",
         (file_uuid, customer_id, file.filename, file_hash, datetime.utcnow().isoformat())
