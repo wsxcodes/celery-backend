@@ -9,7 +9,7 @@ class Customer(BaseModel):
     file_count: int
 
 
-class FileRecord(BaseModel):
+class Document(BaseModel):
     id: int
     customer_id: str
     uuid: str
@@ -23,7 +23,7 @@ class FileRecord(BaseModel):
     file_size: Optional[int] = None
 
 
-class FileUpdate(BaseModel):
+class DocumentUpdate(BaseModel):
     analysis_status: Optional[str] = None
     analysis_started_at: Optional[datetime] = None
     analysis_completed_at: Optional[datetime] = None
