@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 
 class Customer(BaseModel):
+    id: int
     customer_id: str
     output_language: Optional[str] = "Czech"
     file_count: int
