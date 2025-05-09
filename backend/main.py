@@ -81,9 +81,6 @@ async def read_home(request: Request, db=Depends(get_db)):
     customer = await get_customer(customer_id=session_id, db=db)
     logger.info("Customer data retrieved: %s", customer)
 
-    # XXX temp
-    files = 1
-
     logger.info("Rendering index page with session_id: %s", session_id)
     return templates.TemplateResponse("home.html", {"request": request, "session_id": session_id, "files": files, "output_language": customer["output_language"]})
 
