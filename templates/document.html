@@ -108,11 +108,46 @@
       background-color: #4b5563;
     }
     .chat-container {
-      margin-top: 1.5rem;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      margin: 0;
       padding: 1rem;
       background-color: #1f2937;
-      border-radius: 0.5rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-top-left-radius: 0.5rem;
+      border-top-right-radius: 0.5rem;
+      box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      transition: height 0.3s ease-in-out;
+    }
+    .chat-container.minimized {
+      height: 50px;
+      padding: 0.5rem 1rem;
+    }
+    .chat-container.maximized {
+      height: auto;
+    }
+    .chat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chat-toggle {
+      cursor: pointer;
+      transition: transform 0.3s ease-in-out;
+    }
+    .chat-toggle.minimized {
+      transform: rotate(180deg);
+    }
+    .chat-content {
+      display: block;
+      margin-top: 0.5rem;
+      transition: opacity 0.3s ease-in-out;
+    }
+    .chat-container.minimized .chat-content {
+      display: none;
     }
     .chat-input {
       display: flex;
@@ -147,6 +182,8 @@
       background-color: #2563eb;
     }
     .chat-dialog {
+      max-height: 200px;
+      overflow-y: auto;
       margin-top: 1rem;
       padding: 0.75rem;
       background-color: #2d3748;
@@ -180,12 +217,26 @@
       color: #d1d5db;
       font-size: 0.875rem;
     }
+    @media (max-width: 640px) {
+      .chat-container {
+        padding: 0.5rem;
+      }
+      .chat-input input {
+        font-size: 0.75rem;
+      }
+      .chat-input button {
+        padding: 0.5rem;
+        font-size: 0.75rem;
+      }
+      .chat-container.minimized {
+        height: 40px;
+      }
+    }
   </style>
 {% endblock %}
 
 {% block content %}
   <div class="max-w-6xl mx-auto px-4 py-8">
-
     <!-- Header -->
     {% include "elements/header.html" %}
 
@@ -534,43 +585,50 @@
             <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">View Full Document</button>
             <button class="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm">Download</button>
           </div>
-          <!-- Chat with Document -->
-          <div class="chat-container">
-            <h3 class="text-lg font-semibold text-white mb-3">Chat with this Document</h3>
-            <form id="chat-form">
-              <div class="chat-input">
-                <input type="text" id="chat-question" placeholder="Ask questions about this document..." required>
-                <button type="submit">Ask</button>
-              </div>
-            </form>
-            <div class="chat-dialog">
-              <div class="chat-dialog-answer">
-                <svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>
-                </svg>
-                <p>The penalty for early termination is a fee equivalent to two months' rent, as specified in Section 4.3 of the agreement.</p>
-              </div>
-              <br/>
-              <div class="chat-dialog-question">
-                <svg class="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <p>What is the penalty for early termination of the lease?</p>
-              </div>
-              <div class="chat-dialog-answer">
-                <svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>
-                </svg>
-                <p>The penalty for early termination is a fee equivalent to two months' rent, as specified in Section 4.3 of the agreement.</p>
-              </div>
-              <br/>
-              <div class="chat-dialog-question">
-                <svg class="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <p>What is the penalty for early termination of the lease?</p>
-              </div>
-            </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat with Document -->
+    <div class="chat-container minimized" id="chat-container">
+      <div class="chat-header">
+        <h3 class="text-lg font-semibold text-white">Chat with this Document</h3>
+        <svg id="chat-toggle" class="chat-toggle minimized h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </div>
+      <div class="chat-content">
+        <form id="chat-form">
+          <div class="chat-input">
+            <input type="text" id="chat-question" placeholder="Ask questions about this document..." required>
+            <button type="submit">Ask</button>
+          </div>
+        </form>
+        <div class="chat-dialog">
+          <div class="chat-dialog-question">
+            <svg class="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <p>What is the penalty for early termination of the lease?</p>
+          </div>
+          <div class="chat-dialog-answer">
+            <svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>
+            </svg>
+            <p>The penalty for early termination is a fee equivalent to two months' rent, as specified in Section 4.3 of the agreement.</p>
+          </div>
+          <br/>
+          <div class="chat-dialog-question">
+            <svg class="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <p>What are the maintenance responsibilities of the tenant?</p>
+          </div>
+          <div class="chat-dialog-answer">
+            <svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>
+            </svg>
+            <p>The tenant is responsible for routine maintenance, including cleaning and minor repairs, as outlined in Section 5.2 of the agreement.</p>
           </div>
         </div>
       </div>
@@ -586,6 +644,8 @@
   const cancelUpload = document.getElementById('cancel-upload');
   const uploadForm = document.getElementById('upload-form');
   const chatForm = document.getElementById('chat-form');
+  const chatContainer = document.getElementById('chat-container');
+  const chatToggle = document.getElementById('chat-toggle');
 
   uploadButton.addEventListener('click', () => {
     uploadModal.style.display = 'flex';
@@ -619,6 +679,18 @@
     // Placeholder for RAG-based chat logic
     alert(`Question submitted: ${question}`); // Replace with actual RAG implementation
     chatForm.reset();
+  });
+
+  chatToggle.addEventListener('click', () => {
+    if (chatContainer.classList.contains('maximized')) {
+      chatContainer.classList.remove('maximized');
+      chatContainer.classList.add('minimized');
+      chatToggle.classList.add('minimized');
+    } else {
+      chatContainer.classList.remove('minimized');
+      chatContainer.classList.add('maximized');
+      chatToggle.classList.remove('minimized');
+    }
   });
 </script>
 {% endblock %}
