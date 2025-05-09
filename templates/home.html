@@ -52,7 +52,7 @@
                     <div>
                           <p class="text-base font-medium text-white">
                             {% if customer.id == 1 %}
-                              <font color="red">id-{{ doc.id }}</font>
+                              <font color="red">debug-{{ doc.id }} {{doc.ai_alert}}</font>
                             {% endif %}
                             {{ doc.filename }}
                           </p>
@@ -77,7 +77,7 @@
                               <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                               </svg>
-                              {{ doc.analysis_status|title}}
+                              {{ doc.ai_alert|title}}
                             </span>
                           {% endif %}
                         <span class="text-gray-500">{{doc.file_size_human}}</span>
