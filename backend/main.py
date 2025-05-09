@@ -79,7 +79,7 @@ async def read_index(request: Request):
     output_language = "Slovak"
 
     logger.info("Rendering index page with session_id: %s", session_id)
-    return templates.TemplateResponse("index.html", {"request": request, "session_id": session_id, "files": files, "output_language": output_language})
+    return templates.TemplateResponse("home.html", {"request": request, "session_id": session_id, "files": files, "output_language": output_language})
 
 
 @app.get("/categories", response_class=HTMLResponse, include_in_schema=False)
