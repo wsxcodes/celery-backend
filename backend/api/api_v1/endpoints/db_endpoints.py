@@ -33,9 +33,12 @@ async def list_customers(db=Depends(get_db)):
 @router.get("/files/{customer_id}", response_model=List[FileRecord])
 @log_endpoint
 async def list_files(customer_id: str, db=Depends(get_db)):
-    cursor = db.execute(
-        "SELECT id, uuid, customer_id, filename, file_hash, uploaded_at FROM files WHERE customer_id = ? ORDER BY uploaded_at DESC",
-        (customer_id,)
-    )
+    cursor = db.execute("""
+        SELECT id, uuid, customer_id, filename, file_hash, uploaded_at,
+            analysis_status, analysis_started_at, analysis_completed_at, analysis_cost
+        FROM files
+        WHERE customer_id = ?
+        ORDER BY uploaded_at DESC
+    """, (customer_id,))
     rows = cursor.fetchall()
     return [dict(row) for row in rows]
