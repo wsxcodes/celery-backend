@@ -3,8 +3,7 @@ from typing import List
 
 from fastapi import APIRouter, Depends
 
-from fastapi import HTTPException
-from backend.db.schemas.files_schemas import FileRecord, Customer
+from backend.db.schemas.files_schemas import Customer, FileRecord
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
 
@@ -35,7 +34,7 @@ async def list_customers(db=Depends(get_db)):
 @log_endpoint
 async def list_files(customer_id: str, db=Depends(get_db)):
     cursor = db.execute(
-        "SELECT id, customer_id, filename, uploaded_at FROM files WHERE customer_id = ? ORDER BY uploaded_at DESC",
+        "SELECT id, uuid, customer_id, filename, file_hash, uploaded_at FROM files WHERE customer_id = ? ORDER BY uploaded_at DESC",
         (customer_id,)
     )
     rows = cursor.fetchall()
