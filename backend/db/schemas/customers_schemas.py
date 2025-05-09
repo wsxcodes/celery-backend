@@ -8,7 +8,7 @@ class Customer(BaseModel):
     output_language: Optional[str] = "Czech"
     file_count: int
 
+
 class UpdateCustomer(BaseModel):
     output_language: Optional[str] = "Czech"
     file_count: Optional[int] = 0
-    
