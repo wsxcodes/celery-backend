@@ -27,7 +27,7 @@ async def upload_file(
     customer_id: str,
     file: UploadFile = File(...),
     db=Depends(get_db)
-) -> Dict[str, str]:
+) -> dict:
     customer_dir = os.path.join(BASE_UPLOAD_DIR, customer_id)
     os.makedirs(customer_dir, exist_ok=True)
     file_path = os.path.join(customer_dir, file.filename)
@@ -35,11 +35,12 @@ async def upload_file(
     # Read entire file content into memory
     contents = await file.read()
 
-    # Hash it
+    # Compute metadata
+    file_size = len(contents)
     file_hash = hashlib.sha256(contents).hexdigest()
     file_uuid = str(uuid.uuid4())
 
-    # Write it to disk
+    # Write file to disk
     with open(file_path, "wb") as buffer:
         buffer.write(contents)
 
@@ -48,9 +49,10 @@ async def upload_file(
         """
         INSERT INTO files (
             uuid, customer_id, filename, file_hash, uploaded_at,
-            analysis_status, analysis_started_at, analysis_completed_at, analysis_cost
+            analysis_status, analysis_started_at, analysis_completed_at, analysis_cost,
+            file_size
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             file_uuid,
@@ -58,21 +60,23 @@ async def upload_file(
             file.filename,
             file_hash,
             datetime.utcnow().isoformat(),
-            'pending',    # analysis_status
-            None,         # analysis_started_at
-            None,         # analysis_completed_at
-            0             # analysis_cost
+            'pending',
+            None,
+            None,
+            0,
+            file_size
         )
     )
     db.commit()
 
-    logger.info(f"Uploaded file for customer {customer_id}: {file.filename}")
+    logger.info(f"Uploaded file for customer {customer_id}: {file.filename} ({file_size} bytes)")
     return {
         "status": "success",
         "customer_id": customer_id,
         "filename": file.filename,
         "uuid": file_uuid,
-        "file_hash": file_hash
+        "file_hash": file_hash,
+        "file_size": file_size
     }
 
 
