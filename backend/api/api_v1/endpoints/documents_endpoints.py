@@ -70,6 +70,13 @@ async def add_new_document(
     )
     db.commit()
 
+    # Update file_count for customer
+    db.execute(
+        "UPDATE customers SET file_count = file_count + 1 WHERE customer_id = ?",
+        (customer_id,)
+    )
+    db.commit()
+
     logger.info(f"Uploaded file for customer {customer_id}: {file.filename} ({file_size} bytes)")
     return {
         "status": "success",
@@ -136,5 +143,14 @@ async def delete_document(customer_id: str, filename: str) -> Dict[str, str]:
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File not found")
     os.remove(file_path)
+
+    # Update file_count for customer
+    db = next(get_db())
+    db.execute(
+        "UPDATE customers SET file_count = file_count - 1 WHERE customer_id = ? AND file_count > 0",
+        (customer_id,)
+    )
+    db.commit()
+
     logger.info(f"Deleted file for customer {customer_id}: {filename}")
     return {"status": "deleted", "customer_id": customer_id, "filename": filename}
