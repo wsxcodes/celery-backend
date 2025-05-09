@@ -1,3 +1,4 @@
+from typing import Optional
 from datetime import datetime
 
 from pydantic import BaseModel
@@ -10,8 +11,12 @@ class Customer(BaseModel):
 
 class FileRecord(BaseModel):
     id: int
-    uuid: str
     customer_id: str
+    uuid: str
     filename: str
     file_hash: str
     uploaded_at: datetime
+    analysis_status: str = "pending"
+    analysis_started_at: Optional[datetime] = None
+    analysis_completed_at: Optional[datetime] = None
+    analysis_cost: int = 0
