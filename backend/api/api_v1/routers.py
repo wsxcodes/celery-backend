@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from backend.api.api_v1.endpoints import (db_endpoints, documents_endpoints,
+from backend.api.api_v1.endpoints import (customer_endpoints, documents_endpoints,
                                           generic_endpoints)
 
 api_router = APIRouter()
@@ -14,13 +14,13 @@ api_router.include_router(
 # Files Endpoints
 api_router.include_router(
     documents_endpoints.router,
-    prefix="/documents",
+    prefix="/document",
     tags=["Documents"]
 )
 
 # DB Endpoints
 api_router.include_router(
-    db_endpoints.router,
-    prefix="/db",
-    tags=["DB"]
+    customer_endpoints.router,
+    prefix="/customer",
+    tags=["Customers"]
 )
