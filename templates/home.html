@@ -176,46 +176,46 @@
     const uploadStatus = document.getElementById('uploadStatus');
     const clientId = '{{session_id}}';
     const endpoint = `/api/v1/document/add/${clientId}`;
-  
+
     // Prevent default drag behaviors
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
       dropZone.addEventListener(eventName, preventDefaults, false);
     });
-  
+
     function preventDefaults(e) {
       e.preventDefault();
       e.stopPropagation();
     }
-  
+
     // Highlight drop zone on drag
     ['dragenter', 'dragover'].forEach(eventName => {
       dropZone.addEventListener(eventName, () => {
         dropZone.classList.add('border-blue-500', 'bg-gray-700');
       }, false);
     });
-  
+
     ['dragleave', 'drop'].forEach(eventName => {
       dropZone.addEventListener(eventName, () => {
         dropZone.classList.remove('border-blue-500', 'bg-gray-700');
       }, false);
     });
-  
+
     // Handle dropped files
     dropZone.addEventListener('drop', (e) => {
       const files = e.dataTransfer.files;
       handleFiles(files);
     });
-  
+
     // Handle click to select files
     dropZone.addEventListener('click', () => {
       fileInput.click();
     });
-  
+
     fileInput.addEventListener('change', () => {
       handleFiles(fileInput.files);
       fileInput.value = ''; // Reset input
     });
-  
+
     function handleFiles(files) {
       const allowedTypes = [
         'application/pdf',
@@ -227,33 +227,33 @@
         'image/webp',
         'image/gif'
       ];
-  
+
       Array.from(files).forEach(file => {
         if (!allowedTypes.includes(file.type)) {
           showStatus(`File ${file.name} not supported.<br/>Please choose a supported file type.`, 'text-red-400', true);
           return;
         }
-  
+
         uploadFile(file);
       });
     }
-  
+
     function showStatus(message, className, isError = false) {
       // Create a new status message element
       const statusMessage = document.createElement('p');
       statusMessage.className = `text-sm ${className}`;
-      
+
       // Use innerHTML for errors to support HTML tags like <br/>
       if (isError) {
         statusMessage.innerHTML = message;
       } else {
         statusMessage.textContent = message;
       }
-      
+
       // Append the message to the uploadStatus container
       uploadStatus.appendChild(statusMessage);
       uploadStatus.classList.remove('hidden');
-      
+
       // Non-error messages persist until cleared manually or new upload starts
       if (!isError && !message.includes('Uploading')) {
         setTimeout(() => {
@@ -264,21 +264,21 @@
         }, 5000);
       }
     }
-  
+
     async function uploadFile(file) {
       const formData = new FormData();
       formData.append('file', file);
-  
+
       // Clear existing messages when starting a new upload
       uploadStatus.innerHTML = '';
       uploadStatus.classList.add('hidden');
-      
+
       const uploadingMessage = document.createElement('p');
       uploadingMessage.className = 'text-sm text-yellow-400';
       uploadingMessage.textContent = `Uploading ${file.name}...`;
       uploadStatus.appendChild(uploadingMessage);
       uploadStatus.classList.remove('hidden');
-  
+
       try {
         const response = await fetch(endpoint, {
           method: 'POST',
@@ -287,13 +287,13 @@
           },
           body: formData,
         });
-  
+
         // Remove the "Uploading" message immediately
         uploadingMessage.remove();
         if (!uploadStatus.hasChildNodes()) {
           uploadStatus.classList.add('hidden');
         }
-  
+
         if (response.ok) {
           showStatus(`File ${file.name} uploaded successfully!`, 'text-green-400');
         } else {
@@ -307,7 +307,7 @@
         if (!uploadStatus.hasChildNodes()) {
           uploadStatus.classList.add('hidden');
         }
-        
+
         showStatus(`Error uploading ${file.name}:<br/><b><font size=6>${error.message}</font></b>`, 'text-red-400', true);
       }
     }
