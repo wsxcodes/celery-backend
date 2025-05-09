@@ -1,19 +1,19 @@
 import logging
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
-
+from backend.api.api_v1.endpoints.customer_endpoints import list_customer_documents
 from backend import config
 from backend.api.api_v1.routers import api_router
 from backend.decorators import log_endpoint
 from backend.dependencies import init_db
+from backend.dependencies import get_db
 
 API_V1_STR = "/api/v1"
-
 
 # Ensure logging is properly configured
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -59,7 +59,7 @@ def startup_event():
 
 @app.get("/", response_class=HTMLResponse, include_in_schema=False)
 @log_endpoint
-async def read_index(request: Request):
+async def read_home(request: Request, db=Depends(get_db)):
     logger = logging.getLogger(__name__)
 
     session_id = request.session.get("session_id")
@@ -75,7 +75,7 @@ async def read_index(request: Request):
         request.session["session_id"] = session_id
         logger.info("** Generated new session_id: %s", session_id)
 
-    files = 1
+    files = await list_customer_documents(session_id, db)
     output_language = "Slovak"
 
     logger.info("Rendering index page with session_id: %s", session_id)
