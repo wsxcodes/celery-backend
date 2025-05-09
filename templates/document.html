@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}XXX title todo{% endblock %}
+{% block title %}{{filename}}{% endblock %}
 
 {% block meta %}{% endblock %}
 
@@ -107,9 +107,47 @@
       width: 0.125rem;
       background-color: #4b5563;
     }
+    .chat-container {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background-color: #1f2937;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .chat-input {
+      display: flex;
+      align-items: center;
+      background-color: #374151;
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      transition: box-shadow 0.2s ease-in-out;
+    }
+    .chat-input:focus-within {
+      box-shadow: 0 0 0 2px #3b82f6;
+    }
+    .chat-input input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #e5e7eb;
+      font-size: 0.875rem;
+      padding: 0.5rem;
+    }
+    .chat-input button {
+      padding: 0.5rem 1rem;
+      background-color: #3b82f6;
+      color: white;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: background-color 0.2s ease-in-out;
+    }
+    .chat-input button:hover {
+      background-color: #2563eb;
+    }
   </style>
 {% endblock %}
-
 
 {% block content %}
   <div class="max-w-6xl mx-auto px-4 py-8">
@@ -165,7 +203,7 @@
     </header>
 
     <!-- Upload Modal -->
-    <div id="upload-modal" class="modal">
+    <div id="upload-modal™modal" class="modal">
       <div class="modal-content">
         <svg id="close-modal" class="modal-close h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -275,7 +313,7 @@
           </div>
         </div>
 
-        <!-- Alerts & Actions -->
+        <!-- Alerts & Party Actions -->
         <div class="section-card p-6 bg-gray-800 rounded-xl">
           <h2 class="text-2xl font-bold text-white mb-4">Alerts & Actions</h2>
           <div class="space-y-4">
@@ -380,7 +418,7 @@
             <!-- Contract Comparison -->
             <div class="feature-item flex items-center justify-between p-4 bg-gray-700 rounded-lg">
               <div class="flex items-center space-x-3">
-                <svg class="h-6 w-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg class="h-6 wribbon-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                 </svg>
                 <div>
@@ -462,6 +500,16 @@
             <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">View Full Document</button>
             <button class="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm">Download</button>
           </div>
+          <!-- Chat with Document -->
+          <div class="chat-container">
+            <h3 class="text-lg font-semibold text-white mb-3">Chat with this Document</h3>
+            <form id="chat-form">
+              <div class="chat-input">
+                <input type="text" id="chat-question" placeholder="Ask questions about this document..." required>
+                <button type="submit">Ask</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -475,6 +523,7 @@
   const closeModal = document.getElementById('close-modal');
   const cancelUpload = document.getElementById('cancel-upload');
   const uploadForm = document.getElementById('upload-form');
+  const chatForm = document.getElementById('chat-form');
 
   uploadButton.addEventListener('click', () => {
     uploadModal.style.display = 'flex';
@@ -499,9 +548,15 @@
     // Placeholder for form submission logic
     alert('Document uploaded successfully!'); // Replace with actual upload logic
     uploadModal.style.display = 'none';
-    uploadForm
+    uploadForm.reset();
+  });
 
-    .reset();
+  chatForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const question = document.getElementById('chat-question').value;
+    // Placeholder for RAG-based chat logic
+    alert(`Question submitted: ${question}`); // Replace with actual RAG implementation
+    chatForm.reset();
   });
 </script>
 {% endblock %}
