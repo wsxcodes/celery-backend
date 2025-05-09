@@ -22,7 +22,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger.setLevel(logging.INFO)
 
 
-@router.post("/upload/{customer_id}")
+@router.post("/add/{customer_id}")
 @log_endpoint
 async def add_new_document(
     customer_id: str,
