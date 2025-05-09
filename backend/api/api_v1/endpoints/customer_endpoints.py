@@ -1,11 +1,9 @@
 import logging
 from typing import List
-from fastapi import Body
 
-from fastapi import APIRouter, Depends, HTTPException
-from backend.db.schemas.customers_schemas import UpdateCustomer
+from fastapi import APIRouter, Body, Depends, HTTPException
 
-from backend.db.schemas.customers_schemas import Customer
+from backend.db.schemas.customers_schemas import Customer, UpdateCustomer
 from backend.db.schemas.documents_schemas import Document
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
