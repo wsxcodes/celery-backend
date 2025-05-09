@@ -45,8 +45,24 @@ async def upload_file(
 
     # Save metadata to DB
     db.execute(
-        "INSERT INTO files (uuid, customer_id, filename, file_hash, uploaded_at) VALUES (?, ?, ?, ?, ?)",
-        (file_uuid, customer_id, file.filename, file_hash, datetime.utcnow().isoformat())
+        """
+        INSERT INTO files (
+            uuid, customer_id, filename, file_hash, uploaded_at,
+            analysis_status, analysis_started_at, analysis_completed_at, analysis_cost
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            file_uuid,
+            customer_id,
+            file.filename,
+            file_hash,
+            datetime.utcnow().isoformat(),
+            'pending',    # analysis_status
+            None,         # analysis_started_at
+            None,         # analysis_completed_at
+            0             # analysis_cost
+        )
     )
     db.commit()
 
