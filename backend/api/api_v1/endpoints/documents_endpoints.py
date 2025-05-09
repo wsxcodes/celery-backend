@@ -115,6 +115,22 @@ async def update_document_metadata(document_id: int, update: DocumentUpdate, db=
         fields.append("analysis_cost = ?")
         values.append(update.analysis_cost)
 
+    if update.ai_alert is not None:
+        fields.append("ai_alert = ?")
+        values.append(update.ai_alert)
+
+    if update.ai_category is not None:
+        fields.append("ai_category = ?")
+        values.append(update.ai_category)
+
+    if update.ai_summary_short is not None:
+        fields.append("ai_summary_short = ?")
+        values.append(update.ai_summary_short)
+
+    if update.ai_summary_long is not None:
+        fields.append("ai_summary_text = ?")
+        values.append(update.ai_summary_long)
+
     if not fields:
         raise HTTPException(status_code=400, detail="No valid fields to update")
 
