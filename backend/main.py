@@ -2,14 +2,14 @@ import logging
 
 from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
-from fastapi.responses import RedirectResponse
+
 from backend import config
 from backend.api.api_v1.endpoints.customer_endpoints import (
-    add_new_customer, list_customer_documents, get_customer)
+    add_new_customer, get_customer, list_customer_documents)
 from backend.api.api_v1.routers import api_router
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db, init_db
