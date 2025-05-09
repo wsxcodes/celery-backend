@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EternyIQ - Document Intelligence</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html {
+      font-size: 150%;
+    }
+    /* Custom Tailwind Configuration */
+    .gradient-bg {
+      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+    }
+    .file-item {
+      transition: background-color 0.2s ease-in-out;
+    }
+    .file-item:hover {
+      background-color: #2d3748;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #2d3748;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+      border-radius: 0.5rem;
+    }
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+    .dropdown-item {
+      padding: 0.5rem 1rem;
+      color: #e5e7eb;
+      cursor: pointer;
+    }
+    .dropdown-item:hover {
+      background-color: #4b5563;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-900 text-gray-100 font-sans">
+  <div class="max-w-5xl mx-auto px-4 py-8">
+    <!-- Header -->
+    <header class="text-center mb-10">
+      <h1 class="text-4xl font-extrabold tracking-tight text-white">
+        <span class="gradient-bg text-transparent bg-clip-text">EternyIQ</span>
+      </h1>
+      <p class="mt-2 text-lg text-gray-400">Intelligent Document Management</p>
+    </header>
+
+    <!-- Drag and Drop Area -->
+    <div class="w-full max-w-lg mx-auto p-8 bg-gray-800 rounded-xl text-center">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+      </svg>
+      <p class="mt-4 text-xl font-semibold text-white">Drag & Drop your documents here</p>
+      <p class="mt-2 text-sm text-gray-400">Or click to select files</p>
+      <p class="mt-2 text-xs text-gray-500">Supported formats: PDF, DOC, DOCX, TXT</p>
+    </div>
+
+    
+    <!-- Categories and Files -->
+    <div class="mt-12">
+        
+      <!-- Category: Financial Reports -->
+      <div class="mb-12">
+        <h2 class="text-2xl font-bold text-white mb-6">Financial Reports</h2>
+        <div class="space-y-4">
+          <!-- File 1 -->
+          <div class="file-item p-4 bg-gray-800 rounded-xl flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+              <svg class="h-8 w-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              <div>
+                <p class="text-base font-medium text-white">Q1_2025_Report.pdf</p>
+                <p class="text-sm text-gray-400">Quarterly financial performance overview for Q1 2025.</p>
+                <div class="flex items-center space-x-2 mt-1 text-xs">
+                  <span class="flex items-center text-green-400">
+                    <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Processed
+                  </span>
+                  <span class="text-gray-500">381.89 KB</span>
+                  <span class="text-gray-500">Today at 16:43</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="px-2 py-1 rounded-full text-xs font-medium bg-blue-600 text-white">Insights Available</span>
+              <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+              </svg>
+            </div>
+          </div>
+          <!-- File 2 -->
+          <div class="file-item p-4 bg-gray-800 rounded-xl flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+              <svg class="h-8 w-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              <div>
+                <p class="text-base font-medium text-white">Budget_Proposal.docx</p>
+                <p class="text-sm text-gray-400">Proposed budget allocations for FY 2026.</p>
+                <div class="flex items-center space-x-2 mt-1 text-xs">
+                  <span class="flex items-center text-yellow-400">
+                    <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Pending
+                  </span>
+                  <span class="text-gray-500">245.67 KB</span>
+                  <span class="text-gray-500">Today at 14:22</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="px-2 py-1 rounded-full text-xs font-medium bg-red-600 text-white">Action Required</span>
+              <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category: Contracts -->
+      <div class="mb-12">
+        <h2 class="text-2xl font-bold text-white mb-6">Contracts</h2>
+        <div class="space-y-4">
+          <!-- File 1 -->
+          <div class="file-item p-4 bg-gray-800 rounded-xl flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+              <svg class="h-8 w-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              <div>
+                <p class="text-base font-medium text-white">Vendor_Agreement.pdf</p>
+                <p class="text-sm text-gray-400">Agreement with vendor for supply chain services.</p>
+                <div class="flex items-center space-x-2 mt-1 text-xs">
+                  <span class="flex items-center text-green-400">
+                    <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Processed
+                  </span>
+                  <span class="text-gray-500">512.34 KB</span>
+                  <span class="text-gray-500">Yesterday at 09:15</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="px-2 py-1 rounded-full text-xs font-medium bg-orange-600 text-white">Alert</span>
+              <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
