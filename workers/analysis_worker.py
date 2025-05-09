@@ -5,12 +5,12 @@
 # category
 
 
+Smart Summaries
+TL;DR of each document in human-readable form. Highlight key obligations, penalties, rights, and deadlines.
+
 # Analysis Features
 Expiry/Deadline Management
 Detect contract end dates, renewal clauses, trial periods. Send reminders for expiration, automatic renewals, cancellation windows. Sync with Google/Outlook/iCal.
-
-Smart Summaries
-TL;DR of each document in human-readable form. Highlight key obligations, penalties, rights, and deadlines.
 
 Compliance Alerts
 Identify missing signatures, outdated IDs, unfulfilled clauses. GDPR/CCPA compliance checks for stored documents.
