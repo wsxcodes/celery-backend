@@ -7,7 +7,7 @@ from typing import Dict
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
-from backend.db.schemas.documents_schemas import DocumentUpdate
+from backend.db.schemas.documents_schemas import Document, DocumentUpdate
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
 
@@ -92,12 +92,11 @@ async def add_new_document(
     }
 
 
-@router.patch("/metadata/{document_id}")
+@router.patch("/metadata/{document_id}", response_model=Document)
 @log_endpoint
 async def update_document_metadata(document_id: int, update: DocumentUpdate, db=Depends(get_db)):
     fields = []
     values = []
-    file_id = document_id
 
     if update.analysis_status is not None:
         fields.append("analysis_status = ?")
@@ -117,7 +116,7 @@ async def update_document_metadata(document_id: int, update: DocumentUpdate, db=
 
     if update.ai_alert is not None:
         fields.append("ai_alert = ?")
-        values.append(update.ai_alert)
+        values.append(update.ai_alert.value if update.ai_alert else None)
 
     if update.ai_category is not None:
         fields.append("ai_category = ?")
@@ -134,13 +133,16 @@ async def update_document_metadata(document_id: int, update: DocumentUpdate, db=
     if not fields:
         raise HTTPException(status_code=400, detail="No valid fields to update")
 
-    values.append(file_id)
-
+    values.append(document_id)
     query = f"UPDATE files SET {', '.join(fields)} WHERE id = ?"
     db.execute(query, values)
     db.commit()
 
-    return {"status": "updated", "file_id": file_id}
+    row = db.execute("SELECT * FROM files WHERE id = ?", (document_id,)).fetchone()
+    if not row:
+        raise HTTPException(status_code=404, detail="Document not found")
+
+    return Document(**dict(row))
 
 
 @router.put("/version/{customer_id}/{filename}")
