@@ -31,22 +31,7 @@ async def list_customers(db=Depends(get_db)):
     return [dict(row) for row in rows]
 
 
-@router.get("/customers/{customer_id}", response_model=Customer)
-@log_endpoint
-async def get_customer(customer_id: str, db=Depends(get_db)):
-    cursor = db.execute("""
-        SELECT customer_id, COUNT(*) AS file_count
-        FROM files
-        WHERE customer_id = ?
-        GROUP BY customer_id
-    """, (customer_id,))
-    row = cursor.fetchone()
-    if row is None:
-        raise HTTPException(status_code=404, detail="Customer not found")
-    return dict(row)
-
-
-@router.get("/list/{customer_id}", response_model=List[FileRecord])
+@router.get("/files/{customer_id}", response_model=List[FileRecord])
 @log_endpoint
 async def list_files(customer_id: str, db=Depends(get_db)):
     cursor = db.execute(
