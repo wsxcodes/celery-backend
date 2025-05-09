@@ -1,55 +1,14 @@
-<!DOCTYPE html>
-<html lang="en" class="dark">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EternyIQ - Document Intelligence</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    html {
-      font-size: 150%;
-    }
-    /* Custom Tailwind Configuration */
-    .gradient-bg {
-      background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-    }
-    .file-item {
-      transition: background-color 0.2s ease-in-out;
-    }
-    .file-item:hover {
-      background-color: #2d3748;
-    }
-    .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: #2d3748;
-      min-width: 160px;
-      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-      z-index: 1;
-      border-radius: 0.5rem;
-    }
-    .dropdown:hover .dropdown-content {
-      display: block;
-    }
-    .dropdown-item {
-      padding: 0.5rem 1rem;
-      color: #e5e7eb;
-      cursor: pointer;
-    }
-    .dropdown-item:hover {
-      background-color: #4b5563;
-    }
-  </style>
-</head>
-<body class="min-h-screen bg-gray-900 text-gray-100 font-sans">
+{% extends 'base.html' %}
+
+{% block meta %}
+{% endblock %}
+
+{% block content %}
+
   <div class="max-w-5xl mx-auto px-4 py-8">
+
     <!-- Header -->
-    <header class="text-center mb-10">
-      <h1 class="text-4xl font-extrabold tracking-tight text-white">
-        <span class="gradient-bg text-transparent bg-clip-text">EternyIQ</span>
-      </h1>
-      <p class="mt-2 text-lg text-gray-400">Intelligent Document Management</p>
-    </header>
+    {% include "elements/header.html" %}
 
     <!-- Drag and Drop Area -->
     <div class="w-full max-w-lg mx-auto p-8 bg-gray-800 rounded-xl text-center">
@@ -197,5 +156,5 @@
     </footer>
 
   </div>
-</body>
-</html>
+
+{% endblock %}
