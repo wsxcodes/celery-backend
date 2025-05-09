@@ -11,6 +11,7 @@ def get_db():
     finally:
         conn.close()
 
+
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
