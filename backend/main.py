@@ -6,10 +6,11 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
-from backend.dependencies import init_db
+
 from backend import config
 from backend.api.api_v1.routers import api_router
 from backend.decorators import log_endpoint
+from backend.dependencies import init_db
 
 API_V1_STR = "/api/v1"
 
@@ -73,7 +74,6 @@ async def read_index(request: Request):
         session_id = str(uuid.uuid4())
         request.session["session_id"] = session_id
         logger.info("** Generated new session_id: %s", session_id)
-
 
     logger.info("Rendering index page with session_id: %s", session_id)
     return templates.TemplateResponse("index.html", {"request": request, "session_id": session_id})
