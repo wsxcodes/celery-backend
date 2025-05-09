@@ -97,6 +97,7 @@
             </svg>
             <div class="dropdown-content">
               <div class="dropdown-item">Download</div>
+              <div class="dropdown-item">Upload Newer Version</div>
               <div class="dropdown-item">Copy link</div>
             </div>
           </div>
@@ -172,15 +173,21 @@
         <div class="section-card p-6 bg-gray-800 rounded-xl">
           <h2 class="text-2xl font-bold text-white mb-4">Analysis Criteria</h2>
           <div class="p-4 bg-gray-700 rounded-lg">
-            <div class="flex items-center space-x-3">
-              <svg class="h-6 w-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01m-.01 4h.01"></path>
-              </svg>
-              <div>
-                <p class="text-white font-medium">AI Analysis Prompt</p>
-                <p class="text-gray-400 text-sm">"What to watch out for and thoroughly check 10 times in this type of document."</p>
-                <p class="text-gray-300 text-sm mt-1">Analyzed for: completeness of signatures, compliance with local regulations, clarity of termination clauses, fairness of penalty terms, renewal notice periods, maintenance obligations, payment schedules, dispute resolution mechanisms, property condition clauses, and insurance requirements.</p>
-              </div>
+            <div class="space-y-2">
+              <p class="text-gray-300 text-sm">The document was analyzed based on the AI prompt: "What to watch out for and thoroughly check 10 times in this type of document."</p>
+              <ul class="list-disc list-inside text-gray-300 text-sm space-y-1">
+                <li>Completeness of signatures from all parties</li>
+                <li>Compliance with local leasing regulations</li>
+                <li>Clarity and fairness of termination clauses</li>
+                <li>Reasonableness of penalty terms for early termination</li>
+                <li>Renewal notice periods and conditions</li>
+                <li>Maintenance obligations for tenant and landlord</li>
+                <li>Payment schedules and late fee structures</li>
+                <li>Dispute resolution mechanisms</li>
+                <li>Property condition and inspection clauses</li>
+                <li>Insurance requirements for the property</li>
+              </ul>
+              <p class="text-gray-300 text-sm mt-2">These criteria ensure the document is legally sound, fair, and clear in its terms.</p>
             </div>
           </div>
         </div>
@@ -218,7 +225,7 @@
             <!-- Risk Analysis -->
             <div class="alert-card review-suggested p-4 bg-gray-700 rounded-lg">
               <div class="flex items-center space-x-3">
-                <svg class="h-6 w-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg class="h-6 w-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 1111" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                 </svg>
                 <div>
@@ -326,6 +333,23 @@
               </div>
               <span class="text-green-400 font-medium text-sm">Passed</span>
             </div>
+          </div>
+        </div>
+
+        <!-- Change History -->
+        <div class="section-card p-6 bg-gray-800 rounded-xl">
+          <h2 class="text-2xl font-bold text-white mb-4">Change History</h2>
+          <div class="p-4 bg-gray-700 rounded-lg">
+            <ul class="text-sm space-y-2">
+              <li>
+                <span class="text-gray-300">Apr 15, 2025: </span>
+                <a href="https://eternyiq.com/docs/12345/versions/2025-04-15" class="text-blue-400 hover:underline">Initial document upload and analysis</a>
+              </li>
+              <li>
+                <span class="text-gray-300">Apr 16, 2025: </span>
+                <a href="https://eternyiq.com/docs/12345/versions/2025-04-16" class="text-blue-400 hover:underline">Updated with tenant signature</a>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
