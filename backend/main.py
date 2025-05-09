@@ -78,11 +78,13 @@ async def read_home(request: Request, db=Depends(get_db)):
         await add_new_customer(customer_id=session_id, output_language="Czech", db=db)
 
     files = await list_customer_documents(session_id, db)
+    categorized_documents = files["categorized_documents"]
+
     customer = await get_customer(customer_id=session_id, db=db)
     logger.info("Customer data retrieved: %s", customer)
 
     logger.info("Rendering index page with session_id: %s", session_id)
-    return templates.TemplateResponse("home.html", {"request": request, "session_id": session_id, "files": files, "output_language": customer["output_language"]})
+    return templates.TemplateResponse("home.html", {"request": request, "session_id": session_id, "categorized_documents": categorized_documents, "output_language": customer["output_language"]})
 
 
 @app.get("/categories", response_class=HTMLResponse, include_in_schema=False)
