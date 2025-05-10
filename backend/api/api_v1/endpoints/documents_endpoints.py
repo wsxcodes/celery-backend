@@ -6,8 +6,8 @@ from datetime import datetime
 from typing import Dict
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
-from backend import config
 
+from backend import config
 from backend.db.schemas.documents_schemas import Document, DocumentUpdate
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
