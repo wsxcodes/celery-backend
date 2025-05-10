@@ -26,6 +26,7 @@ class Document(BaseModel):
     filename: str
     file_size: Optional[int] = None
     file_hash: str
+    file_preview: Optional[str] = None
     uploaded_at: datetime
     analysis_status: AnalysisStatus = AnalysisStatus.pending
     analysis_started_at: Optional[datetime] = None
