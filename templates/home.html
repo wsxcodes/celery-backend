@@ -326,7 +326,7 @@
                     <div class="flex items-center space-x-2 mt-1 text-xs">
                       ${statusHtml}
                       <span class="text-gray-500">${fileSize}</span>
-                      <span class="text-gray-500">${uploadedAt}</span>
+                      ${doc.analysis_status !== 'pending' ? `<span class="text-gray-500">${uploadedAt}</span>` : ''}
                     </div>
                   </div>
                 </div>
