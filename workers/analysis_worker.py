@@ -38,3 +38,6 @@
 
 # Document Health Score
 # Rate completeness, legal soundness, and currency of important files.
+
+
+# XXX call endpoint to generate preview
