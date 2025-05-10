@@ -22,3 +22,5 @@ else:
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "MISSING-OPENAI_API_KEY")
 
 DB_PATH = os.getenv("DB_PATH", os.path.join(ROOT_DIR, "data", "file_records.db"))
+
+BASE_UPLOAD_DIR = os.getenv("BASE_UPLOAD_DIR", "MISSING-BASE_UPLOAD_DIR")
