@@ -16,6 +16,16 @@ from backend.utils.extract_text import (
     extract_md_text,
 )
 
+from backend.utils.generate_preview import (
+    generate_docx_preview,
+    generate_doc_preview,
+    generate_pdf_preview,
+    generate_rtf_preview,
+    generate_txt_preview,
+    generate_md_preview,
+    generate_odt_preview,
+)
+
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
@@ -92,9 +102,50 @@ async def extract_text_from_image(uuid: str, db=Depends(get_db)) -> str:
 @router.get("/generate-file-preview")
 @log_endpoint
 async def generate_file_preview(uuid: str, db=Depends(get_db)) -> str:
-    """Generate a preview of the document."""
+    """Generate a preview image of the first page for supported document types."""
     document = await get_document(uuid=uuid, db=db)
+    if not document:
+        raise HTTPException(status_code=404, detail="Document not found")
+
+    file_path = Path(config.BASE_UPLOAD_DIR) / document.customer_id / document.filename
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="File not found")
+
     preview_dir = Path(config.BASE_UPLOAD_DIR) / document.customer_id / "preview"
     preview_dir.mkdir(parents=True, exist_ok=True)
     resultant_image_path = preview_dir / f"{uuid}.png"
-    return str(resultant_image_path)
+
+    try:
+        file_extension = file_path.suffix.lower()
+        image = None
+
+        if file_extension == '.pdf':
+            image = generate_pdf_preview(file_path)
+        elif file_extension == '.doc':
+            image = generate_doc_preview(file_path)
+        elif file_extension == '.docx':
+            image = generate_docx_preview(file_path)
+        elif file_extension == '.rtf':
+            image = generate_rtf_preview(file_path)
+        elif file_extension == '.txt':
+            image = generate_txt_preview(file_path)
+        elif file_extension == '.md':
+            image = generate_md_preview(file_path)
+        elif file_extension == '.odt':
+            image = generate_odt_preview(file_path)
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="Unsupported file format. Supported formats: PDF, DOC, DOCX, RTF, TXT, MD, ODT"
+            )
+
+        if not image:
+            raise HTTPException(status_code=500, detail="Failed to generate preview image")
+
+        # Save the image
+        image.save(resultant_image_path, "PNG")
+        return str(resultant_image_path)
+
+    except Exception as e:
+        logger.error(f"Error generating preview for {file_path}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error generating preview: {str(e)}")
