@@ -1,12 +1,10 @@
 import logging
 
-from fastapi import APIRouter, Depends
-from backend.dependencies import get_db
+from fastapi import APIRouter, Depends, HTTPException
 
 from backend.api.api_v1.endpoints.documents_endpoints import get_document
-
 from backend.decorators import log_endpoint
-from fastapi import HTTPException
+from backend.dependencies import get_db
 
 logger = logging.getLogger(__name__)
 
