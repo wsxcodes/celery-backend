@@ -13,6 +13,12 @@ class AIAlert(str, Enum):
     alert = "alert"
 
 
+class AnalysisStatus(str, Enum):
+    pending = "pending"
+    processing = "processing"
+    processed = "processed"
+
+
 class Document(BaseModel):
     id: int
     customer_id: str
@@ -21,7 +27,7 @@ class Document(BaseModel):
     file_size: Optional[int] = None
     file_hash: str
     uploaded_at: datetime
-    analysis_status: str = "pending"
+    analysis_status: AnalysisStatus = AnalysisStatus.pending
     analysis_started_at: Optional[datetime] = None
     analysis_completed_at: Optional[datetime] = None
     analysis_cost: int = 0
@@ -32,7 +38,7 @@ class Document(BaseModel):
 
 
 class DocumentUpdate(BaseModel):
-    analysis_status: Optional[str] = None
+    analysis_status: Optional[AnalysisStatus] = None
     analysis_started_at: Optional[datetime] = None
     analysis_completed_at: Optional[datetime] = None
     analysis_cost: Optional[int] = None
