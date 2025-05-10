@@ -5,10 +5,8 @@ from typing import Optional
 import markdown
 import pdf2image
 from docx import Document
-from docx.oxml.ns import qn
-from docx.shared import Pt
 from fastapi import APIRouter, Depends, HTTPException
-from odf import teletype, text
+from odf import teletype
 from odf.opendocument import load as load_odf
 from PIL import Image, ImageDraw, ImageFont
 from striprtf.striprtf import rtf_to_text
@@ -33,6 +31,7 @@ IMAGE_WIDTH = 800
 IMAGE_HEIGHT = 1000
 MAX_TEXT_LENGTH = 5000  # Limit text to avoid memory issues
 
+
 def render_text_to_image(text: str) -> Image.Image:
     """Render plain text to an image for TXT and MD files."""
     image = Image.new("RGB", (IMAGE_WIDTH, IMAGE_HEIGHT), "white")
@@ -46,6 +45,7 @@ def render_text_to_image(text: str) -> Image.Image:
             break
     return image
 
+
 def generate_pdf_preview(file_path: Path) -> Optional[Image.Image]:
     """Generate preview for PDF (first page)."""
     try:
@@ -54,6 +54,7 @@ def generate_pdf_preview(file_path: Path) -> Optional[Image.Image]:
     except Exception as e:
         logger.error(f"Error generating PDF preview for {file_path}: {str(e)}")
         return None
+
 
 def generate_docx_preview(file_path: Path) -> Optional[Image.Image]:
     """Generate preview for DOCX (first page text rendered as image)."""
@@ -69,6 +70,7 @@ def generate_docx_preview(file_path: Path) -> Optional[Image.Image]:
         logger.error(f"Error generating DOCX preview for {file_path}: {str(e)}")
         return None
 
+
 def generate_rtf_preview(file_path: Path) -> Optional[Image.Image]:
     """Generate preview for RTF (extract text using striprtf and render as image)."""
     try:
@@ -80,6 +82,7 @@ def generate_rtf_preview(file_path: Path) -> Optional[Image.Image]:
         logger.error(f"Error generating RTF preview for {file_path}: {str(e)}")
         return None
 
+
 def generate_txt_preview(file_path: Path) -> Optional[Image.Image]:
     """Generate preview for TXT (render text as image)."""
     try:
@@ -89,6 +92,7 @@ def generate_txt_preview(file_path: Path) -> Optional[Image.Image]:
     except Exception as e:
         logger.error(f"Error generating TXT preview for {file_path}: {str(e)}")
         return None
+
 
 def generate_md_preview(file_path: Path) -> Optional[Image.Image]:
     """Generate preview for MD (convert to plain text and render as image)."""
@@ -101,6 +105,7 @@ def generate_md_preview(file_path: Path) -> Optional[Image.Image]:
         logger.error(f"Error generating MD preview for {file_path}: {str(e)}")
         return None
 
+
 def generate_odt_preview(file_path: Path) -> Optional[Image.Image]:
     """Generate preview for ODT (extract text and render as image)."""
     try:
@@ -111,9 +116,11 @@ def generate_odt_preview(file_path: Path) -> Optional[Image.Image]:
         logger.error(f"Error generating ODT preview for {file_path}: {str(e)}")
         return None
 
+
 def generate_doc_preview(file_path: Path) -> Optional[Image.Image]:
     """Generate preview for DOC (treat as DOCX for simplicity, may need pywin32 for true DOC)."""
     return generate_docx_preview(file_path)  # Fallback to DOCX handling
+
 
 @router.get("/generate-file-preview")
 @log_endpoint
