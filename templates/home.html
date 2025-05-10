@@ -50,14 +50,18 @@
     background-color: inherit !important;
     cursor: default !important;
     display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    text-align: center; /* Center text */
-  }
+    justify-content: center;
+    align-items: center;
+}
 
-  .file-item.no-hover:hover {
+.file-item.no-hover:hover {
     background-color: inherit !important;
-  }
+}
+
+/* Ensure filename and related text are left-aligned within no-hover file items */
+.file-item.no-hover .flex.items-center.space-x-4 > div {
+    text-align: left;
+}
 </style>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -251,7 +255,6 @@
           categoryGroup.documents.forEach(doc => {
             const fileSize = formatFileSize(doc.file_size);
             const uploadedAt = doc.uploaded_at_human || formatDate(doc.uploaded_at);
-            const debugId = '{{customer.id}}' === '1' ? `<font color="red">debug-${doc.id}</font>` : '';
             const summary = doc.ai_summary_short ? `<p class="text-sm text-gray-400">${doc.ai_summary_short}</p>` : '';
             const containerBg = categoryGroup.category ? 'bg-gray-800' : 'bg-gray-700';
             let statusHtml = '';
@@ -301,7 +304,7 @@
                   </svg>
                 `;
               } else {
-                alertHtml = `<font color="red">$doc.ai_alert error ${doc.ai_alert}</font>`;
+                alertHtml = `<font color="red">${doc.ai_alert} error</font>`;
               }
             }
             // Conditionally render <a> or <div> based on analysis_status
@@ -317,7 +320,6 @@
                   </svg>
                   <div>
                     <p class="text-base font-medium text-white">
-                      ${debugId}
                       ${doc.filename}
                     </p>
                     ${summary}
