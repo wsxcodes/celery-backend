@@ -133,7 +133,15 @@ async def read_document(request: Request, uuid: str, db=Depends(get_db)):
         raise
 
     logger.info("Document retrieved: %s", document)
+
+    # Visual Conversions for the template
     document_dict["file_size_humanized"] = humanize.naturalsize(document.file_size)
+    document_dict["uploaded_at"] = document.uploaded_at.strftime("%b %d, %Y")
+    document_dict["filename"] = document_dict["filename"].replace(" ", "_")
+
+    if document.ai_expires:
+        document_dict["ai_expires"] = document.ai_expires.strftime("%b %d, %Y")
+
     document = document_dict
 
     return templates.TemplateResponse("document.html", {"request": request, "document": document})
