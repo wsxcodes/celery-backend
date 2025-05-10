@@ -35,7 +35,7 @@ async def add_new_document(
     # Check if file already exists for customer
     if os.path.exists(file_path):
         logger.info(f"File already exists for customer {customer_id}: {file.filename}")
-        raise HTTPException(status_code=409, detail="File already exists for this customer")
+        raise HTTPException(status_code=409, detail="File already exists!")
 
     # Read entire file content into memory
     contents = await file.read()
