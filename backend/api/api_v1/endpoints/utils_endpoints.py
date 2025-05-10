@@ -33,6 +33,7 @@ logger.setLevel(logging.INFO)
 @log_endpoint
 async def extract_text_from_file(uuid: str, db=Depends(get_db)) -> str:
     """This endpoint will indetify type of file and extract text from it."""
+    # XXX TODO
     return "XXX TODO"
 
 
@@ -78,7 +79,9 @@ async def extract_text_from_document(uuid: str, db=Depends(get_db)) -> str:
 @router.get("/image-to-text")
 @log_endpoint
 async def extract_text_from_image(uuid: str, db=Depends(get_db)) -> str:
-    """Convert image to plaintext."""
+    """Convert image to plaintext utilising LLM."""
+
+    # XXX TODO utilise LLM
 
     image = await get_document(uuid=uuid, db=db)
     if not image:
