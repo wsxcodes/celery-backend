@@ -184,7 +184,7 @@
       return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
-    // Convert ISO date to human-readable format
+    // Convert ISO date to human-readable format (fallback if uploaded_at_human is not available)
     function formatDate(isoDate) {
       const date = new Date(isoDate);
       return date.toLocaleString('en-US', {
@@ -234,7 +234,8 @@
           `;
           categoryGroup.documents.forEach(doc => {
             const fileSize = formatFileSize(doc.file_size);
-            const uploadedAt = formatDate(doc.uploaded_at);
+            // Use uploaded_at_human if available, otherwise format uploaded_at
+            const uploadedAt = doc.uploaded_at_human || formatDate(doc.uploaded_at);
             const debugId = '{{customer.id}}' === '1' ? `<font color="red">debug-${doc.id}</font>` : '';
             const summary = doc.ai_summary_short ? `<p class="text-sm text-gray-400">${doc.ai_summary_short}</p>` : '';
             let statusHtml = '';
