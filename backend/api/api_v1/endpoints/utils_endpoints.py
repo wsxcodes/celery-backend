@@ -1,10 +1,12 @@
 import logging
 
+from pathlib import Path
 from fastapi import APIRouter, Depends, HTTPException
 
 from backend.api.api_v1.endpoints.documents_endpoints import get_document
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
+from backend import config
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +27,11 @@ async def convert_document_to_plaintext(uuid: str, db=Depends(get_db)):
     document = await get_document(uuid=uuid, db=db)
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
+
+    file_path = Path(config.BASE_UPLOAD_DIR) / document.customer_id / document.filename
+    print("pica **",file_path)
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="File not found")
 
     return "XXX TODO"
 
