@@ -1,5 +1,6 @@
 import logging
 from pathlib import Path
+from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -29,7 +30,7 @@ async def extract_text_from_file(uuid: str, db=Depends(get_db)) -> str:
 @router.get("/document-to-text")
 @log_endpoint
 async def extract_text_from_document(uuid: str, db=Depends(get_db)) -> str:
-    """Convert document to plaintext."""
+    """Convert PDF, DOC, DOCX, TXT, ODT to plaintext."""
 
     document = await get_document(uuid=uuid, db=db)
     if not document:
@@ -39,7 +40,26 @@ async def extract_text_from_document(uuid: str, db=Depends(get_db)) -> str:
     if not file_path.exists():
         raise HTTPException(status_code=404, detail="File not found")
 
-    return "XXX TODO"
+    try:
+        file_extension = file_path.suffix.lower()
+
+        if file_extension == '.pdf':
+            return extract_pdf_text(file_path)
+        elif file_extension in ('.doc', '.docx'):
+            return extract_docx_text(file_path)
+        elif file_extension == '.txt':
+            return extract_txt_text(file_path)
+        elif file_extension == '.odt':
+            return extract_odt_text(file_path)
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="Unsupported file format. Supported formats: PDF, DOC, DOCX, TXT, ODT"
+            )
+
+    except Exception as e:
+        logger.error(f"Error extracting text from {file_path}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error processing document: {str(e)}")
 
 
 @router.get("/image-to-text")
