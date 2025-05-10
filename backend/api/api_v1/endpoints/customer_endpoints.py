@@ -1,10 +1,8 @@
 import logging
-from typing import List
-from fastapi import APIRouter, Depends
 from datetime import datetime
-import humanize
-import logging
+from typing import List
 
+import humanize
 from fastapi import APIRouter, Body, Depends, HTTPException
 
 from backend.db.schemas.customers_schemas import Customer, UpdateCustomer
