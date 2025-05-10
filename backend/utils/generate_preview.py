@@ -138,7 +138,7 @@ async def generate_file_preview(uuid: str, db=Depends(get_db)) -> str:
     preview_dir.mkdir(parents=True, exist_ok=True)
     resultant_image_path = preview_dir / f"{uuid}.png"
 
-    # XXX TODO images should be just copied over to the preview dir
+    # XXX TODO images (PNG, JPEG, WEBP, and GIF.) should be just copied over to the preview dir
 
     try:
         file_extension = file_path.suffix.lower()
