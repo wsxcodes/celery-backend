@@ -29,3 +29,11 @@ async def extract_text_from_image() -> str:
     """Convert image to plaintext."""
 
     return "XXX TODO"
+
+
+@router.get("/document-preview")
+@log_endpoint
+async def generate_document_preview() -> str:
+    """Generate a preview of the document."""
+
+    return "XXX TODO"
