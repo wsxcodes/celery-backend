@@ -1,6 +1,7 @@
 import logging
 
 from fastapi import Depends, FastAPI, Request
+from fastapi.exceptions import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -10,6 +11,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from backend import config
 from backend.api.api_v1.endpoints.customer_endpoints import (add_new_customer,
                                                              get_customer)
+from backend.api.api_v1.endpoints.documents_endpoints import get_document
 from backend.api.api_v1.routers import api_router
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db, init_db
@@ -115,12 +117,22 @@ async def reset_customer(request: Request, db=Depends(get_db)):
     return RedirectResponse(url="/", status_code=302)
 
 
-@app.get("/{full_path:path}", response_class=HTMLResponse, include_in_schema=False)
+@app.get("/{uuid:path}", response_class=HTMLResponse, include_in_schema=False)
 @log_endpoint
-async def read_document(request: Request, full_path: str):
-    filename = "example.txt"
-    logger.info("Rendering document page for path: %s", full_path)
-    return templates.TemplateResponse("document.html", {"request": request, "filename": filename})
+async def read_document(request: Request, uuid: str, db=Depends(get_db)):
+    logger.info("Rendering document page for path: %s", uuid)
+
+    try:
+        document = await get_document(uuid=uuid, db=db)
+    except HTTPException as e:
+        if e.status_code == 404:
+            logger.info("404 returned from get_document, rendering 404.html")
+            return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
+        raise
+
+    logger.info("Document retrieved: %s", document)
+
+    return templates.TemplateResponse("document.html", {"request": request, "document": document})
 
 
 if __name__ == "__main__":
