@@ -2,29 +2,8 @@ import hashlib
 import logging
 import os
 import uuid
-from fastapi import APIRouter, Depends, HTTPException
-from typing import Dict, Optional
-import os
-
-from backend.db.schemas.documents_schemas import Document
-from backend.decorators import log_endpoint
-from backend.dependencies import get_db
-from fastapi import APIRouter, Depends, HTTPException
-from typing import Dict, Optional
-import os
-
-from backend.db.schemas.documents_schemas import Document
-from backend.decorators import log_endpoint
-from backend.dependencies import get_db
 from datetime import datetime
-from typing import Dict
-from fastapi import APIRouter, Depends, HTTPException
 from typing import Dict, Optional
-import os
-
-from backend.db.schemas.documents_schemas import Document
-from backend.decorators import log_endpoint
-from backend.dependencies import get_db
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
@@ -125,14 +104,14 @@ async def get_document(
         "SELECT * FROM files WHERE uuid = ?",
         (uuid,)
     ).fetchone()
-    
+
     if not row:
         logger.info(f"Document not found for UUID: {uuid}")
         raise HTTPException(status_code=404, detail="Document not found")
-    
+
     # Convert database row to Document schema
     document = Document(**dict(row))
-        
+
     logger.info(f"Retrieved document for UUID: {uuid}")
     return document
 
