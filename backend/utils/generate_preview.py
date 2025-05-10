@@ -6,10 +6,8 @@ from typing import Optional
 import markdown
 import pdf2image
 from docx import Document
-from docx.oxml.ns import qn
-from docx.shared import Pt
 from fastapi import APIRouter, Depends, HTTPException
-from odf import teletype, text
+from odf import teletype
 from odf.opendocument import load as load_odf
 from PIL import Image, ImageDraw, ImageFont
 from striprtf.striprtf import rtf_to_text
