@@ -1,8 +1,12 @@
 import logging
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from backend.dependencies import get_db
+
+from backend.api.api_v1.endpoints.documents_endpoints import get_document
 
 from backend.decorators import log_endpoint
+from fastapi import HTTPException
 
 logger = logging.getLogger(__name__)
 
@@ -17,8 +21,12 @@ logger.setLevel(logging.INFO)
 
 @router.get("/document-to-text")
 @log_endpoint
-async def convert_document_to_plaintext() -> str:
+async def convert_document_to_plaintext(uuid: str, db=Depends(get_db)):
     """Convert document to plaintext."""
+
+    document = await get_document(uuid=uuid, db=db)
+    if not document:
+        raise HTTPException(status_code=404, detail="Document not found")
 
     return "XXX TODO"
 
