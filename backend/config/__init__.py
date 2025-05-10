@@ -8,6 +8,7 @@ CODE_DIR = os.path.dirname(__file__)
 ROOT_DIR = os.path.dirname(CODE_DIR)
 
 API_V1_STR = "/api/v1"
+API_URL = os.getenv("API_URL", "http://localhost:8000")
 
 DEVELOPMENT = os.getenv("DEVELOPMENT", None)
 
