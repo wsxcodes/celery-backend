@@ -1,6 +1,5 @@
 import logging
 from pathlib import Path
-from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -8,6 +7,8 @@ from backend import config
 from backend.api.api_v1.endpoints.documents_endpoints import get_document
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
+from backend.utils.extract_text import (extract_docx_text, extract_odt_text,
+                                        extract_pdf_text, extract_txt_text)
 
 logger = logging.getLogger(__name__)
 
