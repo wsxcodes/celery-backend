@@ -32,6 +32,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     inetutils-ping \
     telnet \
     ntp \
+    poppler-utils \
     && rm -rf /var/lib/apt/lists/*
 
 # Install dependencies required by Playwright
