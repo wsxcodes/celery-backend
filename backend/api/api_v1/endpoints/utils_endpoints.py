@@ -7,8 +7,14 @@ from backend import config
 from backend.api.api_v1.endpoints.documents_endpoints import get_document
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
-from backend.utils.extract_text import (extract_docx_text, extract_odt_text,
-                                        extract_pdf_text, extract_txt_text)
+from backend.utils.extract_text import (
+    extract_docx_text,
+    extract_odt_text,
+    extract_pdf_text,
+    extract_txt_text,
+    extract_rtf_text,
+    extract_md_text,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -48,14 +54,18 @@ async def extract_text_from_document(uuid: str, db=Depends(get_db)) -> str:
             return extract_pdf_text(file_path)
         elif file_extension in ('.doc', '.docx'):
             return extract_docx_text(file_path)
+        elif file_extension == '.rtf':
+            return extract_rtf_text(file_path)
         elif file_extension == '.txt':
             return extract_txt_text(file_path)
+        elif file_extension == '.md':
+            return extract_md_text(file_path)
         elif file_extension == '.odt':
             return extract_odt_text(file_path)
         else:
             raise HTTPException(
                 status_code=400,
-                detail="Unsupported file format. Supported formats: PDF, DOC, DOCX, TXT, ODT"
+                detail="Unsupported file format. Supported formats: PDF, DOC, DOCX, RTF, TXT, MD, ODT"
             )
 
     except Exception as e:
