@@ -1,12 +1,15 @@
 import logging
+import shutil
 from pathlib import Path
 from typing import Optional
 
 import markdown
 import pdf2image
 from docx import Document
+from docx.oxml.ns import qn
+from docx.shared import Pt
 from fastapi import APIRouter, Depends, HTTPException
-from odf import teletype
+from odf import teletype, text
 from odf.opendocument import load as load_odf
 from PIL import Image, ImageDraw, ImageFont
 from striprtf.striprtf import rtf_to_text
@@ -138,12 +141,22 @@ async def generate_file_preview(uuid: str, db=Depends(get_db)) -> str:
     preview_dir.mkdir(parents=True, exist_ok=True)
     resultant_image_path = preview_dir / f"{uuid}.png"
 
-    # XXX TODO images (PNG, JPEG, WEBP, and GIF.) should be just copied over to the preview dir
-
     try:
         file_extension = file_path.suffix.lower()
         image = None
 
+        # Handle image formats by copying or converting to PNG
+        if file_extension in ('.png', '.jpeg', '.jpg', '.webp', '.gif'):
+            if file_extension == '.png':
+                # Directly copy PNG files
+                shutil.copy2(file_path, resultant_image_path)
+            else:
+                # Convert other image formats to PNG
+                image = Image.open(file_path)
+                image.save(resultant_image_path, "PNG")
+            return str(resultant_image_path)
+
+        # Handle document formats
         if file_extension == '.pdf':
             image = generate_pdf_preview(file_path)
         elif file_extension == '.doc':
@@ -161,13 +174,13 @@ async def generate_file_preview(uuid: str, db=Depends(get_db)) -> str:
         else:
             raise HTTPException(
                 status_code=400,
-                detail="Unsupported file format. Supported formats: PDF, DOC, DOCX, RTF, TXT, MD, ODT"
+                detail="Unsupported file format. Supported formats: PDF, DOC, DOCX, RTF, TXT, MD, ODT, PNG, JPEG, WEBP, GIF"
             )
 
         if not image:
             raise HTTPException(status_code=500, detail="Failed to generate preview image")
 
-        # Save the image
+        # Save the generated image
         image.save(resultant_image_path, "PNG")
         return str(resultant_image_path)
 
