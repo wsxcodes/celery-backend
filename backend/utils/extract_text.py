@@ -4,7 +4,7 @@ from pathlib import Path
 from odf import teletype
 from odf.opendocument import load
 from pdfminer.high_level import extract_text
-from python_docx import Document
+from docx import Document
 
 logger = logging.getLogger(__name__)
 
