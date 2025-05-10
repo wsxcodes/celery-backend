@@ -81,7 +81,10 @@ async def extract_text_from_image(uuid: str, db=Depends(get_db)) -> str:
 
 @router.get("/generate-file-preview")
 @log_endpoint
-async def generate_file_preview() -> str:
+async def generate_file_preview(uuid: str, db=Depends(get_db)) -> str:
     """Generate a preview of the document."""
-
-    return "XXX TODO"
+    document = await get_document(uuid=uuid, db=db)
+    preview_dir = Path(config.BASE_UPLOAD_DIR) / document.customer_id / "preview"
+    preview_dir.mkdir(parents=True, exist_ok=True)
+    resultant_image_path = preview_dir / f"{uuid}.png"
+    return str(resultant_image_path)
