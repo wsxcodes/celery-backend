@@ -6,6 +6,7 @@ from datetime import datetime
 from typing import Dict
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from backend import config
 
 from backend.db.schemas.documents_schemas import Document, DocumentUpdate
 from backend.decorators import log_endpoint
@@ -13,7 +14,7 @@ from backend.dependencies import get_db
 
 router = APIRouter()
 
-BASE_UPLOAD_DIR = "data/uploads"
+BASE_UPLOAD_DIR = config.BASE_UPLOAD_DIR
 os.makedirs(BASE_UPLOAD_DIR, exist_ok=True)
 
 logger = logging.getLogger(__name__)
