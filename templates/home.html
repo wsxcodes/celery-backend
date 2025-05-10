@@ -293,8 +293,10 @@
             // Conditionally render <a> or <div> based on analysis_status
             const tag = doc.analysis_status === 'processed' ? 'a' : 'div';
             const href = doc.analysis_status === 'processed' ? `href="/${doc.uuid}"` : '';
+            // Conditionally apply hover effect only if status is processed
+            const hoverClass = doc.analysis_status === 'processed' ? 'hover:bg-gray-650' : '';
             html += `
-              <${tag} ${href} class="file-item p-4 ${containerBg} rounded-xl flex items-center justify-between no-underline hover:no-underline">
+              <${tag} ${href} class="file-item p-4 ${containerBg} rounded-xl flex items-center justify-between no-underline hover:no-underline ${hoverClass}">
                 <div class="flex items-center space-x-4">
                   <svg class="h-8 w-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
