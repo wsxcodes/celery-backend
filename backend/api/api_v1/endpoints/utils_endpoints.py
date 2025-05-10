@@ -21,7 +21,7 @@ logger.setLevel(logging.INFO)
 
 @router.get("/document-to-text")
 @log_endpoint
-async def convert_document_to_plaintext(uuid: str, db=Depends(get_db)):
+async def convert_document_to_plaintext(uuid: str, db=Depends(get_db)) -> str:
     """Convert document to plaintext."""
 
     document = await get_document(uuid=uuid, db=db)
@@ -37,8 +37,16 @@ async def convert_document_to_plaintext(uuid: str, db=Depends(get_db)):
 
 @router.get("/image-to-text")
 @log_endpoint
-async def extract_text_from_image() -> str:
+async def extract_text_from_image(uuid: str, db=Depends(get_db)) -> str:
     """Convert image to plaintext."""
+
+    image = await get_document(uuid=uuid, db=db)
+    if not image:
+        raise HTTPException(status_code=404, detail="Document not found")
+
+    file_path = Path(config.BASE_UPLOAD_DIR) / image.customer_id / image.filename
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="File not found")
 
     return "XXX TODO"
 
