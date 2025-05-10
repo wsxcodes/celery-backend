@@ -46,9 +46,13 @@
 
 {% block scripts %}
 <style>
-  .file-item.no-hover {
+.file-item.no-hover {
     background-color: inherit !important;
     cursor: default !important;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    text-align: center; /* Center text */
   }
 
   .file-item.no-hover:hover {
