@@ -98,6 +98,12 @@ async def read_categories(request: Request, db=Depends(get_db)):
     return templates.TemplateResponse("categories.html", {"request": request})
 
 
+@app.get("/404", response_class=HTMLResponse, include_in_schema=False)
+@log_endpoint
+async def read_404(request: Request, db=Depends(get_db)):
+    return templates.TemplateResponse("404.html", {"request": request})
+
+
 @app.get("/reset", response_class=HTMLResponse, include_in_schema=False)
 @log_endpoint
 async def reset_customer(request: Request, db=Depends(get_db)):
