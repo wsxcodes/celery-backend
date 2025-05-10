@@ -1,9 +1,10 @@
 import logging
 from pathlib import Path
-from python_docx import Document
-from odf import text, teletype
+
+from odf import teletype, text
 from odf.opendocument import load
 from pdfminer.high_level import extract_text
+from python_docx import Document
 
 logger = logging.getLogger(__name__)
 
