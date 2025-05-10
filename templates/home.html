@@ -247,21 +247,25 @@
     function renderDocuments(categorizedDocuments) {
       if (categorizedDocuments && categorizedDocuments.length > 0) {
         let html = '';
+        
+        // Handle processed documents grouped by category
         categorizedDocuments.forEach(categoryGroup => {
           const categoryTitle = categoryGroup.category || '';
-          html += `
-            <div class="mb-12">
-              <h2 class="text-2xl font-bold text-white mb-6">${categoryTitle}</h2>
-              <div class="space-y-4">
-          `;
-          categoryGroup.documents.forEach(doc => {
-            const fileSize = formatFileSize(doc.file_size);
-            const uploadedAt = doc.uploaded_at_human || formatDate(doc.uploaded_at);
-            const summary = doc.ai_summary_short ? `<p class="text-sm text-gray-400">${doc.ai_summary_short}</p>` : '';
-            const containerBg = categoryGroup.category ? 'bg-gray-800' : 'bg-gray-700';
-            let statusHtml = '';
-            if (doc.analysis_status === 'processed') {
-              statusHtml = `
+          // Filter only processed documents
+          const processedDocs = categoryGroup.documents.filter(doc => doc.analysis_status === 'processed');
+          
+          if (processedDocs.length > 0) {
+            html += `
+              <div class="mb-12">
+                <h2 class="text-2xl font-bold text-white mb-6">${categoryTitle}</h2>
+                <div class="space-y-4">
+            `;
+            processedDocs.forEach(doc => {
+              const fileSize = formatFileSize(doc.file_size);
+              const uploadedAt = doc.uploaded_at_human || formatDate(doc.uploaded_at);
+              const summary = doc.ai_summary_short ? `<p class="text-sm text-gray-400">${doc.ai_summary_short}</p>` : '';
+              const containerBg = categoryTitle ? 'bg-gray-800' : 'bg-gray-700';
+              let statusHtml = `
                 <span class="flex items-center text-green-400">
                   <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -269,7 +273,68 @@
                   Processed
                 </span>
               `;
-            } else if (doc.analysis_status === 'pending') {
+              let alertHtml = '';
+              if (doc.ai_alert) {
+                const alertStyles = {
+                  'insights_available': 'bg-blue-600 text-white',
+                  'action_required': 'bg-red-600 text-white',
+                  'reminder': 'bg-yellow-600 text-white',
+                  'alert': 'bg-orange-600 text-white'
+                };
+                if (alertStyles[doc.ai_alert]) {
+                  alertHtml = `
+                    <span class="px-2 py-1 rounded-full text-xs font-medium ${alertStyles[doc.ai_alert]}">
+                      ${doc.ai_alert.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase())}
+                    </span>
+                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
+                    </svg>
+                  `;
+                } else {
+                  alertHtml = `<font color="red">${doc.ai_alert} error</font>`;
+                }
+              }
+              html += `
+                <a href="/${doc.uuid}" class="file-item p-4 ${containerBg} rounded-xl flex items-center justify-between no-underline hover:bg-gray-600">
+                  <div class="flex items-center space-x-4">
+                    <svg class="h-8 w-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <div>
+                      <p class="text-base font-medium text-white">${doc.filename}</p>
+                      ${summary}
+                      <div class="flex items-center space-x-2 mt-1 text-xs">
+                        ${statusHtml}
+                        <span class="text-gray-500">${fileSize}</span>
+                        <span class="text-gray-500">${uploadedAt}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    ${alertHtml}
+                  </div>
+                </a>
+              `;
+            });
+            html += `</div></div>`;
+          }
+        });
+
+        // Handle pending or processing documents separately (without category)
+        const nonProcessedDocs = [];
+        categorizedDocuments.forEach(categoryGroup => {
+          const docs = categoryGroup.documents.filter(doc => doc.analysis_status !== 'processed');
+          nonProcessedDocs.push(...docs);
+        });
+
+        if (nonProcessedDocs.length > 0) {
+          html += ``;
+          nonProcessedDocs.forEach(doc => {
+            const fileSize = formatFileSize(doc.file_size);
+            const uploadedAt = doc.uploaded_at_human || formatDate(doc.uploaded_at);
+            const containerBg = 'bg-gray-700';
+            let statusHtml = '';
+            if (doc.analysis_status === 'pending') {
               statusHtml = `
                 <span class="flex items-center text-yellow-400">
                   <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -288,43 +353,14 @@
                 </span>
               `;
             }
-            let alertHtml = '';
-            if (doc.ai_alert) {
-              const alertStyles = {
-                'insights_available': 'bg-blue-600 text-white',
-                'action_required': 'bg-red-600 text-white',
-                'reminder': 'bg-yellow-600 text-white',
-                'alert': 'bg-orange-600 text-white'
-              };
-              if (alertStyles[doc.ai_alert]) {
-                alertHtml = `
-                  <span class="px-2 py-1 rounded-full text-xs font-medium ${alertStyles[doc.ai_alert]}">
-                    ${doc.ai_alert.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase())}
-                  </span>
-                  <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
-                  </svg>
-                `;
-              } else {
-                alertHtml = `<font color="red">${doc.ai_alert} error</font>`;
-              }
-            }
-            // Conditionally render <a> or <div> based on analysis_status
-            const tag = doc.analysis_status === 'processed' ? 'a' : 'div';
-            const href = doc.analysis_status === 'processed' ? `href="/${doc.uuid}"` : '';
-            // Conditionally apply hover effect only if status is processed
-            const hoverClass = doc.analysis_status === 'processed' ? 'hover:bg-gray-600' : 'no-hover';
             html += `
-              <${tag} ${href} class="file-item p-4 ${containerBg} rounded-xl flex items-center justify-between no-underline hover:no-underline ${hoverClass}">
+              <div class="file-item p-4 ${containerBg} rounded-xl flex items-center justify-between no-underline no-hover">
                 <div class="flex items-center space-x-4">
                   <svg class="h-8 w-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                   </svg>
                   <div>
-                    <p class="text-base font-medium text-white">
-                      ${doc.filename}
-                    </p>
-                    ${summary}
+                    <p class="text-base font-medium text-white">${doc.filename}</p>
                     <div class="flex items-center space-x-2 mt-1 text-xs">
                       ${statusHtml}
                       <span class="text-gray-500">${fileSize}</span>
@@ -332,17 +368,12 @@
                     </div>
                   </div>
                 </div>
-                <div class="flex items-center space-x-2">
-                  ${alertHtml}
-                </div>
-              </${tag}>
+              </div>
             `;
           });
-          if (!categoryGroup.category && categorizedDocuments.length > 1) {
-            html += `<br/><hr/>`;
-          }
           html += `</div></div>`;
-        });
+        }
+
         documentsContainer.innerHTML = html;
       } else {
         documentsContainer.innerHTML = `
