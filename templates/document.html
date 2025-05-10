@@ -290,6 +290,8 @@
       </div>
     </header>
 
+    {{document}}
+
     <!-- Upload Modal -->
     <div id="upload-modal" class="modal">
       <div class="modal-content">
@@ -324,12 +326,9 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
             <div>
               <p class="text-gray-400">File Hash</p>
-              <p class="text-white">e7d8c9b0a1f2e3d4c5b6a7d8c9e0f1a2</p>
+              <p class="text-white">{{document.file_hash}}</p>
             </div>
-            <div>
-              <p class="text-gray-400">UUID</p>
-              <p class="text-white">8f7d6e5c-4b3a-2a1b-9c8d-7e6f5d4c3b2a</p>
-            </div>
+            <br/>
             <div>
               <p class="text-gray-400">Verification</p>
               <p class="text-white">Mersenne Twister proves the hash</p>
