@@ -260,6 +260,15 @@
                   Pending
                 </span>
               `;
+            } else if (doc.analysis_status === 'processing') {
+              statusHtml = `
+                <span class="flex items-center text-orange-400">
+                  <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"></path>
+                  </svg>
+                  Processing
+                </span>
+              `;
             }
             let alertHtml = '';
             if (doc.ai_alert) {
