@@ -19,9 +19,16 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
+@router.get("/extract-text-from-file")
+@log_endpoint
+async def extract_text_from_file(uuid: str, db=Depends(get_db)) -> str:
+    """This endpoint will indetify type of file and extract text from it."""
+    return "XXX TODO"
+
+
 @router.get("/document-to-text")
 @log_endpoint
-async def convert_document_to_plaintext(uuid: str, db=Depends(get_db)) -> str:
+async def extract_text_from_document(uuid: str, db=Depends(get_db)) -> str:
     """Convert document to plaintext."""
 
     document = await get_document(uuid=uuid, db=db)
@@ -51,9 +58,9 @@ async def extract_text_from_image(uuid: str, db=Depends(get_db)) -> str:
     return "XXX TODO"
 
 
-@router.get("/document-preview")
+@router.get("/generate-file-preview")
 @log_endpoint
-async def generate_document_preview() -> str:
+async def generate_file_preview() -> str:
     """Generate a preview of the document."""
 
     return "XXX TODO"
