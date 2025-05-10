@@ -1,4 +1,5 @@
 import logging
+import humanize
 
 from fastapi import Depends, FastAPI, Request
 from fastapi.exceptions import HTTPException
@@ -116,7 +117,6 @@ async def reset_customer(request: Request, db=Depends(get_db)):
     await add_new_customer(customer_id=session_id, output_language="Czech", db=db)
     return RedirectResponse(url="/", status_code=302)
 
-
 @app.get("/{uuid:path}", response_class=HTMLResponse, include_in_schema=False)
 @log_endpoint
 async def read_document(request: Request, uuid: str, db=Depends(get_db)):
@@ -124,13 +124,17 @@ async def read_document(request: Request, uuid: str, db=Depends(get_db)):
 
     try:
         document = await get_document(uuid=uuid, db=db)
+        document_dict = document.dict() if hasattr(document, "dict") else dict(document)
     except HTTPException as e:
         if e.status_code == 404:
             logger.info("404 returned from get_document, rendering 404.html")
             return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
         raise
 
+
     logger.info("Document retrieved: %s", document)
+    document_dict["file_size_humanized"] = humanize.naturalsize(document.file_size)
+    document = document_dict
 
     return templates.TemplateResponse("document.html", {"request": request, "document": document})
 
