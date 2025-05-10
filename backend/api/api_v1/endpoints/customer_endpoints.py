@@ -131,29 +131,18 @@ async def list_customer_documents(customer_id: str, db=Depends(get_db)):
     ]
 
     # Enrich categorized_documents with file_size_human and uploaded_at_human
-    logger.info("Found %d categories", len(categorized_documents))
-
     for cat_index, cat in enumerate(categorized_documents):
-        logger.info("Category %d: %s", cat_index + 1, cat.get("category", "Unknown"))
         for doc_index, doc in enumerate(cat.get("documents", [])):
-            logger.info("Doc %d in category %d keys: %s", doc_index + 1, cat_index + 1, list(doc.keys()))
-
             # Log raw file_size before humanizing
             if "file_size" in doc:
-                logger.info("Raw file size for doc %d in category %d: %s", doc_index + 1, cat_index + 1, doc["file_size"])
                 doc["file_size_human"] = humanize.naturalsize(doc["file_size"], binary=False)
-                logger.info("Humanized file size for doc %d in category %d: %s", doc_index + 1, cat_index + 1, doc["file_size_human"])
 
             # Check the raw uploaded_at before humanizing
             if "uploaded_at" in doc:
-                logger.info("Raw uploaded_at for doc %d in category %d: %s", doc_index + 1, cat_index + 1, doc["uploaded_at"])
-
                 # Convert the uploaded_at string to datetime
                 try:
                     uploaded_at = datetime.fromisoformat(doc["uploaded_at"])
-                    logger.info("Converted uploaded_at to datetime for doc %d in category %d", doc_index + 1, cat_index + 1)
                     doc["uploaded_at_human"] = humanize.naturaltime(datetime.now() - uploaded_at)
-                    logger.info("Humanized uploaded_at for doc %d in category %d: %s", doc_index + 1, cat_index + 1, doc["uploaded_at_human"])
                 except ValueError:
                     logger.warning("uploaded_at for doc %d in category %d is not in the correct datetime format: %s", doc_index + 1, cat_index + 1, doc["uploaded_at"])
 
