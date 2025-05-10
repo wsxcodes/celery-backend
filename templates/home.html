@@ -23,8 +23,10 @@
         <br/>
         as well as common image formats like PNG, JPEG, WEBP, and GIF.
       </p>
-      <div id="uploadStatus" class="mt-4 text-sm text-gray-400 hidden"></div>
     </div>
+
+    <!-- Upload Status Area -->
+    <div id="uploadStatus" class="mt-4 text-sm text-gray-400 hidden text-center"></div>
 
     <div id="documentsContainer" class="mt-8">
       <!-- Documents will be dynamically inserted here by JavaScript -->
@@ -164,14 +166,14 @@
         } else {
           const error = await response.json();
           const errorMessage = error.detail || error.message || 'Unknown error';
-          showStatus(`Failed to upload ${file.name}:<br/><b><font size=6>${errorMessage}</font></b>`, 'text-red-400', true);
+          showStatus(`Failed to upload ${file.name}:<br/><br/><b><font size=6>${errorMessage}</font></b>`, 'text-red-400', true);
         }
       } catch (error) {
         uploadingMessage.remove();
         if (!uploadStatus.hasChildNodes()) {
           uploadStatus.classList.add('hidden');
         }
-        showStatus(`Error uploading ${file.name}:<br/><b><font size=6>${error.message}</font></b>`, 'text-red-400', true);
+        showStatus(`Error uploading ${file.name}:<br/><br/><b><font size=6>${error.message}</font></b>`, 'text-red-400', true);
       }
     }
 
@@ -323,7 +325,6 @@
               <span class="px-3 py-1 rounded-full bg-indigo-700 text-white">Identity</span>
               <span class="px-3 py-1 rounded-full bg-purple-700 text-white">Family</span>
               <span class="px-3 py-1 rounded-full bg-blue-700 text-white">Financial</span>
-              <span class="px-3 py-1 rounded-full bg-green-700 text-white">
               <span class="px-3 py-1 rounded-full bg-green-700 text-white">Real Estate</span>
               <span class="px-3 py-1 rounded-full bg-yellow-700 text-black">Insurance</span>
               <span class="px-3 py-1 rounded-full bg-red-600 text-white">Liabilities</span>
