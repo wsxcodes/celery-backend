@@ -2,7 +2,8 @@ from fastapi import APIRouter
 
 from backend.api.api_v1.endpoints import (customer_endpoints,
                                           documents_endpoints,
-                                          generic_endpoints, utils_endpoints, rag_endpoints, llm_endpoints)
+                                          generic_endpoints, llm_endpoints,
+                                          rag_endpoints, utils_endpoints)
 
 api_router = APIRouter()
 
