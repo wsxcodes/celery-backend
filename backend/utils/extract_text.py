@@ -65,3 +65,36 @@ def extract_odt_text(file_path: Path) -> str:
     except Exception as e:
         logger.error(f"Error extracting ODT text: {str(e)}")
         raise
+
+
+def extract_rtf_text(file_path: Path) -> str:
+    """Extract text from RTF file."""
+    try:
+        from striprtf.striprtf import rtf_to_text
+        with open(file_path, 'r', encoding='utf-8') as file:
+            rtf_content = file.read()
+            text = rtf_to_text(rtf_content)
+            return text.strip() or "No text could be extracted from the RTF file"
+    except UnicodeDecodeError:
+        with open(file_path, 'r', encoding='latin-1') as file:
+            rtf_content = file.read()
+            text = rtf_to_text(rtf_content)
+            return text.strip() or "No text could be extracted from the RTF file"
+    except Exception as e:
+        logger.error(f"Error extracting RTF text: {str(e)}")
+        raise
+
+
+def extract_md_text(file_path: Path) -> str:
+    """Extract text from MD (Markdown) file."""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            text = file.read()
+            return text.strip() or "No text could be extracted from the markdown file"
+    except UnicodeDecodeError:
+        with open(file_path, 'r', encoding='latin-1') as file:
+            text = file.read()
+            return text.strip() or "No text could be extracted from the markdown file"
+    except Exception as e:
+        logger.error(f"Error extracting MD text: {str(e)}")
+        raise
