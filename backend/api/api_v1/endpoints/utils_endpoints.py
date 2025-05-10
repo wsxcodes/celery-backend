@@ -7,24 +7,16 @@ from backend import config
 from backend.api.api_v1.endpoints.documents_endpoints import get_document
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
-from backend.utils.extract_text import (
-    extract_docx_text,
-    extract_odt_text,
-    extract_pdf_text,
-    extract_txt_text,
-    extract_rtf_text,
-    extract_md_text,
-)
-
-from backend.utils.generate_preview import (
-    generate_docx_preview,
-    generate_doc_preview,
-    generate_pdf_preview,
-    generate_rtf_preview,
-    generate_txt_preview,
-    generate_md_preview,
-    generate_odt_preview,
-)
+from backend.utils.extract_text import (extract_docx_text, extract_md_text,
+                                        extract_odt_text, extract_pdf_text,
+                                        extract_rtf_text, extract_txt_text)
+from backend.utils.generate_preview import (generate_doc_preview,
+                                            generate_docx_preview,
+                                            generate_md_preview,
+                                            generate_odt_preview,
+                                            generate_pdf_preview,
+                                            generate_rtf_preview,
+                                            generate_txt_preview)
 
 logger = logging.getLogger(__name__)
 
