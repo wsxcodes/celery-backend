@@ -247,13 +247,13 @@
     function renderDocuments(categorizedDocuments) {
       if (categorizedDocuments && categorizedDocuments.length > 0) {
         let html = '';
-        
+
         // Handle processed documents grouped by category
         categorizedDocuments.forEach(categoryGroup => {
           const categoryTitle = categoryGroup.category || '';
           // Filter only processed documents
           const processedDocs = categoryGroup.documents.filter(doc => doc.analysis_status === 'processed');
-          
+
           if (processedDocs.length > 0) {
             html += `
               <div class="mb-12">
