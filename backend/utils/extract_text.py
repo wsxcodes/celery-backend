@@ -1,12 +1,13 @@
 import logging
 from pathlib import Path
 
-from odf import teletype, text
+from odf import teletype
 from odf.opendocument import load
 from pdfminer.high_level import extract_text
 from python_docx import Document
 
 logger = logging.getLogger(__name__)
+
 
 def extract_pdf_text(file_path: Path) -> str:
     """Extract text from PDF file."""
@@ -20,6 +21,7 @@ def extract_pdf_text(file_path: Path) -> str:
         logger.error(f"Error extracting PDF text: {str(e)}")
         raise
 
+
 def extract_docx_text(file_path: Path) -> str:
     """Extract text from DOC/DOCX file."""
     try:
@@ -32,6 +34,7 @@ def extract_docx_text(file_path: Path) -> str:
     except Exception as e:
         logger.error(f"Error extracting DOCX text: {str(e)}")
         raise
+
 
 def extract_txt_text(file_path: Path) -> str:
     """Extract text from TXT file."""
@@ -47,6 +50,7 @@ def extract_txt_text(file_path: Path) -> str:
     except Exception as e:
         logger.error(f"Error extracting TXT text: {str(e)}")
         raise
+
 
 def extract_odt_text(file_path: Path) -> str:
     """Extract text from ODT file."""
