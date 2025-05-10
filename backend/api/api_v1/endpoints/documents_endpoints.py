@@ -3,7 +3,7 @@ import logging
 import os
 import uuid
 from datetime import datetime
-from typing import Dict, Optional
+from typing import Dict
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
@@ -90,7 +90,6 @@ async def add_new_document(
         "file_hash": file_hash,
         "file_size": file_size
     }
-
 
 
 @router.get("/get/{uuid}", response_model=Document)
