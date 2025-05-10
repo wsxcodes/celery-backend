@@ -1,1 +1,32 @@
-{}
+{
+    "example_response_format_query": {
+        "system": {
+            "content": "You are an AI tasked with responding in structured format."
+        },
+        "user": {
+            "content": "Say hello world and number 1."
+        },
+        "response_format": {
+            "name": "hello_world",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "text": {
+                        "type": "string"
+                    },
+                    "number": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "text",
+                    "number"
+                ],
+                "additionalProperties": false
+            },
+            "strict": true
+        },
+        "temperature": 0.5,
+        "model": "gpt-4.1"
+    }
+}
