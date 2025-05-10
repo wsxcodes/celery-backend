@@ -115,9 +115,9 @@ async def get_document(
     return document
 
 
-@router.patch("/metadata/{document_id}", response_model=Document)
+@router.patch("/metadata/{uuid}", response_model=Document)
 @log_endpoint
-async def update_document_metadata(document_id: int, update: DocumentUpdate, db=Depends(get_db)):
+async def update_document_metadata(uuid: str, update: DocumentUpdate, db=Depends(get_db)):
     fields = []
     values = []
 
@@ -156,12 +156,12 @@ async def update_document_metadata(document_id: int, update: DocumentUpdate, db=
     if not fields:
         raise HTTPException(status_code=400, detail="No valid fields to update")
 
-    values.append(document_id)
-    query = f"UPDATE files SET {', '.join(fields)} WHERE id = ?"
+    values.append(uuid)
+    query = f"UPDATE files SET {', '.join(fields)} WHERE uuid = ?"
     db.execute(query, values)
     db.commit()
 
-    row = db.execute("SELECT * FROM files WHERE id = ?", (document_id,)).fetchone()
+    row = db.execute("SELECT * FROM files WHERE uuid = ?", (uuid,)).fetchone()
     if not row:
         raise HTTPException(status_code=404, detail="Document not found")
 
