@@ -239,7 +239,6 @@
             const uploadedAt = doc.uploaded_at_human || formatDate(doc.uploaded_at);
             const debugId = '{{customer.id}}' === '1' ? `<font color="red">debug-${doc.id}</font>` : '';
             const summary = doc.ai_summary_short ? `<p class="text-sm text-gray-400">${doc.ai_summary_short}</p>` : '';
-            // Use lighter background (bg-gray-700) if category is not set, otherwise bg-gray-800
             const containerBg = categoryGroup.category ? 'bg-gray-800' : 'bg-gray-700';
             let statusHtml = '';
             if (doc.analysis_status === 'processed') {
@@ -291,8 +290,11 @@
                 alertHtml = `<font color="red">$doc.ai_alert error ${doc.ai_alert}</font>`;
               }
             }
+            // Conditionally render <a> or <div> based on analysis_status
+            const tag = doc.analysis_status === 'processed' ? 'a' : 'div';
+            const href = doc.analysis_status === 'processed' ? `href="/${doc.uuid}"` : '';
             html += `
-              <a href="/${doc.uuid}" class="file-item p-4 ${containerBg} rounded-xl flex items-center justify-between no-underline hover:no-underline">
+              <${tag} ${href} class="file-item p-4 ${containerBg} rounded-xl flex items-center justify-between no-underline hover:no-underline">
                 <div class="flex items-center space-x-4">
                   <svg class="h-8 w-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -313,7 +315,7 @@
                 <div class="flex items-center space-x-2">
                   ${alertHtml}
                 </div>
-              </a>
+              </${tag}>
             `;
           });
           if (!categoryGroup.category && categorizedDocuments.length > 1) {
