@@ -2,15 +2,15 @@ import logging
 from pathlib import Path
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException
-from PIL import Image, ImageDraw, ImageFont
+import markdown
 import pdf2image
 from docx import Document
 from docx.oxml.ns import qn
 from docx.shared import Pt
-from odf import text, teletype
+from fastapi import APIRouter, Depends, HTTPException
+from odf import teletype, text
 from odf.opendocument import load as load_odf
-import markdown
+from PIL import Image, ImageDraw, ImageFont
 from striprtf.striprtf import rtf_to_text
 
 from backend import config
