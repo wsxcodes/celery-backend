@@ -12,3 +12,16 @@
 
 
 1. employ status analysis_status "pending", "processing", "processed"
+
+
+
+
+
+1. timezone consideration?
+
+e.g.:
+import httpx
+
+def get_timezone_from_ip(ip_address: str):
+    response = httpx.get(f"https://ipapi.co/{ip_address}/timezone/")
+    return response.text
