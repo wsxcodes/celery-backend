@@ -1,5 +1,6 @@
 import logging
 from pathlib import Path
+import mimetypes
 
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -33,8 +34,41 @@ logger.setLevel(logging.INFO)
 @log_endpoint
 async def extract_text_from_file(uuid: str, db=Depends(get_db)) -> str:
     """This endpoint will indetify type of file and extract text from it."""
-    # XXX TODO
-    return "XXX TODO"
+    document = await get_document(uuid=uuid, db=db)
+    if not document:
+        raise HTTPException(status_code=404, detail="Document not found")
+
+    file_path = Path(config.BASE_UPLOAD_DIR) / document.customer_id / document.filename
+    if not file_path.exists():
+        raise HTTPException(status_code=404, detail="File not found")
+
+    mime_type, _ = mimetypes.guess_type(file_path.name)
+    supported_doc_types = {
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/rtf',
+        'text/rtf',
+        'application/x-rtf',
+        'text/plain',
+        'text/markdown',
+        'application/vnd.oasis.opendocument.text'
+    }
+    supported_image_types = {
+        'image/png',
+        'image/jpeg',
+        'image/webp',
+        'image/gif'
+    }
+    if mime_type in supported_image_types:
+        return await extract_text_from_image(uuid, db)
+    elif mime_type in supported_doc_types:
+        return await extract_text_from_document(uuid, db)
+    else:
+        raise HTTPException(
+            status_code=400,
+            detail="Unsupported file format. Supported formats: PDF, DOC, DOCX, RTF, TXT, MD, ODT, PNG, JPEG, WEBP, GIF"
+        )
 
 
 @router.get("/document-to-text")
