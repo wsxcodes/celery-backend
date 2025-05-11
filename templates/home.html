@@ -74,6 +74,9 @@
     const fileInput = document.getElementById('fileInput');
     const uploadStatus = document.getElementById('uploadStatus');
     const documentsContainer = document.getElementById('documentsContainer');
+    let isHoveringDocuments = false;
+    documentsContainer.addEventListener('mouseenter', () => { isHoveringDocuments = true; });
+    documentsContainer.addEventListener('mouseleave', () => { isHoveringDocuments = false; });
     const clientId = '{{session_id}}';
     const uploadEndpoint = `/api/v1/document/add/${clientId}`;
     const documentsEndpoint = `/api/v1/customer/documents/${clientId}`;
@@ -230,7 +233,7 @@
     // Fetch and update documents
     let isFetching = false;
     async function fetchDocuments() {
-      if (isFetching) return;
+      if (isFetching || isHoveringDocuments) return;
       isFetching = true;
       try {
         const response = await fetch(documentsEndpoint, {
