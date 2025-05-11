@@ -34,7 +34,8 @@ def init_db():
             ai_sub_category TEXT,
             ai_summary_short TEXT,
             ai_summary_text TEXT,
-            file_size INTEGER
+            file_size INTEGER,
+            raw_text TEXT
         )
     """)
     cursor.execute("""
