@@ -37,3 +37,19 @@ def perform_request(request_type: str, url: str, data: dict) -> requests.Respons
     except ValueError as e:
         logger.error(str(e))
         raise
+
+
+def safe_request(*, request_type, url, data):
+    try:
+        response = perform_request(request_type=request_type, url=url, data=data)
+        response.raise_for_status()
+        return response
+    except Exception as e:
+        msg = ""
+        if hasattr(e, "response") and e.response is not None:
+            try:
+                msg = e.response.json().get("message") or e.response.text
+            except Exception:
+                msg = e.response.text
+        logger.error(f"API call failed: {e} - {msg}")
+        return None
