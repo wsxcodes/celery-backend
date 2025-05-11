@@ -1,5 +1,5 @@
-import asyncio
 import time
+from backend.utils.helpers import perform_request
 
 # extract entities, e.g. people, organizations, locations, full names, etc.
 
@@ -43,11 +43,11 @@ import time
 # XXX call endpoint to generate preview
 
 
-async def main():
+def main():
     while True:
         print("XXX TODO")
         time.sleep(2)
 
 if __name__ == "__main__":
     print("Analysis worker started")
-    asyncio.run(main())
+    main()
