@@ -27,6 +27,7 @@ dependencies = [
     "markdown (>=3.8,<4.0)",
     "striprtf (>=0.0.29,<0.0.30)",
     "poppler-utils (>=0.1.0,<0.2.0)",
+    "requests (>=2.32.3,<3.0.0)",
 ]
 
 
