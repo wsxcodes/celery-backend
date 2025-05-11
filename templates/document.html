@@ -303,6 +303,16 @@
       color: #e5e7eb;
     }
 
+    .preview-container {
+      overflow: hidden; /* Clip any overflow content */
+    }
+
+    .preview-image {
+      max-width: 100%; /* Ensure the image doesn't exceed the container's width */
+      max-height: 100%; /* Ensure the image doesn't exceed the container's height */
+      object-fit: contain; /* Scale the image while preserving its aspect ratio */
+    }
+
     @media (max-width: 640px) {
       .document-modal-content {
         width: 95%;
@@ -666,7 +676,7 @@
       <div class="lg:col-span-1">
         <div class="section-card p-6 bg-gray-800 rounded-xl sticky top-8">
           <h2 class="text-2xl font-bold text-white mb-4">Document Preview</h2>
-          <div class="bg-gray-700 h-96 rounded-lg flex items-center justify-center">
+          <div class="bg-gray-700 h-96 rounded-lg flex items-center justify-center preview-container">
             {% if document.file_preview %}
               <img id="preview-image" src="/{{document.file_preview}}" alt="Document Preview">
             {% else %}
