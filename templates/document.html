@@ -384,7 +384,7 @@
               <div class="dropdown-item">
                 <a href="/data/uploads/{{document.customer_id}}/{{document.filename|urlencode}}" download="{{document.filename|urlencode}}">Download</a>
               </div>
-              <div class="dropdown-item">Print</div>
+              <div class="dropdown-item print-item">Print</div>
             </div>
           </div>
         </div>
@@ -856,5 +856,12 @@
       }
     });
   });
+  // Print Dropdown Item
+  const printItem = document.querySelector('.dropdown-item.print-item');
+  if (printItem) {
+    printItem.addEventListener('click', () => {
+      window.print();
+    });
+  }
 </script>
 {% endblock %}
