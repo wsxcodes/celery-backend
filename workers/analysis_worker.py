@@ -1,5 +1,6 @@
 import logging
 import time
+import datetime
 
 from backend import config
 from backend.utils.helpers import safe_request
@@ -72,14 +73,14 @@ def main():
             safe_request(
                 request_type="PATCH",
                 url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
-                data={"analysis_status": "processing"},
+                data={"analysis_status": "processing", "analysis_started_at": datetime.datetime.now().isoformat()},
             )
 
             logger.info("Requesting document preview")
             preview_response = safe_request(
                 request_type="GET",
                 url=config.API_URL + f"/api/v1/utils/generate-file-preview?uuid={document_uuid}",
-                data={"analysis_status": "processing"},
+                data={},
             )
 
             if preview_response is None:
@@ -106,7 +107,7 @@ def main():
             safe_request(
                 request_type="PATCH",
                 url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
-                data={"analysis_status": "processed"},
+                data={"analysis_status": "processed", "analysis_completed_at": datetime.datetime.now().isoformat()},
             )
             logger.info("Analysis completed successfully")
 
