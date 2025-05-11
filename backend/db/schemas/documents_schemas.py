@@ -32,7 +32,7 @@ class Document(BaseModel):
     analysis_started_at: Optional[datetime] = None
     analysis_completed_at: Optional[datetime] = None
     analysis_cost: int = 0
-    ai_alert: Optional[AIAlert] = AIAlert.insights_available
+    ai_alert: Optional[AIAlert] = AIAlert.none
     ai_expires: Optional[datetime] = None
     ai_category: Optional[str] = ""
     ai_sub_category: Optional[str] = ""
@@ -47,7 +47,7 @@ class DocumentUpdate(BaseModel):
     analysis_started_at: Optional[datetime] = None
     analysis_completed_at: Optional[datetime] = None
     analysis_cost: int = 0
-    ai_alert: Optional[AIAlert] = AIAlert.insights_available
+    ai_alert: Optional[AIAlert] = AIAlert.none
     ai_expires: Optional[datetime] = None
     ai_category: Optional[str] = ""
     ai_sub_category: Optional[str] = ""
