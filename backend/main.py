@@ -136,6 +136,8 @@ async def read_document(request: Request, uuid: str, db=Depends(get_db)):
     logger.info("Document retrieved: %s", document)
 
     # Visual Conversions for the template
+    document_dict["analysis_started_at"] = document.analysis_started_at.strftime('%Y-%m-%d %H:%M:%S')
+    document_dict["analysis_completed_at"] = document.analysis_completed_at.strftime('%Y-%m-%d %H:%M:%S')
     document_dict["file_size_humanized"] = humanize.naturalsize(document.file_size)
     document_dict["uploaded_at"] = document.uploaded_at.strftime("%b %d, %Y")
     document_dict["filename"] = document_dict["filename"].replace(" ", "_")
