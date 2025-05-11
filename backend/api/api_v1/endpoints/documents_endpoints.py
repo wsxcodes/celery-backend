@@ -2,6 +2,7 @@ import hashlib
 import logging
 import os
 import uuid
+from enum import Enum
 from datetime import datetime
 from typing import Dict, List
 
@@ -119,51 +120,21 @@ async def get_document(
 @router.patch("/metadata/{uuid}", response_model=Document)
 @log_endpoint
 async def update_document_metadata(uuid: str, update: DocumentUpdate, db=Depends(get_db)):
+    data = update.dict(exclude_unset=True)
+
+    if not data:
+        raise HTTPException(status_code=400, detail="No valid fields to update")
+
     fields = []
     values = []
 
-    if update.analysis_status is not None:
-        fields.append("analysis_status = ?")
-        values.append(update.analysis_status)
-
-    if update.analysis_started_at is not None:
-        fields.append("analysis_started_at = ?")
-        values.append(update.analysis_started_at.isoformat())
-
-    if update.analysis_completed_at is not None:
-        fields.append("analysis_completed_at = ?")
-        values.append(update.analysis_completed_at.isoformat())
-
-    if update.analysis_cost is not None:
-        fields.append("analysis_cost = ?")
-        values.append(update.analysis_cost)
-
-    if update.ai_alert is not None:
-        fields.append("ai_alert = ?")
-        values.append(update.ai_alert.value if update.ai_alert else None)
-
-    if update.ai_category is not None:
-        fields.append("ai_category = ?")
-        values.append(update.ai_category)
-
-    if update.ai_summary_short is not None:
-        fields.append("ai_summary_short = ?")
-        values.append(update.ai_summary_short)
-
-    if update.ai_summary_long is not None:
-        fields.append("ai_summary_text = ?")
-        values.append(update.ai_summary_long)
-
-    if update.ai_expires is not None:
-        fields.append("ai_expires = ?")
-        values.append(update.ai_expires.isoformat())
-
-    if update.ai_sub_category is not None:
-        fields.append("ai_sub_category = ?")
-        values.append(update.ai_sub_category)
-
-    if not fields:
-        raise HTTPException(status_code=400, detail="No valid fields to update")
+    for key, value in data.items():
+        if isinstance(value, Enum):
+            value = value.value
+        elif isinstance(value, datetime):
+            value = value.isoformat()
+        fields.append(f"{key} = ?")
+        values.append(value)
 
     values.append(uuid)
     query = f"UPDATE files SET {', '.join(fields)} WHERE uuid = ?"
