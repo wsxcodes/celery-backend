@@ -26,7 +26,7 @@ class Document(BaseModel):
     filename: str
     file_size: Optional[int] = None
     file_hash: str
-    file_preview: Optional[str] = None
+    file_preview: Optional[str] = ""
     uploaded_at: datetime
     analysis_status: AnalysisStatus = AnalysisStatus.pending
     analysis_started_at: Optional[datetime] = None
@@ -41,13 +41,14 @@ class Document(BaseModel):
 
 
 class DocumentUpdate(BaseModel):
-    analysis_status: Optional[AnalysisStatus] = None
+    file_preview: Optional[str] = ""
+    analysis_status: AnalysisStatus = AnalysisStatus.pending
     analysis_started_at: Optional[datetime] = None
     analysis_completed_at: Optional[datetime] = None
-    analysis_cost: Optional[int] = None
-    ai_alert: Optional[AIAlert] = None
+    analysis_cost: int = 0
+    ai_alert: Optional[AIAlert] = AIAlert.none
     ai_expires: Optional[datetime] = None
-    ai_category: Optional[str] = None
-    ai_sub_category: Optional[str] = None
-    ai_summary_short: Optional[str] = None
-    ai_summary_long: Optional[str] = None
+    ai_category: Optional[str] = ""
+    ai_sub_category: Optional[str] = ""
+    ai_summary_short: Optional[str] = ""
+    ai_summary_long: Optional[str] = ""
