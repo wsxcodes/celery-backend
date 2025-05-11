@@ -92,7 +92,7 @@ def main():
             )
 
             # XXX TEMP delay for testing
-            # time.sleep(5)
+            time.sleep(10)
 
             # XXX TODO Mark off AI Alert
             logger.info("Marking document as processed")
