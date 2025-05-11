@@ -154,6 +154,14 @@ async def update_document_metadata(uuid: str, update: DocumentUpdate, db=Depends
         fields.append("ai_summary_text = ?")
         values.append(update.ai_summary_long)
 
+    if update.ai_expires is not None:
+        fields.append("ai_expires = ?")
+        values.append(update.ai_expires.isoformat())
+
+    if update.ai_sub_category is not None:
+        fields.append("ai_sub_category = ?")
+        values.append(update.ai_sub_category)
+
     if not fields:
         raise HTTPException(status_code=400, detail="No valid fields to update")
 
