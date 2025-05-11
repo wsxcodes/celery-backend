@@ -1,6 +1,6 @@
+import datetime
 import logging
 import time
-import datetime
 
 from backend import config
 from backend.utils.helpers import safe_request
