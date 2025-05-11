@@ -79,6 +79,7 @@ def main():
                 data={"analysis_status": "processing", "analysis_started_at": datetime.datetime.now().isoformat()},
             )
 
+            # Request document preview
             logger.info("Requesting document preview")
             preview_response = safe_request(
                 request_type="GET",
@@ -104,6 +105,10 @@ def main():
                     url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
                     data={"file_preview": preview_path},
                 )
+
+            # Extract text from the document
+            logger.info("Extracting text from document")
+            # XXX TODO
 
             # Mark document as processed
             logger.info("Marking document as processed")
