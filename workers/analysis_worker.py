@@ -123,6 +123,15 @@ def main():
                 data={"raw_text": raw_text},
             )
 
+            # XXX Mark off AI Alert
+            logger.info("Marking document as processed")
+            safe_request(
+                request_type="PATCH",
+                url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+                data={"ai_alert": "insights_available"},
+            )
+            logger.info("Analysis completed successfully")
+
             # Mark document as processed
             logger.info("Marking document as processed")
             safe_request(
