@@ -16,10 +16,10 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-@router.get("/llm")
+@router.get("/chat_completion")
 @log_endpoint
-async def llm_xxx() -> Dict[str, str]:
-    """LLM xxx endpoint."""
+async def chat_completion() -> Dict[str, str]:
+    """LLM chat completion endpoint."""
     return {
         "status": "LLM",
         "message": "XXX",
