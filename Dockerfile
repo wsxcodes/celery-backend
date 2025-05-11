@@ -35,6 +35,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     poppler-utils \
     && rm -rf /var/lib/apt/lists/*
 
+# Install LibreOffice
+RUN apt-get install -y libreoffice-core libreoffice-writer
+
 # Install dependencies required by Playwright
 RUN apt-get update && apt-get install -y \
     libnss3 \
