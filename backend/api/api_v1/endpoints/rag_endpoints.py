@@ -1,9 +1,11 @@
 import logging
 from typing import Dict
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Body, Depends
 
+from backend.api.api_v1.endpoints.documents_endpoints import get_document
 from backend.decorators import log_endpoint
+from backend.dependencies import get_db
 
 logger = logging.getLogger(__name__)
 
@@ -16,11 +18,17 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-@router.get("/xxx")
+@router.post("/ask")
 @log_endpoint
-async def rag_xxx() -> Dict[str, str]:
-    """RAG xxx endpoint."""
+async def ask_a_question_about_document(
+    uuid: str,
+    question: str = Body(...),
+    db=Depends(get_db)
+) -> Dict[str, str]:
+    """RAG ask endpoint."""
+    document = await get_document(uuid, db)
+    logger.info(f"Document found: {document}")
     return {
         "status": "XXX",
-        "message": "TODO",
+        "message": "TODO"
     }
