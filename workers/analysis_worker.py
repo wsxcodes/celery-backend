@@ -1,9 +1,9 @@
-
+import asyncio
+import time
 
 # extract entities, e.g. people, organizations, locations, full names, etc.
 
 # category
-
 
 # Smart Summaries
 # TL;DR of each document in human-readable form. Highlight key obligations, penalties, rights, and deadlines.
@@ -41,3 +41,13 @@
 
 
 # XXX call endpoint to generate preview
+
+
+async def main():
+    while True:
+        print("XXX TODO")
+        time.sleep(2)
+
+if __name__ == "__main__":
+    print("Analysis worker started")
+    asyncio.run(main())
