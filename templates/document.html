@@ -304,13 +304,12 @@
     }
 
     .preview-container {
-      overflow: hidden; /* Clip any overflow content */
+      overflow: hidden; /* Still useful to ensure no overflow */
     }
 
     .preview-image {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain; /* Scale the image while preserving its aspect ratio */
+      width: 100%; /* Scale the image to the full width of the container */
+      height: auto; /* Let the height adjust to maintain aspect ratio */
     }
 
     @media (max-width: 640px) {
@@ -676,9 +675,9 @@
       <div class="lg:col-span-1">
         <div class="section-card p-6 bg-gray-800 rounded-xl sticky top-8">
           <h2 class="text-2xl font-bold text-white mb-4">Document Preview</h2>
-          <div class="bg-gray-700 h-96 rounded-lg flex items-center justify-center preview-container">
+          <div class="bg-gray-700 rounded-lg flex items-center justify-center preview-container">
             {% if document.file_preview %}
-              <img id="preview-image" src="/{{document.file_preview}}" alt="Document Preview">
+              <img id="preview-image" class="preview-image" src="/{{document.file_preview}}" alt="Document Preview">
             {% else %}
               <p class="text-gray-400">Preview Not Available</p>
             {% endif %}
