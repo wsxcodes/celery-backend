@@ -123,8 +123,6 @@ def main():
                 data={"raw_text": raw_text},
             )
 
-            input("Press Enter to continue...")
-
             # Mark document as processed
             logger.info("Marking document as processed")
             safe_request(
