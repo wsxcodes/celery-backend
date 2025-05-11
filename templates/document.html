@@ -355,6 +355,7 @@
             </svg>
             <div class="dropdown-content">
               <div class="dropdown-item">Copy link</div>
+              <div class="dropdown-item"><a href="/data/uploads/{{document.customer_id}}/{{document.filename}}">Download</a></div>
               <div class="dropdown-item">Print</div>
             </div>
           </div>
@@ -655,7 +656,7 @@
           </div>
           <div class="mt-4 flex justify-between">
             <button id="view-full-document" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">View Full Document</button>
-            <button class="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm">Download</button>
+            <a href="/data/uploads/{{document.customer_id}}/{{document.filename}}" download class="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm">Download</a>
           </div>
         </div>
 
