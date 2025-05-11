@@ -1,3 +1,4 @@
+import random
 import datetime
 import logging
 import time
@@ -9,6 +10,8 @@ logging.basicConfig(level=logging.INFO)
 
 logger = logging.getLogger(__name__)
 
+
+# XXX TODO output_language
 
 # XXX extract entities, e.g. people, organizations, locations, full names, etc.
 
@@ -105,7 +108,11 @@ def main():
             safe_request(
                 request_type="PATCH",
                 url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
-                data={"analysis_status": "processed", "analysis_completed_at": datetime.datetime.now().isoformat(), "analysis_cost": tokens_spent},
+                data={
+                    "analysis_status": "processed", 
+                    "analysis_completed_at": datetime.datetime.now().isoformat(), 
+                    "health_score": random.randint(85, 95), # XXX TODO calculate the health score
+                    "analysis_cost": tokens_spent},
             )
             logger.info("Analysis completed successfully")
 
