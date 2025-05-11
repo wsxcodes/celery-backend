@@ -50,7 +50,6 @@ logger = logging.getLogger(__name__)
 
 # XXX call endpoint to generate preview
 
-
 def main():
     while True:
         logger.info("Querying pending documents for analysis")
@@ -73,10 +72,40 @@ def main():
             )
 
             logger.info("Requesting document preview")
-            # XXX call endpoint to generate preview
+            preview_response = perform_request(
+                request_type="GET",
+                url=config.API_URL + f"/api/v1/utils/generate-file-preview?uuid={document_uuid}",
+                data={"analysis_status": "processing"},
+            )
+
+            if preview_response.status_code == 400:
+                logger.info("Preview generation returned 400; skipping metadata update")
+                continue
+
+            if preview_response.status_code == 200:
+                preview_path = preview_response.json()
+                logger.info(f"Preview path: {preview_path}")
+
+                logger.info("Updating document data")
+                perform_request(
+                    request_type="PATCH",
+                    url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+                    data={"file_preview": preview_path},
+                )
+
+            # Mark document as processed
+            logger.info("Marking document as processed")
+            perform_request(
+                request_type="PATCH",
+                url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+                data={"analysis_status": "processed"},
+            )
+            logger.info("Analysis completed successfully")
+
         else:
             logger.info("No pending documents found")
-        time.sleep(2)
+
+        time.sleep(1)
 
 
 if __name__ == "__main__":
