@@ -2,7 +2,7 @@ import logging
 import time
 
 from backend import config
-from backend.utils.helpers import perform_request
+from backend.utils.helpers import safe_request
 
 logging.basicConfig(level=logging.INFO)
 
@@ -53,11 +53,15 @@ logger = logging.getLogger(__name__)
 def main():
     while True:
         logger.info("Querying pending documents for analysis")
-        pending_document = perform_request(
+        pending_document = safe_request(
             request_type="GET",
             url=config.API_URL + "/api/v1/document/list/pending?limit=1",
             data={},
         )
+        if not pending_document:
+            time.sleep(1)
+            continue
+
         pending_documents = pending_document.json()
 
         if pending_documents:
@@ -65,18 +69,22 @@ def main():
             logger.info(f"Document to analyze: {document_uuid}")
 
             logger.info("Starting analysis")
-            perform_request(
+            safe_request(
                 request_type="PATCH",
                 url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
                 data={"analysis_status": "processing"},
             )
 
             logger.info("Requesting document preview")
-            preview_response = perform_request(
+            preview_response = safe_request(
                 request_type="GET",
                 url=config.API_URL + f"/api/v1/utils/generate-file-preview?uuid={document_uuid}",
                 data={"analysis_status": "processing"},
             )
+
+            if preview_response is None:
+                logger.info("Preview generation request failed; skipping metadata update")
+                continue
 
             if preview_response.status_code == 400:
                 logger.info("Preview generation returned 400; skipping metadata update")
@@ -87,7 +95,7 @@ def main():
                 logger.info(f"Preview path: {preview_path}")
 
                 logger.info("Updating document data")
-                perform_request(
+                safe_request(
                     request_type="PATCH",
                     url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
                     data={"file_preview": preview_path},
@@ -95,7 +103,7 @@ def main():
 
             # Mark document as processed
             logger.info("Marking document as processed")
-            perform_request(
+            safe_request(
                 request_type="PATCH",
                 url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
                 data={"analysis_status": "processed"},
