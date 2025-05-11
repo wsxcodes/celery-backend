@@ -1,6 +1,6 @@
-import random
 import datetime
 import logging
+import random
 import time
 
 from backend import config
@@ -111,9 +111,9 @@ def main():
                 request_type="PATCH",
                 url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
                 data={
-                    "analysis_status": "processed", 
-                    "analysis_completed_at": datetime.datetime.now().isoformat(), 
-                    "health_score": random.randint(85, 95), # XXX TODO calculate the health score
+                    "analysis_status": "processed",
+                    "analysis_completed_at": datetime.datetime.now().isoformat(),
+                    "health_score": random.randint(85, 95),  # XXX TODO calculate the health score
                     "analysis_cost": tokens_spent},
             )
             logger.info("Analysis completed successfully")
