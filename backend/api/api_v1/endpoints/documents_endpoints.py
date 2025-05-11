@@ -3,7 +3,7 @@ import logging
 import os
 import uuid
 from datetime import datetime
-from typing import Dict
+from typing import Dict, List
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
@@ -194,3 +194,16 @@ async def delete_document(customer_id: str, filename: str) -> Dict[str, str]:
 
     logger.info(f"Deleted file for customer {customer_id}: {filename}")
     return {"status": "deleted", "customer_id": customer_id, "filename": filename}
+
+
+@router.get("/list/pending", response_model=List[Document])
+@log_endpoint
+async def list_pending_documents(limit: int = 10, db=Depends(get_db)):
+    rows = db.execute(
+        "SELECT * FROM files WHERE analysis_status = 'pending' LIMIT ?",
+        (limit,)
+    ).fetchall()
+
+    documents = [Document(**dict(row)) for row in rows]
+    logger.info(f"Retrieved {len(documents)} pending documents (limit: {limit})")
+    return documents
