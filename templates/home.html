@@ -19,7 +19,7 @@
       <p class="mt-4 text-xl font-semibold text-white">Drag & Drop your documents here</p>
       <p class="mt-2 text-sm text-gray-400">Or click to select files</p>
       <p class="mt-2 text-xs text-gray-500">
-        Supported formats: DOC, DOCX, RTF, PDF, TXT, MD, ODT
+        Supported formats: DOC, DOCX, RTF, PDF, TXT, ODT
         <br/>
         as well as common image formats like PNG, JPEG, WEBP, and GIF.
       </p>
@@ -123,19 +123,18 @@
 
     function handleFiles(files) {
       const allowedTypes = [
-        'application/pdf',
-        'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'application/rtf',
-        'text/rtf',
-        'application/x-rtf',
-        'text/plain',
-        'text/markdown',
-        'application/vnd.oasis.opendocument.text',
-        'image/png',
-        'image/jpeg',
-        'image/webp',
-        'image/gif'
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/rtf',
+      'text/rtf',
+      'application/x-rtf',
+      'text/plain',
+      'application/vnd.oasis.opendocument.text',
+      'image/png',
+      'image/jpeg',
+      'image/webp',
+      'image/gif'
       ];
 
       Array.from(files).forEach(file => {
