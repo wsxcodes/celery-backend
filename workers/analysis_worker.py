@@ -135,7 +135,7 @@ def main():
             )
             logger.info("Analysis completed successfully")
 
-            # XXX TODO do the category as last step
+            # XXX TODO do the category as the very last step
 
             # Mark document as processed
             logger.info("Marking document as processed")
