@@ -235,6 +235,74 @@
         height: 40px;
       }
     }
+
+    /* Full-Screen Document Modal */
+    .document-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .document-modal-content {
+      position: relative;
+      max-width: 1200px; /* Limit width for large screens */
+      width: 90%;
+      max-height: 90%;
+      overflow: auto;
+      border-radius: 0.5rem;
+    }
+
+    .document-modal-content img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 0.5rem;
+    }
+
+    .document-modal-close {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      cursor: pointer;
+      background-color: #2d3748;
+      border-radius: 50%;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .document-modal-close svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      color: #e5e7eb;
+    }
+
+    @media (max-width: 640px) {
+      .document-modal-content {
+        width: 95%;
+        max-height: 85%;
+      }
+
+      .document-modal-close {
+        top: 0.4rem;
+        right: 0.4rem;
+        padding: 0.3rem;
+      }
+
+      .document-modal-close svg {
+        width: 1.2rem;
+        height: 1.2rem;
+      }
+    }
   </style>
 {% endblock %}
 
@@ -580,14 +648,30 @@
           <h2 class="text-2xl font-bold text-white mb-4">Document Preview</h2>
           <div class="bg-gray-700 h-96 rounded-lg flex items-center justify-center">
             {% if document.file_preview %}
-                <img src="/{{document.file_preview}}">
+              <img src="/{{document.file_preview}}" alt="Document Preview">
             {% else %}
-                <p class="text-gray-400">Preview Not Available</p>
+              <p class="text-gray-400">Preview Not Available</p>
             {% endif %}
           </div>
           <div class="mt-4 flex justify-between">
-            <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">View Full Document</button>
+            <button id="view-full-document" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">View Full Document</button>
             <button class="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm">Download</button>
+          </div>
+        </div>
+
+        <!-- Full-Screen Document Modal -->
+        <div id="document-modal" class="document-modal">
+          <div class="document-modal-content">
+            {% if document.file_preview %}
+              <img src="/{{document.file_preview}}" alt="Full Document Preview">
+            {% else %}
+              <p class="text-gray-400 text-center">Full Document Not Available</p>
+            {% endif %}
+            <div id="document-modal-close" class="document-modal-close">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </div>
           </div>
         </div>
       </div>
@@ -695,6 +779,25 @@
       chatContainer.classList.remove('minimized');
       chatContainer.classList.add('maximized');
       chatToggle.classList.remove('minimized');
+    }
+  });
+
+  // Document Modal
+  const viewFullDocumentButton = document.getElementById('view-full-document');
+  const documentModal = document.getElementById('document-modal');
+  const documentModalClose = document.getElementById('document-modal-close');
+
+  viewFullDocumentButton.addEventListener('click', () => {
+    documentModal.style.display = 'flex';
+  });
+
+  documentModalClose.addEventListener('click', () => {
+    documentModal.style.display = 'none';
+  });
+
+  documentModal.addEventListener('click', (e) => {
+    if (e.target === documentModal) {
+      documentModal.style.display = 'none';
     }
   });
 </script>
