@@ -92,11 +92,7 @@ def main():
                 data={"raw_text": raw_text},
             )
 
-            # XXX TEMP delay for testing
-            # time.sleep(10)
-
-            # XXX Get customer info
-
+            # Get customer info
             customer = safe_request(
                 request_type="GET",
                 url=config.API_URL + f"/api/v1/customer/{customer_id}",
@@ -113,6 +109,9 @@ def main():
                 data={"ai_alert": "insights_available"},
             )
             logger.info("Analysis completed successfully")
+
+            # XXX TEMP delay for testing
+            # time.sleep(10)
 
             # XXX TODO do the category as the very last step
 
