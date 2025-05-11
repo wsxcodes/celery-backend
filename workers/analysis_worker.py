@@ -5,10 +5,6 @@ from backend import config
 from backend.utils.helpers import perform_request
 
 logging.basicConfig(level=logging.INFO)
-import time
-
-from backend import config
-from backend.utils.helpers import perform_request
 
 logger = logging.getLogger(__name__)
 
@@ -76,6 +72,8 @@ def main():
                 data={"analysis_status": "processing"},
             )
 
+            logger.info("Requesting document preview")
+            # XXX call endpoint to generate preview
         else:
             logger.info("No pending documents found")
         time.sleep(2)
