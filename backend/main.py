@@ -52,6 +52,7 @@ app.add_middleware(
 app.include_router(api_router, prefix=API_V1_STR)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/data", StaticFiles(directory="data"), name="data")
 
 templates = Jinja2Templates(directory="templates")
 
