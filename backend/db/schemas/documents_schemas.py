@@ -38,6 +38,7 @@ class Document(BaseModel):
     ai_sub_category: Optional[str] = ""
     ai_summary_short: Optional[str] = ""
     ai_summary_long: Optional[str] = ""
+    raw_text: Optional[str] = ""
 
 
 class DocumentUpdate(BaseModel):
@@ -52,3 +53,4 @@ class DocumentUpdate(BaseModel):
     ai_sub_category: Optional[str] = ""
     ai_summary_short: Optional[str] = ""
     ai_summary_long: Optional[str] = ""
+    raw_text: Optional[str] = ""
