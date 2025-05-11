@@ -4,6 +4,7 @@ from pathlib import Path
 from docx import Document
 from odf import teletype
 from odf.opendocument import load
+from odf.text import P
 from pdfminer.high_level import extract_text
 
 logger = logging.getLogger(__name__)
@@ -56,12 +57,12 @@ def extract_odt_text(file_path: Path) -> str:
     """Extract text from ODT file."""
     try:
         doc = load(file_path)
-        text = []
-        for element in doc.getElementsByType(text.P):
+        paragraphs = []
+        for element in doc.getElementsByType(P):
             extracted_text = teletype.extractText(element)
             if extracted_text.strip():
-                text.append(extracted_text)
-        return "\n".join(text).strip() or "No text could be extracted from the ODT file"
+                paragraphs.append(extracted_text)
+        return "\n".join(paragraphs).strip() or "No text could be extracted from the ODT file"
     except Exception as e:
         logger.error(f"Error extracting ODT text: {str(e)}")
         raise
