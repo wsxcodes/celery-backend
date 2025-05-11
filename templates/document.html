@@ -579,7 +579,11 @@
         <div class="section-card p-6 bg-gray-800 rounded-xl sticky top-8">
           <h2 class="text-2xl font-bold text-white mb-4">Document Preview</h2>
           <div class="bg-gray-700 h-96 rounded-lg flex items-center justify-center">
-            <p class="text-gray-400">Preview Placeholder</p>
+            {% if document.file_preview %}
+                <img src="/{{document.file_preview}}">
+            {% else %}
+                <p class="text-gray-400">Preview Not Available</p>
+            {% endif %}
           </div>
           <div class="mt-4 flex justify-between">
             <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">View Full Document</button>
