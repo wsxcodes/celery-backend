@@ -380,7 +380,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path>
             </svg>
             <div class="dropdown-content">
-              <div class="dropdown-item">Copy link</div>
+              <div class="dropdown-item" id="copy-link">Copy link</div>
               <div class="dropdown-item">
                 <a href="/data/uploads/{{document.customer_id}}/{{document.filename|urlencode}}" download="{{document.filename|urlencode}}">Download</a>
               </div>
@@ -856,11 +856,56 @@
       }
     });
   });
+
   // Print Dropdown Item
   const printItem = document.querySelector('.dropdown-item.print-item');
   if (printItem) {
     printItem.addEventListener('click', () => {
       window.print();
+    });
+  }
+
+  // Copy Link to Clipboard with Visual Confirmation (updated logic)
+  const copyLinkItem = document.getElementById('copy-link');
+  if (copyLinkItem) {
+    copyLinkItem.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const link = window.location.href;
+      const originalText = copyLinkItem.textContent;
+
+      async function copyText(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+          // Modern secure clipboard API
+          return navigator.clipboard.writeText(text);
+        } else {
+          // Fallback for insecure contexts
+          const textArea = document.createElement("textarea");
+          textArea.value = text;
+          textArea.style.position = "fixed";
+          textArea.style.top = "-9999px";
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          try {
+            document.execCommand('copy');
+          } catch (err) {
+            console.error('Clipboard fallback failed:', err);
+          }
+          document.body.removeChild(textArea);
+        }
+      }
+
+      try {
+        await copyText(link);
+        copyLinkItem.textContent = 'Link copied!';
+      } catch (err) {
+        console.error('Failed to copy link:', err);
+        copyLinkItem.textContent = 'Copy failed';
+      } finally {
+        setTimeout(() => {
+          copyLinkItem.textContent = originalText;
+        }, 2000);
+      }
     });
   }
 </script>
