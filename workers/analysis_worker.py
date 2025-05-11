@@ -66,6 +66,9 @@ def main():
         pending_documents = pending_document.json()
 
         if pending_documents:
+
+            tokens_spent = 0
+
             document_uuid = pending_documents[0]["uuid"]
             logger.info(f"Document to analyze: {document_uuid}")
 
@@ -107,7 +110,7 @@ def main():
             safe_request(
                 request_type="PATCH",
                 url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
-                data={"analysis_status": "processed", "analysis_completed_at": datetime.datetime.now().isoformat()},
+                data={"analysis_status": "processed", "analysis_completed_at": datetime.datetime.now().isoformat(), "analysis_cost": tokens_spent},
             )
             logger.info("Analysis completed successfully")
 
