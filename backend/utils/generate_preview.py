@@ -1,24 +1,18 @@
+import html
 import logging
-import shutil
+import subprocess
+import tempfile
 from pathlib import Path
 from typing import Optional
 
 import markdown
-import html
 import pdf2image
 from docx import Document
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter
 from odf import teletype
 from odf.opendocument import load as load_odf
 from PIL import Image, ImageDraw, ImageFont
 from striprtf.striprtf import rtf_to_text
-import subprocess
-import tempfile
-
-from backend import config
-from backend.api.api_v1.endpoints.documents_endpoints import get_document
-from backend.decorators import log_endpoint
-from backend.dependencies import get_db
 
 logger = logging.getLogger(__name__)
 
