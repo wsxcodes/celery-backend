@@ -63,9 +63,19 @@ def main():
             url=config.API_URL + "/api/v1/document/list/pending?limit=1",
             data={},
         )
-        if pending_document.status_code == 200:
-            document = pending_document.json()
-            logger.info(f"Document to analyze: {document}")
+        pending_documents = pending_document.json()
+
+        if pending_documents:
+            document_uuid = pending_documents[0]["uuid"]
+            logger.info(f"Document to analyze: {document_uuid}")
+
+            logger.info("Starting analysis")
+            perform_request(
+                request_type="PATCH",
+                url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+                data={"analysis_status": "processing"},
+            )
+
         else:
             logger.info("No pending documents found")
         time.sleep(2)
