@@ -21,6 +21,8 @@ def perform_request(request_type: str, url: str, data: dict) -> requests.Respons
             response = requests.put(url, json=data)
         elif request_type.upper() == "DELETE":
             response = requests.delete(url, json=data)
+        elif request_type.upper() == "PATCH":
+            response = requests.patch(url, json=data)
         else:
             raise ValueError(f"Invalid request_type: {request_type}")
 
