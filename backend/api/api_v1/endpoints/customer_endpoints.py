@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List
 
 import humanize
@@ -141,8 +141,9 @@ async def list_customer_documents(customer_id: str, db=Depends(get_db)):
             if "uploaded_at" in doc:
                 # Convert the uploaded_at string to datetime
                 try:
-                    uploaded_at = datetime.fromisoformat(doc["uploaded_at"])
-                    doc["uploaded_at_human"] = humanize.naturaltime(datetime.now() - uploaded_at)
+                    uploaded_at_utc = datetime.fromisoformat(doc["uploaded_at"]).replace(tzinfo=timezone.utc)
+                    now_utc = datetime.now(timezone.utc)
+                    doc["uploaded_at_human"] = humanize.naturaltime(now_utc - uploaded_at_utc)
                 except ValueError:
                     logger.warning("uploaded_at for doc %d in category %d is not in the correct datetime format: %s", doc_index + 1, cat_index + 1, doc["uploaded_at"])
 
