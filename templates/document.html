@@ -21,27 +21,44 @@
     .feature-item:hover {
       transform: translateX(8px);
     }
+    .dropdown {
+      position: relative;
+    }
     .dropdown-content {
       display: none;
       position: absolute;
       background-color: #2d3748;
       min-width: 160px;
       box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-      z-index: 1;
+      z-index: 10;
       border-radius: 0.5rem;
-      right: 100%;
-      top: 0;
+      right: 0;
+      top: 100%;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
     }
-    .dropdown:hover .dropdown-content {
+    .dropdown:hover .dropdown-content,
+    .dropdown:focus-within .dropdown-content,
+    .dropdown.active .dropdown-content {
       display: block;
+      opacity: 1;
+      visibility: visible;
     }
     .dropdown-item {
       padding: 0.5rem 1rem;
       color: #e5e7eb;
       cursor: pointer;
+      display: block;
     }
     .dropdown-item:hover {
       background-color: #4b5563;
+    }
+    .dropdown-item a {
+      color: inherit;
+      text-decoration: none;
+      display: block;
+      width: 100%;
     }
     .alert-card {
       border-left: 4px solid;
@@ -355,7 +372,9 @@
             </svg>
             <div class="dropdown-content">
               <div class="dropdown-item">Copy link</div>
-              <div class="dropdown-item"><a href="/data/uploads/{{document.customer_id}}/{{document.filename}}">Download</a></div>
+              <div class="dropdown-item">
+                <a href="/data/uploads/{{document.customer_id}}/{{document.filename|urlencode}}" download="{{document.filename|urlencode}}">Download</a>
+              </div>
               <div class="dropdown-item">Print</div>
             </div>
           </div>
@@ -656,7 +675,7 @@
           </div>
           <div class="mt-4 flex justify-between">
             <button id="view-full-document" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm">View Full Document</button>
-            <a href="/data/uploads/{{document.customer_id}}/{{document.filename}}" download class="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm">Download</a>
+            <a href="/data/uploads/{{document.customer_id}}/{{document.filename|urlencode}}" download class="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm">Download</a>
           </div>
         </div>
 
@@ -736,7 +755,12 @@
   const chatContainer = document.getElementById('chat-container');
   const chatHeader = document.getElementById('chat-header');
   const chatToggle = document.getElementById('chat-toggle');
+  const viewFullDocumentButton = document.getElementById('view-full-document');
+  const previewImage = document.getElementById('preview-image');
+  const documentModal = document.getElementById('document-modal');
+  const documentModalClose = document.getElementById('document-modal-close');
 
+  // Upload Modal Logic
   uploadButton.addEventListener('click', () => {
     uploadModal.style.display = 'flex';
   });
@@ -763,6 +787,7 @@
     uploadForm.reset();
   });
 
+  // Chat Logic
   chatForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const question = document.getElementById('chat-question').value;
@@ -783,12 +808,7 @@
     }
   });
 
-  // Document Modal
-  const viewFullDocumentButton = document.getElementById('view-full-document');
-  const previewImage = document.getElementById('preview-image');
-  const documentModal = document.getElementById('document-modal');
-  const documentModalClose = document.getElementById('document-modal-close');
-
+  // Document Modal Logic
   viewFullDocumentButton.addEventListener('click', () => {
     documentModal.style.display = 'flex';
   });
@@ -807,6 +827,18 @@
     if (e.target === documentModal) {
       documentModal.style.display = 'none';
     }
+  });
+
+  // Download Dropdown Fix
+  document.querySelectorAll('.dropdown-item a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      console.log('Download link clicked:', link.href);
+      // Ensure default behavior is not prevented
+      if (!link.href) {
+        e.preventDefault();
+        console.error('Invalid href for download link');
+      }
+    });
   });
 </script>
 {% endblock %}
