@@ -38,6 +38,7 @@ def main():
             tokens_spent = 0
 
             document_uuid = pending_documents[0]["uuid"]
+            customer_id = pending_documents[0]["customer_id"]
             logger.info(f"Document to analyze: {document_uuid}")
 
             logger.info("Starting analysis")
@@ -93,6 +94,16 @@ def main():
 
             # XXX TEMP delay for testing
             # time.sleep(10)
+
+            # XXX Get customer info
+
+            customer = safe_request(
+                request_type="GET",
+                url=config.API_URL + f"/api/v1/customer/{customer_id}",
+                data={}
+            )
+            output_language = customer.json().get("output_language", "English")
+            logger.info(f"Customer output language: {output_language}")
 
             # XXX TODO Mark off AI Alert
             logger.info("Marking document as processed")
