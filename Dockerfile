@@ -51,7 +51,6 @@ RUN pip install --upgrade pip \
 # Copy the entire project directory
 COPY . /code
 WORKDIR /code
-RUN mkdir /code/data/tickets
 
 RUN ls -la
 
