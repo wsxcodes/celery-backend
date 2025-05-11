@@ -123,7 +123,7 @@ def main():
                 data={"raw_text": raw_text},
             )
 
-            # XXX Mark off AI Alert
+            # XXX TODO Mark off AI Alert
             logger.info("Marking document as processed")
             safe_request(
                 request_type="PATCH",
