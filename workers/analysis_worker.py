@@ -13,6 +13,8 @@ logger = logging.getLogger(__name__)
 
 # XXX TODO output_language
 
+# XXX TODO update "ai_expires" field in the database when applicable
+
 # XXX extract entities, e.g. people, organizations, locations, full names, etc.
 
 # XXX detect expiry dates, renewal clauses, trial periods - also update "ai_expires" field in the database
