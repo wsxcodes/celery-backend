@@ -26,6 +26,7 @@ async def ask_a_question_about_document(
     db=Depends(get_db)
 ) -> Dict[str, str]:
     """RAG ask endpoint."""
+    # XXX tokens_spent should be added to the document metadata
     document = await get_document(uuid, db)
     logger.info(f"Document found: {document}")
     return {
