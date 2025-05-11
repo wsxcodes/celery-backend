@@ -48,7 +48,7 @@ logger = logging.getLogger(__name__)
 # Rate completeness, legal soundness, and currency of important files.
 
 
-# XXX call endpoint to generate preview
+# XXX detect expiry dates, renewal clauses, trial periods - also update "ai_expires" field in the database
 
 def main():
     while True:
