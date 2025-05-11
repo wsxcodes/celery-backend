@@ -108,7 +108,22 @@ def main():
 
             # Extract text from the document
             logger.info("Extracting text from document")
-            # XXX TODO
+            raw_text = safe_request(
+                request_type="GET",
+                url=config.API_URL + f"/api/v1/utils/extract-text-from-file?uuid={document_uuid}",
+                data={},
+            )
+            raw_text = raw_text.json()
+
+            # Save the extracted text to the database
+            logger.info("Saving extracted text to database")
+            safe_request(
+                request_type="PATCH",
+                url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+                data={"raw_text": raw_text},
+            )
+
+            input("Press Enter to continue...")
 
             # Mark document as processed
             logger.info("Marking document as processed")
