@@ -1,5 +1,17 @@
+import logging
 import time
+
+from backend import config
 from backend.utils.helpers import perform_request
+
+logging.basicConfig(level=logging.INFO)
+import time
+
+from backend import config
+from backend.utils.helpers import perform_request
+
+logger = logging.getLogger(__name__)
+
 
 # extract entities, e.g. people, organizations, locations, full names, etc.
 
@@ -45,9 +57,20 @@ from backend.utils.helpers import perform_request
 
 def main():
     while True:
-        print("XXX TODO")
+        logger.info("Querying pending documents for analysis")
+        pending_document = perform_request(
+            request_type="GET",
+            url=config.API_URL + "/api/v1/document/list/pending?limit=1",
+            data={},
+        )
+        if pending_document.status_code == 200:
+            document = pending_document.json()
+            logger.info(f"Document to analyze: {document}")
+        else:
+            logger.info("No pending documents found")
         time.sleep(2)
 
+
 if __name__ == "__main__":
-    print("Analysis worker started")
+    logger.info("Analysis worker started")
     main()
