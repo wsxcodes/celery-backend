@@ -282,7 +282,8 @@
         }
       });
 
-      while (currentNodes.length > newNodes.length) {
+      // Remove extra nodes beyond the new set
+      while (documentsContainer.children.length > newNodes.length) {
         documentsContainer.removeChild(documentsContainer.lastChild);
       }
     }
