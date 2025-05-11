@@ -123,6 +123,9 @@ def main():
                 data={"raw_text": raw_text},
             )
 
+            # XXX TEMP delay for testing
+            time.sleep(5)
+
             # XXX TODO Mark off AI Alert
             logger.info("Marking document as processed")
             safe_request(
@@ -131,6 +134,8 @@ def main():
                 data={"ai_alert": "insights_available"},
             )
             logger.info("Analysis completed successfully")
+
+            # XXX TODO do the category as last step
 
             # Mark document as processed
             logger.info("Marking document as processed")
