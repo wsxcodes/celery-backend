@@ -1,32 +1,26 @@
 {
-    "example_response_format_query": {
-        "system": {
-            "content": "You are an AI tasked with responding in structured format."
-        },
-        "user": {
-            "content": "Say hello world and number 1."
-        },
-        "response_format": {
-            "name": "hello_world",
-            "schema": {
-                "type": "object",
-                "properties": {
-                    "text": {
-                        "type": "string"
-                    },
-                    "number": {
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "text",
-                    "number"
-                ],
-                "additionalProperties": false
-            },
-            "strict": true
-        },
+    "example_1": {
+        "model": "gpt-4.1",
         "temperature": 0.5,
-        "model": "gpt-4.1"
-    }
+        "messages": [
+            {"role": "system",  "content": "You are a helpful assistant."},
+            {"role": "user",    "content": "Say hello world and number 1."}
+        ],
+        "schema": {
+            "type": "json_schema",
+                "json_schema": {
+                    "name": "ExampleSchema",
+                    "strict": true,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "text":   {"type": "string"},
+                            "number": {"type": "integer"}
+                        },
+                        "required": ["text", "number"],
+                        "additionalProperties": false
+                    }
+                }
+            }
+        }
 }
