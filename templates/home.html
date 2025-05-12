@@ -340,7 +340,7 @@
                 };
                 if (alertStyles[doc.ai_alert]) {
                   alertHtml = `
-                    <span class="px-2 py-1 rounded-full text-xs font-medium ${alertStyles[doc.ai_alert]}">
+                    <span class="px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${alertStyles[doc.ai_alert]}">
                       ${doc.ai_alert.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase())}
                     </span>
                     <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
