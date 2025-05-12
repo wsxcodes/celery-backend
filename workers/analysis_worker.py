@@ -175,6 +175,8 @@ def main():
             # -----------------------------------------------------------------------------------------------------------------------------
             # Map existing Eterny.io Document Schemas
 
+            # XXX TODO dump matching to legacy schema and do dynamic mapping, save much on token spending
+
             logger.info("Mapping existing Eterny.io Document Schemas")
             simple_prompt = prompts["map_existing_eterny.io_schemas"]
 
