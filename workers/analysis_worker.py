@@ -163,11 +163,13 @@ def main():
             )
 
             # XXX TODO Mark off AI Alert
+            random_alert = random.choice(["insights_available", "action_required", "reminder", "alert"])
+            
             logger.info("Marking document as processed")
             safe_request(
                 request_type="PATCH",
                 url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
-                data={"ai_alert": "insights_available"},
+                data={"ai_alert": random_alert},
             )
             logger.info("Analysis completed successfully")
 
