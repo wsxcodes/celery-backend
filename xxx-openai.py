@@ -1,3 +1,4 @@
+import json
 import logging
 
 from openai import AzureOpenAI
@@ -15,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 # -----------------------------------------------------------------------------------------------------------------------------
 
-document_uuid = "6a61c4da-6d86-4de9-814d-349909559cfa"
+document_uuid = "31b2f4c8-09f2-4c5a-a1c5-fce83bd1e923"
 
 # -----------------------------------------------------------------------------------------------------------------------------
 
@@ -27,12 +28,12 @@ ai_client = AzureOpenAI(
 
 prompts = prompt_generators.load_prompts()
 
-# document = safe_request(
-#             request_type="GET",
-#             url=config.API_URL + f"/api/v1/document/get/{document_uuid}",
-#             data={},
-#         )
-# raw_text = document.json()["raw_text"]
+document = safe_request(
+            request_type="GET",
+            url=config.API_URL + f"/api/v1/document/get/{document_uuid}",
+            data={},
+        )
+raw_text = document.json()["raw_text"]
 
 output_language = "Slovak"
 tokens_spent = 0
@@ -68,11 +69,36 @@ tokens_spent = 0
 
 # Example simple prompt
 
-simple_prompt = prompts["example_prompt_simple"]
-data = run_ai_completition(ai_client=ai_client, prompt=simple_prompt, document_text="", output_language="Slovak")
+# simple_prompt = prompts["example_prompt_simple"]
+# data = run_ai_completition(ai_client=ai_client, prompt=simple_prompt, document_text="", output_language="Slovak")
+
+# usage = data.get("usage")
+# tokens_spent += usage["total_tokens"]
+
+# print(data)
+# print(usage)
+
+# -----------------------------------------------------------------------------------------------------------------------------
+
+# Map existing Eterny.io Document Schemas
+simple_prompt = prompts["map_existing_eterny.io_schemas"]
+
+with open("prompts/prompts.json", "r") as f:
+        eterny_legacy_schema = f.read()
+
+raw_text += "\n\n schema:\n" + eterny_legacy_schema
+data = run_ai_completition(ai_client=ai_client, prompt=simple_prompt, document_text=raw_text, output_language="English")
+legacy_schema_dict = json.loads(data["message"])
 
 usage = data.get("usage")
 tokens_spent += usage["total_tokens"]
 
-print(data)
+logger.info("Update Eterny.io legacy schema to database")
+safe_request(
+    request_type="PATCH",
+    url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+    data={"ai_enterny_legacy_schema": str(legacy_schema_dict)},
+)
+
+print(legacy_schema_dict)
 print(usage)
