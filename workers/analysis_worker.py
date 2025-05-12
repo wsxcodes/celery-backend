@@ -145,7 +145,7 @@ def main():
 
             # Run the smart summary prompt
             smart_summary = prompts["smart_summary"]
-            data = run_ai_completition(ai_client=ai_client, prompt=smart_summary, document_text=raw_text, output_language="Slovak")
+            data = run_ai_completition(ai_client=ai_client, prompt=smart_summary, document_text=raw_text, output_language=output_language)
 
             usage = data.get("usage")
             tokens_spent += usage["total_tokens"]
