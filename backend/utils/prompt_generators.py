@@ -28,4 +28,14 @@ def run_ai_completition(ai_client, prompt: dict, document_text=None, output_lang
         response_format=prompt["schema"]
     )
     message = response.choices[0].message
-    return json.loads(message.content)
+    data = json.loads(message.content)
+
+    # Capture token usage if available
+    if hasattr(response, "usage"):
+        usage = {
+            "prompt_tokens": response.usage.prompt_tokens,
+            "completion_tokens": response.usage.completion_tokens,
+            "total_tokens": response.usage.total_tokens
+        }
+        data["usage"] = usage
+    return data
