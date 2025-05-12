@@ -49,7 +49,7 @@ def run_ai_completition(ai_client, prompt: dict, document_text=None, output_lang
         )
         message = response.choices[0].message.content
         data = {"message": message}
-    
+
     usage = {
         "prompt_tokens": response.usage.prompt_tokens,
         "completion_tokens": response.usage.completion_tokens,
