@@ -50,7 +50,7 @@
                             },
                             "summary_long": {
                                 "type": "string",
-                                "description": "A 5-6 sentence overview describing the type of the document and covering key facts, legal issues, and conclusions."
+                                "description": "A 3-4 sentence overview describing the type of the document and covering key facts, legal issues, and conclusions."
                             },
                             "top_category": {
                                 "type": "string",
