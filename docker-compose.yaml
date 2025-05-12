@@ -16,11 +16,11 @@ services:
     volumes:
       - ./data:/code/data
     command: >
-      gunicorn
-      --worker-class uvicorn.workers.UvicornWorker
-      --workers ${NEURAL_API_WORKERS:-1}
-      --bind 0.0.0.0:8880
-      backend.main:app
+      sh -c "scripts/run-worker.sh & gunicorn \
+        --worker-class uvicorn.workers.UvicornWorker \
+        --workers ${NEURAL_API_WORKERS:-1} \
+        --bind 0.0.0.0:8880 \
+        backend.main:app"
     healthcheck:
       interval: 10s
       timeout: 5s
