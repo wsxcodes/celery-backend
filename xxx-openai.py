@@ -7,7 +7,7 @@ from backend.utils.helpers import safe_request
 from openai import AzureOpenAI
 
 
-client = AzureOpenAI(
+ai_client = AzureOpenAI(
     azure_endpoint=config.AZURE_OPENAI_ENDPOINT,
     api_version=config.OPENAI_API_VERSION
 )
@@ -24,29 +24,31 @@ document = safe_request(
         )
 raw_text = document.json()["raw_text"]
 
+output_language = "Slovak"
+
+def run_ai_completition(prompt_text, output_language="Slovak"):
+    """
+    Generate a smart summary for the given prompt text using the loaded template.
+    """
+    system_content = example_prompt["messages"][0]["content"].replace("{output_language}", output_language)
+    user_template = example_prompt["messages"][1]["content"]
+    user_content = user_template.replace("{document_text}", prompt_text)
+    response = ai_client.chat.completions.create(
+        model=example_prompt["model"],
+        temperature=example_prompt["temperature"],
+        messages=[
+            {"role": "system", "content": system_content},
+            {"role": "user", "content": user_content}
+        ],
+        response_format=example_prompt["schema"]
+    )
+    message = response.choices[0].message
+    return json.loads(message.content)
 
 example_prompt = prompts["smart_summary"]
 
-output_language = "Slovak"
 
-response = client.chat.completions.create(
-    model=example_prompt["model"],
-    temperature=example_prompt["temperature"],
-    messages=[
-            {
-                "role": "system",
-                "content": example_prompt["messages"][0]["content"].replace("{output_language}", output_language)
-            },
-            {
-                "role": "user",
-                "content": example_prompt["messages"][1]["content"].replace("{document_text}", raw_text)
-            }
-        ],
-    response_format=example_prompt["schema"]
-)
-
-response = response.choices[0].message
-data = json.loads(response.content)
+data = run_ai_completition(raw_text)
 
 from pprint import pprint
 pprint(data)
