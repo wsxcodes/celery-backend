@@ -108,7 +108,7 @@ async def list_customer_documents(customer_id: str, db=Depends(get_db)):
     cursor = db.execute("""
         SELECT id, customer_id, uuid, filename, file_size, file_hash, uploaded_at,
                analysis_status, analysis_started_at, analysis_completed_at, analysis_cost,
-               ai_alert, ai_category, ai_summary_short, ai_summary_text as ai_summary_long
+               ai_alert, ai_category, ai_summary_short, ai_summary_long as ai_summary_long
         FROM files
         WHERE customer_id = ?
         ORDER BY uploaded_at DESC
