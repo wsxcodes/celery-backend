@@ -63,9 +63,4 @@ response = client.chat.completions.create(
     response_format=schema
 )
 
-# parsed object
-result = completion.choices[0].message.parsed
-print(result)
-
-# raw JSON string if you need it
-print(completion.choices[0].message.content)
+print(response.choices[0].message.content)
