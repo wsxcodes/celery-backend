@@ -20,7 +20,9 @@ if origins_str:
 else:
     CORS_ORIGINS = []
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "MISSING-OPENAI_API_KEY")
+AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY", "your-azure-openai-api-key")
+AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT", "your-azure-openai-endpoint")
+OPENAI_API_VERSION = os.getenv("OPENAI_API_VERSION", "2025-01-01-preview")
 
 DB_PATH = os.getenv("DB_PATH", os.path.join(ROOT_DIR, "data", "file_records.db"))
 
