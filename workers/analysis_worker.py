@@ -30,12 +30,35 @@ prompts = prompt_generators.load_prompts()
 # XXX detect expiry dates, renewal clauses, trial periods - also update "ai_expires" field in the database
 
 
-def update_tokens_spent(document_uuid, tokens_spent):
-    # XXX get the document
-    # add the tokens_spent to the existing value
-    # update the document using safe_request
-    # add in logging.info...
-    ...
+def update_tokens_spent(document_uuid: str, add_tokens_spent: int) -> bool:
+    logger.info(f"Updating tokens_spent for document {document_uuid} by {add_tokens_spent}")
+    # Fetch current metadata
+    response = safe_request(
+        request_type="GET",
+        url=config.API_URL + f"/api/v1/document/get/{document_uuid}",
+        data={}
+    )
+    if not response or response.status_code != 200:
+        logger.error(f"Failed to fetch metadata for document {document_uuid}")
+        return False
+
+    metadata = response.json()
+    current = metadata.get("analysis_cost", 0)
+    new_total = current + add_tokens_spent
+
+    # Update metadata with new token total
+    update_resp = safe_request(
+        request_type="PATCH",
+        url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+        data={"analysis_cost": new_total}
+    )
+    if update_resp and getattr(update_resp, 'status_code', None) == 200:
+        logger.info(f"analysis_cost updated to {new_total} for document {document_uuid}")
+    else:
+        logger.error(f"Failed to update analysis_cost for document {document_uuid}")
+
+    return True
+
 
 def main():
     while True:
@@ -133,7 +156,8 @@ def main():
 
             # XXX TODO do the category as the very last step
 
-            # XXX TODO function to update "analysis_cost": tokens_spent incrementally
+            # Update document analysis_cost
+            update_tokens_spent(document_uuid=document_uuid, add_tokens_spent=tokens_spent)
 
             # Mark document as processed, update the cost
             logger.info("Marking document as processed")
