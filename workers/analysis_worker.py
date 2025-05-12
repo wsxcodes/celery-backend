@@ -29,6 +29,14 @@ prompts = prompt_generators.load_prompts()
 
 # XXX detect expiry dates, renewal clauses, trial periods - also update "ai_expires" field in the database
 
+
+def update_tokens_spent(document_uuid, tokens_spent):
+    # XXX get the document
+    # add the tokens_spent to the existing value
+    # update the document using safe_request
+    # add in logging.info...
+    ...
+
 def main():
     while True:
         logger.info("Querying pending documents for analysis")
