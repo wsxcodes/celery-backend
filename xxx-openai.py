@@ -7,7 +7,6 @@ from backend import config
 from backend.utils import prompt_generators
 from backend.utils.helpers import safe_request
 from backend.utils.prompt_generators import run_ai_completition
-from workers.analysis_worker import update_tokens_spent
 
 logging.basicConfig(level=logging.INFO)
 
@@ -83,7 +82,7 @@ tokens_spent = 0
 simple_prompt = prompts["map_existing_eterny.io_schemas"]
 
 with open("prompts/prompts.json", "r") as f:
-        eterny_legacy_schema = f.read()
+    eterny_legacy_schema = f.read()
 
 raw_text += "\n\n schema:\n" + eterny_legacy_schema
 data = run_ai_completition(ai_client=ai_client, prompt=simple_prompt, document_text=raw_text, output_language="English")
