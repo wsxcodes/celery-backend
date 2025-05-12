@@ -7,8 +7,8 @@ from openai import AzureOpenAI
 
 from backend import config
 from backend.utils import prompt_generators
-from backend.utils.prompt_generators import run_ai_completition
 from backend.utils.helpers import safe_request
+from backend.utils.prompt_generators import run_ai_completition
 
 logging.basicConfig(level=logging.INFO)
 
@@ -143,8 +143,6 @@ def main():
             output_language = customer.json().get("output_language", "English")
             logger.info(f"Customer output language: {output_language}")
 
-
-            # XXX TODO do the category - this should be the last step for visual purposes
             # Run the smart summary prompt
             smart_summary = prompts["smart_summary"]
             data = run_ai_completition(ai_client=ai_client, prompt=smart_summary, document_text=raw_text, output_language="Slovak")

@@ -5,6 +5,7 @@ logging.basicConfig(level=logging.INFO)
 
 logger = logging.getLogger(__name__)
 
+
 def load_prompts() -> dict:
 
     with open("prompts/prompts.json", "r") as f:
