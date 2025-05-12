@@ -29,11 +29,11 @@
         "messages": [
             {
                 "role": "system",
-                "content": "You are an expert AI assistant specialized in identifying and analyzing legal documents. Produce concise, accurate summaries that preserve key terminology and nuances, and structure your output logically. You must response in {output_language} language."
+                "content": "You are an expert AI assistant specialized in identifying and analyzing legal documents. You must response in {output_language} language."
             },
             {
                 "role": "user",
-                "content": "Summarize the following legal document. In your response, include:\n  1. Key facts\n  2. Legal issues presented\n  3. Court’s (or parties’) conclusions\n  4. Important definitions or terms\n\nDocument:\n{document_text}"
+                "content": "Summarize the following legal document. In your response identify the type of the document and provide it's summary.\n\nDocument:\n{document_text}"
             }
         ],
         "schema": {
