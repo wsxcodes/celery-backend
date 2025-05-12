@@ -7,6 +7,7 @@ from openai import AzureOpenAI
 
 from backend import config
 from backend.utils import prompt_generators
+from backend.utils.prompt_generators import run_ai_completition
 from backend.utils.helpers import safe_request
 
 logging.basicConfig(level=logging.INFO)
@@ -142,6 +143,27 @@ def main():
             output_language = customer.json().get("output_language", "English")
             logger.info(f"Customer output language: {output_language}")
 
+
+            # XXX TODO do the category - this should be the last step for visual purposes
+            # Run the smart summary prompt
+            smart_summary = prompts["smart_summary"]
+            data = run_ai_completition(ai_client=ai_client, prompt=smart_summary, document_text=raw_text, output_language="Slovak")
+
+            usage = data.get("usage")
+            tokens_spent += usage["total_tokens"]
+
+            logger.info("Saving smart summary to database")
+            safe_request(
+                request_type="PATCH",
+                url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+                data={
+                    "ai_category": data["top_category"],
+                    "ai_sub_category": data["sub_category"],
+                    "ai_summary_short": data["summary_short"],
+                    "ai_summary_long": data["summary_long"]
+                }
+            )
+
             # XXX TODO Mark off AI Alert
             logger.info("Marking document as processed")
             safe_request(
@@ -151,13 +173,11 @@ def main():
             )
             logger.info("Analysis completed successfully")
 
-            # XXX TEMP delay for testing
-            # time.sleep(10)
-
-            # XXX TODO do the category as the very last step
-
-            # Update document analysis_cost
-            update_tokens_spent(document_uuid=document_uuid, add_tokens_spent=tokens_spent)
+            # Record the tokens spent
+            update_tokens_spent(
+                document_uuid=document_uuid,
+                add_tokens_spent=tokens_spent
+            )
 
             # Mark document as processed, update the cost
             logger.info("Marking document as processed")
