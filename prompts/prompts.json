@@ -29,7 +29,7 @@
         "messages": [
             {
                 "role": "system",
-                "content": "You are an expert AI assistant specialized in analyzing legal documents. Produce concise, accurate summaries that preserve key terminology and nuances, and structure your output logically."
+                "content": "You are an expert AI assistant specialized in identifying and analyzing legal documents. Produce concise, accurate summaries that preserve key terminology and nuances, and structure your output logically. You must response in {output_language} language."
             },
             {
                 "role": "user",
@@ -44,18 +44,20 @@
                     "schema": {
                         "type": "object",
                         "properties": {
-                            "ai_summary_short": {
+                            "summary_short": {
                                 "type": "string",
-                                "description": "One-sentence summary capturing the document’s core point.",
-                                "maxLength": 200
+                                "description": "One-sentence summary capturing the type of the document."
                             },
-                            "ai_summary_long": {
+                            "summary_long": {
                                 "type": "string",
-                                "description": "A 4–5 sentence overview covering key facts, legal issues, and conclusions.",
-                                "maxLength": 1000
+                                "description": "A 4–5 sentence overview describing the type of the document and covering key facts, legal issues, and conclusions."
+                            },
+                            "document_type": {
+                                "type": "string",
+                                "description": "The type of the document, e.g., 'contract', 'court ruling', 'rental agreement', etc."
                             }
                         },
-                        "required": ["ai_summary_short", "ai_summary_long"],
+                        "required": ["summary_short", "summary_long", "document_type"],
                         "additionalProperties": false
                     }
                 }
