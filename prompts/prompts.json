@@ -52,12 +52,16 @@
                                 "type": "string",
                                 "description": "A 4–5 sentence overview describing the type of the document and covering key facts, legal issues, and conclusions."
                             },
-                            "document_type": {
+                            "top_category": {
                                 "type": "string",
-                                "description": "The type of the document, e.g., 'contract', 'court ruling', 'rental agreement', etc."
+                                "description": ""
+                            },
+                            "sub_category": {
+                                "type": "string",
+                                "description": ""
                             }
                         },
-                        "required": ["summary_short", "summary_long", "document_type"],
+                        "required": ["summary_short", "summary_long", "top_category", "sub_category"],
                         "additionalProperties": false
                     }
                 }
