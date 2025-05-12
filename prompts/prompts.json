@@ -22,5 +22,43 @@
                     }
                 }
             }
+        },
+    "smart_summary": {
+        "model": "gpt-4.1",
+        "temperature": 0.5,
+        "messages": [
+            {
+                "role": "system",
+                "content": "You are an expert AI assistant specialized in analyzing legal documents. Produce concise, accurate summaries that preserve key terminology and nuances, and structure your output logically."
+            },
+            {
+                "role": "user",
+                "content": "Summarize the following legal document. In your response, include:\n  1. Key facts\n  2. Legal issues presented\n  3. Court’s (or parties’) conclusions\n  4. Important definitions or terms\n\nDocument:\n{document_text}"
+            }
+        ],
+        "schema": {
+            "type": "json_schema",
+                "json_schema": {
+                    "name": "SummarySchema",
+                    "strict": true,
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "ai_summary_short": {
+                                "type": "string",
+                                "description": "One-sentence summary capturing the document’s core point.",
+                                "maxLength": 200
+                            },
+                            "ai_summary_long": {
+                                "type": "string",
+                                "description": "A 4–5 sentence overview covering key facts, legal issues, and conclusions.",
+                                "maxLength": 1000
+                            }
+                        },
+                        "required": ["ai_summary_short", "ai_summary_long"],
+                        "additionalProperties": false
+                    }
+                }
+            }
         }
 }
