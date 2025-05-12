@@ -36,7 +36,8 @@ def init_db():
             ai_summary_long TEXT,
             file_size INTEGER,
             raw_text TEXT,
-            health_score INTEGER DEFAULT 0
+            health_score INTEGER DEFAULT 0,
+            ai_enterny_legacy_schema TEXT
         )
     """)
     cursor.execute("""
