@@ -1,12 +1,12 @@
 import logging
-from pprint import pprint
 
 from openai import AzureOpenAI
-from workers.analysis_worker import update_tokens_spent
+
 from backend import config
 from backend.utils import prompt_generators
 from backend.utils.helpers import safe_request
 from backend.utils.prompt_generators import run_ai_completition
+from workers.analysis_worker import update_tokens_spent
 
 logging.basicConfig(level=logging.INFO)
 
