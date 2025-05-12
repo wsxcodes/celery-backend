@@ -23,3 +23,18 @@ response = client.chat.completions.create(
 
 # Print the assistant's reply
 print(response.choices[0].message.content)
+
+# Example 2: Requesting structured JSON output
+response_json = client.chat.completions.create(
+    model="gpt-4.1",
+    messages=[
+        {"role": "system", "content": (
+            "You are a JSON generator. "
+            "Always respond with valid JSON following this schema: "
+            '{"joke": "string", "length": "integer"}'
+        )},
+        {"role": "user", "content": "Tell me a joke."}
+    ]
+)
+structured_output = response_json.choices[0].message.content
+print("Structured JSON response:", structured_output)
