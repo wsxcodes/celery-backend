@@ -348,8 +348,8 @@
               {{document.filename}}
             </h1>
             <div class="flex items-center space-x-3 mt-2 text-sm">
-              <span class="px-3 py-1 bg-blue-600 text-white rounded-full">Legal Contract</span>
-              <span class="px-3 py-1 bg-indigo-600 text-white rounded-full">Leases</span>
+              <span class="px-3 py-1 bg-blue-600 text-white rounded-full">{{document.ai_category}}</span>
+              <span class="px-3 py-1 bg-indigo-600 text-white rounded-full">{{document.ai_sub_category}}</span>
               <span class="text-gray-400 flex items-center">
                 <svg class="h-5 w-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -357,6 +357,7 @@
                 Uploaded {{document.uploaded_at}}
               </span>
 
+              <font color="red">XXX expires</font>
               {% if document.ai_expires %}
                 <span class="text-gray-400 flex items-center">
                   <svg class="h-5 w-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
