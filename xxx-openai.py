@@ -31,13 +31,23 @@ document = safe_request(
 raw_text = document.json()["raw_text"]
 
 output_language = "Slovak"
-
+tokens_spent = 0
 
 smart_summary = prompts["smart_summary"]
 data = run_ai_completition(ai_client=ai_client, prompt=smart_summary, document_text=raw_text, output_language="Slovak")
 
 from pprint import pprint
 pprint(data)
+
+usage = data.get("usage")
+if usage:
+    logger.info(
+        f"Token usage - prompt: {usage['prompt_tokens']}, completion: {usage['completion_tokens']}, total: {usage['total_tokens']}"
+    )
+    tokens_spent += usage["total_tokens"]
+
+
+# XXX update tokens_spent
 
 logger.info("Saving smart summary to database")
 safe_request(
