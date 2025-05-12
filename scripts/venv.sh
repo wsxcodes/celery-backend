@@ -7,7 +7,7 @@ source .venv/bin/activate
 # .venv\Scripts\Activate
 
 # Load environment variables from the .env file
-export $(grep -v '^#' .env.devel | xargs)
+export $(grep -v '^#' .env | xargs)
 
 poetry install --no-root
 
