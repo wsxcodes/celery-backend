@@ -1,5 +1,5 @@
-import json
 import datetime
+import json
 import logging
 import random
 import time
@@ -179,7 +179,7 @@ def main():
             simple_prompt = prompts["map_existing_eterny.io_schemas"]
 
             with open("prompts/prompts.json", "r") as f:
-                    eterny_legacy_schema = f.read()
+                eterny_legacy_schema = f.read()
 
             raw_text += "\n\n schema:\n" + eterny_legacy_schema
             data = run_ai_completition(ai_client=ai_client, prompt=simple_prompt, document_text=raw_text, output_language="English")
@@ -207,7 +207,6 @@ def main():
                 data={"ai_alert": random_alert},
             )
             logger.info("Analysis completed successfully")
-
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Record the tokens spent
