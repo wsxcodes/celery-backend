@@ -26,21 +26,24 @@ raw_text = document.json()["raw_text"]
 
 output_language = "Slovak"
 
-def run_ai_completition(prompt_text, output_language="Slovak"):
+def run_ai_completition(ai_client, prompt: dict, document_text=None, output_language="Slovak"):
     """
     Generate a smart summary for the given prompt text using the loaded template.
     """
-    system_content = example_prompt["messages"][0]["content"].replace("{output_language}", output_language)
-    user_template = example_prompt["messages"][1]["content"]
-    user_content = user_template.replace("{document_text}", prompt_text)
+    system_content = prompt["messages"][0]["content"].replace("{output_language}", output_language)
+    user_template = prompt["messages"][1]["content"]
+
+    if document_text:
+        user_content = user_template.replace("{document_text}", document_text)
+        
     response = ai_client.chat.completions.create(
-        model=example_prompt["model"],
-        temperature=example_prompt["temperature"],
+        model=prompt["model"],
+        temperature=prompt["temperature"],
         messages=[
             {"role": "system", "content": system_content},
             {"role": "user", "content": user_content}
         ],
-        response_format=example_prompt["schema"]
+        response_format=prompt["schema"]
     )
     message = response.choices[0].message
     return json.loads(message.content)
@@ -48,7 +51,7 @@ def run_ai_completition(prompt_text, output_language="Slovak"):
 example_prompt = prompts["smart_summary"]
 
 
-data = run_ai_completition(raw_text)
+data = run_ai_completition(ai_client=ai_client, prompt=example_prompt, document_text=raw_text, output_language="Slovak")
 
 from pprint import pprint
 pprint(data)
