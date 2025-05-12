@@ -2,7 +2,7 @@ import logging
 from pprint import pprint
 
 from openai import AzureOpenAI
-
+from workers.analysis_worker import update_tokens_spent
 from backend import config
 from backend.utils import prompt_generators
 from backend.utils.helpers import safe_request
@@ -58,4 +58,9 @@ safe_request(
         "ai_summary_short": data["summary_short"],
         "ai_summary_long": data["summary_long"]
     }
+)
+
+update_tokens_spent(
+    document_uuid=document_uuid,
+    add_tokens_spent=tokens_spent
 )
