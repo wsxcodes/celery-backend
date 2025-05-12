@@ -126,6 +126,8 @@ def main():
 
             # XXX TODO do the category as the very last step
 
+            # XXX TODO function to update "analysis_cost": tokens_spent incrementally
+
             # Mark document as processed, update the cost
             logger.info("Marking document as processed")
             safe_request(
@@ -135,7 +137,7 @@ def main():
                     "analysis_status": "processed",
                     "analysis_completed_at": datetime.datetime.now().isoformat(),
                     "health_score": random.randint(85, 95),  # XXX TODO calculate the health score
-                    "analysis_cost": tokens_spent},
+                }
             )
             logger.info("Analysis completed successfully")
 
