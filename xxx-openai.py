@@ -21,7 +21,7 @@ ai_client = AzureOpenAI(
  
 prompts = prompt_generators.load_prompts()
 
-document_uuid = "edf60c87-27dc-4a19-a404-284f0424babc"
+document_uuid = "6a61c4da-6d86-4de9-814d-349909559cfa"
 
 document = safe_request(
             request_type="GET",
