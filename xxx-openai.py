@@ -15,11 +15,11 @@ client = AzureOpenAI(
  
 prompts = prompt_generators.load_prompts()
 
-
+document_uuid = "edf60c87-27dc-4a19-a404-284f0424babc"
 
 document = safe_request(
             request_type="GET",
-            url=config.API_URL + "/api/v1/document/get/a699ac08-cd55-49b9-8aaf-cdc2b46e77b6",
+            url=config.API_URL + f"/api/v1/document/get/{document_uuid}",
             data={},
         )
 raw_text = document.json()["raw_text"]
@@ -39,7 +39,7 @@ response = client.chat.completions.create(
             },
             {
                 "role": "user",
-                "content": example_prompt["messages"][0]["content"].replace("{document_text}", raw_text)
+                "content": example_prompt["messages"][1]["content"].replace("{document_text}", raw_text)
             }
         ],
     response_format=example_prompt["schema"]
