@@ -13,15 +13,19 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+# -----------------------------------------------------------------------------------------------------------------------------
+
+document_uuid = "6a61c4da-6d86-4de9-814d-349909559cfa"
+
+# -----------------------------------------------------------------------------------------------------------------------------
+
+
 ai_client = AzureOpenAI(
     azure_endpoint=config.AZURE_OPENAI_ENDPOINT,
     api_version=config.OPENAI_API_VERSION
 )
 
-
 prompts = prompt_generators.load_prompts()
-
-document_uuid = "6a61c4da-6d86-4de9-814d-349909559cfa"
 
 document = safe_request(
             request_type="GET",
@@ -32,6 +36,8 @@ raw_text = document.json()["raw_text"]
 
 output_language = "Slovak"
 tokens_spent = 0
+
+# -----------------------------------------------------------------------------------------------------------------------------
 
 # Run the smart summary prompt
 smart_summary = prompts["smart_summary"]
@@ -57,3 +63,5 @@ update_tokens_spent(
     document_uuid=document_uuid,
     add_tokens_spent=tokens_spent
 )
+
+# -----------------------------------------------------------------------------------------------------------------------------
