@@ -8,6 +8,7 @@ def load_prompts() -> dict:
 
     return prompts
 
+
 def run_ai_completition(ai_client, prompt: dict, document_text=None, output_language="Slovak"):
     """
     Generate a smart summary for the given prompt text using the loaded template.
@@ -17,7 +18,7 @@ def run_ai_completition(ai_client, prompt: dict, document_text=None, output_lang
 
     if document_text:
         user_content = user_template.replace("{document_text}", document_text)
-        
+
     response = ai_client.chat.completions.create(
         model=prompt["model"],
         temperature=prompt["temperature"],
