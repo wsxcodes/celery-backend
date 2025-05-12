@@ -22,6 +22,8 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger.setLevel(logging.INFO)
 
+# XXX TODO assure that the owner of the file is the customer and is the only one who can access it
+
 
 @router.post("/add/{customer_id}")
 @log_endpoint
