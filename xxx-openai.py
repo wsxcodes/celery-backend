@@ -1,12 +1,12 @@
-import os 
-import json
 import logging
-from backend import config
-from backend.utils import prompt_generators
-from backend.utils.prompt_generators import run_ai_completition
-from backend.utils.helpers import safe_request
+from pprint import pprint
 
 from openai import AzureOpenAI
+
+from backend import config
+from backend.utils import prompt_generators
+from backend.utils.helpers import safe_request
+from backend.utils.prompt_generators import run_ai_completition
 
 logging.basicConfig(level=logging.INFO)
 
@@ -18,7 +18,7 @@ ai_client = AzureOpenAI(
     api_version=config.OPENAI_API_VERSION
 )
 
- 
+
 prompts = prompt_generators.load_prompts()
 
 document_uuid = "6a61c4da-6d86-4de9-814d-349909559cfa"
@@ -36,7 +36,6 @@ tokens_spent = 0
 smart_summary = prompts["smart_summary"]
 data = run_ai_completition(ai_client=ai_client, prompt=smart_summary, document_text=raw_text, output_language="Slovak")
 
-from pprint import pprint
 pprint(data)
 
 usage = data.get("usage")
