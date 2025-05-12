@@ -33,7 +33,7 @@ def init_db():
             ai_category TEXT,
             ai_sub_category TEXT,
             ai_summary_short TEXT,
-            ai_summary_text TEXT,
+            ai_summary_long TEXT,
             file_size INTEGER,
             raw_text TEXT,
             health_score INTEGER DEFAULT 0
