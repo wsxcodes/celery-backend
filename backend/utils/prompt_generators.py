@@ -1,5 +1,6 @@
 import json
 
+
 def load_prompts() -> dict:
 
     with open("prompts/prompts.json", "r") as f:
