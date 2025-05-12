@@ -20,7 +20,7 @@ logger.setLevel(logging.INFO)
 
 @router.post("/")
 @log_endpoint
-async def ask_a_question_about_document(
+async def ask_question_about_document(
     uuid: str,
     question: str = Body(...),
     db=Depends(get_db)
