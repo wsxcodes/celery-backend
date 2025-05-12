@@ -23,19 +23,33 @@ def run_ai_completition(ai_client, prompt: dict, document_text=None, output_lang
 
     if document_text:
         user_content = user_template.replace("{document_text}", document_text)
+    else:
+        user_content = user_template
 
-    response = ai_client.chat.completions.create(
-        model=prompt["model"],
-        temperature=prompt["temperature"],
-        messages=[
-            {"role": "system", "content": system_content},
-            {"role": "user", "content": user_content}
-        ],
-        response_format=prompt["schema"]
-    )
-    message = response.choices[0].message
-    data = json.loads(message.content)
-
+    if "schema" in prompt:
+        response = ai_client.chat.completions.create(
+            model=prompt["model"],
+            temperature=prompt["temperature"],
+            messages=[
+                {"role": "system", "content": system_content},
+                {"role": "user", "content": user_content}
+            ],
+            response_format=prompt["schema"]
+        )
+        message = response.choices[0].message
+        data = json.loads(message.content)
+    else:
+        response = ai_client.chat.completions.create(
+            model=prompt["model"],
+            temperature=prompt["temperature"],
+            messages=[
+                {"role": "system", "content": system_content},
+                {"role": "user", "content": user_content}
+            ]
+        )
+        message = response.choices[0].message.content
+        data = {"message": message}
+    
     usage = {
         "prompt_tokens": response.usage.prompt_tokens,
         "completion_tokens": response.usage.completion_tokens,
