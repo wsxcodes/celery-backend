@@ -1,5 +1,9 @@
 import json
+import logging
 
+logging.basicConfig(level=logging.INFO)
+
+logger = logging.getLogger(__name__)
 
 def load_prompts() -> dict:
 
@@ -31,12 +35,12 @@ def run_ai_completition(ai_client, prompt: dict, document_text=None, output_lang
     message = response.choices[0].message
     data = json.loads(message.content)
 
-    # Capture token usage if available
-    if hasattr(response, "usage"):
-        usage = {
-            "prompt_tokens": response.usage.prompt_tokens,
-            "completion_tokens": response.usage.completion_tokens,
-            "total_tokens": response.usage.total_tokens
-        }
-        data["usage"] = usage
+    usage = {
+        "prompt_tokens": response.usage.prompt_tokens,
+        "completion_tokens": response.usage.completion_tokens,
+        "total_tokens": response.usage.total_tokens
+    }
+    data["usage"] = usage
+    logger.info(f"Token usage - prompt: {usage['prompt_tokens']}, completion: {usage['completion_tokens']}, total: {usage['total_tokens']}")
+
     return data
