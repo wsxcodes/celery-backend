@@ -163,7 +163,7 @@ def main():
             )
 
             # XXX TODO Mark off AI Alert
-            random_alert = random.choice(["insights_available", "action_required", "reminder", "alert"])
+            random_alert = random.choice(["insights_available", "action_required", "reminder", "alert", ""])
             
             logger.info("Marking document as processed")
             safe_request(
