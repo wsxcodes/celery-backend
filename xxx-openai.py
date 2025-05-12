@@ -79,7 +79,6 @@ tokens_spent = 0
 # print(usage)
 
 # -----------------------------------------------------------------------------------------------------------------------------
-
 # Map existing Eterny.io Document Schemas
 simple_prompt = prompts["map_existing_eterny.io_schemas"]
 
