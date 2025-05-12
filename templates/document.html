@@ -329,6 +329,17 @@
         height: 1.2rem;
       }
     }
+    /* Subtle highlight for mapping links */
+    .mapping-link {
+      color: #60a5fa;
+      text-decoration: underline dotted;
+      background-color: rgba(59, 130, 246, 0.1);
+      border-radius: 0.2rem;
+      transition: background-color 0.2s ease-in-out;
+    }
+    .mapping-link:hover {
+      background-color: rgba(59, 130, 246, 0.2);
+    }
   </style>
 {% endblock %}
 
@@ -634,12 +645,16 @@
           <h2 class="text-2xl font-bold text-green-400 mb-4">Extraction Log</h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-300">
             <div>
-              <p class="text-gray-400">Extracted Entities</p>
+              <p class="text-gray-400">Eterny Schema Mappings</p>
                   xxx todo metadata
+                  <br/>
+                  <font size="2">
+                  <a href="/data/mapping/docu-schemas_eterny.io.json" target="_blank" class="mapping-link">docu-schemas.json</a>
+                  </font>
               </pre>
               <br/>
               <br/>
-              <p class="text-gray-400">Extracted Entities</p>
+              <p class="text-gray-400">Enhanced Entities Extraction</p>
                   xxx todo metadata
               </pre>
             </div>
