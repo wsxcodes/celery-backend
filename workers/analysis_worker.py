@@ -1,3 +1,4 @@
+import json
 import datetime
 import logging
 import random
@@ -90,6 +91,7 @@ def main():
                 data={"analysis_status": "processing", "analysis_started_at": datetime.datetime.now().isoformat()},
             )
 
+            # -----------------------------------------------------------------------------------------------------------------------------
             # Request document preview
             logger.info("Requesting document preview")
             preview_response = safe_request(
@@ -117,7 +119,9 @@ def main():
                     data={"file_preview": preview_path},
                 )
 
+            # -----------------------------------------------------------------------------------------------------------------------------
             # Extract text from the document
+
             logger.info("Extracting text from document")
             raw_text = safe_request(
                 request_type="GET",
@@ -126,7 +130,9 @@ def main():
             )
             raw_text = raw_text.json()
 
+            # -----------------------------------------------------------------------------------------------------------------------------
             # Save the extracted text to the database
+
             logger.info("Saving extracted text to database")
             safe_request(
                 request_type="PATCH",
@@ -134,7 +140,9 @@ def main():
                 data={"raw_text": raw_text},
             )
 
+            # -----------------------------------------------------------------------------------------------------------------------------
             # Get customer info
+
             customer = safe_request(
                 request_type="GET",
                 url=config.API_URL + f"/api/v1/customer/{customer_id}",
@@ -143,7 +151,9 @@ def main():
             output_language = customer.json().get("output_language", "English")
             logger.info(f"Customer output language: {output_language}")
 
+            # -----------------------------------------------------------------------------------------------------------------------------
             # Run the smart summary prompt
+
             smart_summary = prompts["smart_summary"]
             data = run_ai_completition(ai_client=ai_client, prompt=smart_summary, document_text=raw_text, output_language=output_language)
 
@@ -162,7 +172,32 @@ def main():
                 }
             )
 
+            # -----------------------------------------------------------------------------------------------------------------------------
+            # Map existing Eterny.io Document Schemas
+
+            logger.info("Mapping existing Eterny.io Document Schemas")
+            simple_prompt = prompts["map_existing_eterny.io_schemas"]
+
+            with open("prompts/prompts.json", "r") as f:
+                    eterny_legacy_schema = f.read()
+
+            raw_text += "\n\n schema:\n" + eterny_legacy_schema
+            data = run_ai_completition(ai_client=ai_client, prompt=simple_prompt, document_text=raw_text, output_language="English")
+            legacy_schema_dict = json.loads(data["message"])
+
+            usage = data.get("usage")
+            tokens_spent += usage["total_tokens"]
+
+            logger.info("Update Eterny.io legacy schema to database")
+            safe_request(
+                request_type="PATCH",
+                url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+                data={"ai_enterny_legacy_schema": str(legacy_schema_dict)},
+            )
+
+            # -----------------------------------------------------------------------------------------------------------------------------
             # XXX TODO Mark off AI Alert
+
             random_alert = random.choice(["insights_available", "action_required", "reminder", "alert", ""])
 
             logger.info("Marking document as processed")
@@ -173,12 +208,16 @@ def main():
             )
             logger.info("Analysis completed successfully")
 
+
+            # -----------------------------------------------------------------------------------------------------------------------------
             # Record the tokens spent
+
             update_tokens_spent(
                 document_uuid=document_uuid,
                 add_tokens_spent=tokens_spent
             )
 
+            # -----------------------------------------------------------------------------------------------------------------------------
             # Mark document as processed, update the cost
             logger.info("Marking document as processed")
             safe_request(
