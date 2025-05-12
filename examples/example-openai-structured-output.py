@@ -1,9 +1,7 @@
-import os 
-from backend import config
-
-from pydantic import BaseModel
 from openai import AzureOpenAI
+from pydantic import BaseModel
 
+from backend import config
 
 client = AzureOpenAI(
     azure_endpoint=config.AZURE_OPENAI_ENDPOINT,
@@ -12,16 +10,18 @@ client = AzureOpenAI(
 
 # ------------------ Pydantic SCHEMA example ------------------
 
+
 class HelloWorld(BaseModel):
     text: str
     number: int
+
 
 completion = client.beta.chat.completions.parse(
     model="gpt-4.1",
     temperature=0.5,
     messages=[
         {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user",   "content": "Say hello world and number 1."}
+        {"role": "user", "content": "Say hello world and number 1."}
     ],
     response_format=HelloWorld
 )
@@ -44,7 +44,7 @@ schema = {
         "schema": {                   # <— your real JSON Schema goes here
             "type": "object",
             "properties": {
-                "text":   {"type": "string"},
+                "text": {"type": "string"},
                 "number": {"type": "integer"}
             },
             "required": ["text", "number"],
@@ -57,8 +57,8 @@ response = client.chat.completions.create(
     model="gpt-4.1",
     temperature=0.5,
     messages=[
-        {"role": "system",  "content": "You are a helpful assistant."},
-        {"role": "user",    "content": "Say hello world and number 1."}
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Say hello world and number 1."}
     ],
     response_format=schema
 )
