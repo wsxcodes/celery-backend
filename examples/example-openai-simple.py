@@ -1,6 +1,6 @@
-from backend import config
-
 from openai import AzureOpenAI
+
+from backend import config
 
 # Initialize the OpenAI client
 client = AzureOpenAI(
