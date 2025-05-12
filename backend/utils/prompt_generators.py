@@ -7,3 +7,25 @@ def load_prompts() -> dict:
         prompts = json.load(f)
 
     return prompts
+
+def run_ai_completition(ai_client, prompt: dict, document_text=None, output_language="Slovak"):
+    """
+    Generate a smart summary for the given prompt text using the loaded template.
+    """
+    system_content = prompt["messages"][0]["content"].replace("{output_language}", output_language)
+    user_template = prompt["messages"][1]["content"]
+
+    if document_text:
+        user_content = user_template.replace("{document_text}", document_text)
+        
+    response = ai_client.chat.completions.create(
+        model=prompt["model"],
+        temperature=prompt["temperature"],
+        messages=[
+            {"role": "system", "content": system_content},
+            {"role": "user", "content": user_content}
+        ],
+        response_format=prompt["schema"]
+    )
+    message = response.choices[0].message
+    return json.loads(message.content)
