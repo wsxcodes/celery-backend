@@ -7,7 +7,6 @@
 
 ### Get Started
 **Your documents and assets, fully under control.**  
-For you and your family. Forever.
 
 All your finances, investments, and important documents in one place. Secure, organized, and always within reach.
 
