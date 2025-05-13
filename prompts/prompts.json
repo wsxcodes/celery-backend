@@ -94,5 +94,19 @@
                 "content": "Map the entities from this text to the provided schema. Text:\n{document_text}"
             }
         ]
+    },
+    "map_entities_to_schema": {
+        "model": "gpt-4.1",
+        "temperature": 0.0,
+        "messages": [
+            {
+                "role": "system",
+                "content": "You are a data modeling and extraction specialist. Analyze the provided document, infer a comprehensive JSON Schema capturing all entity types, field names, and data types, then extract all entities conforming to that schema. Respond with a single JSON object containing two top-level keys: \"schema\" (the JSON Schema definition) and \"entities\" (the extracted data). Do not include any explanatory text or additional fields."
+            },
+            {
+                "role": "user",
+                "content": "Document:\n{document_text}\n\nAnalyze the document to infer the JSON schema and extract all entities into that schema. Output only valid JSON."
+            }
+        ]
     }
 }
