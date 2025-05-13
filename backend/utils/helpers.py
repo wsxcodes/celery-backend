@@ -2,6 +2,7 @@ import logging
 import re
 
 import requests
+
 from backend import config
 
 logger = logging.getLogger(__name__)
