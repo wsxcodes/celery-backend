@@ -10,13 +10,13 @@ from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 
 from backend import config
-from backend.utils.helpers import format_analysis
 from backend.api.api_v1.endpoints.customer_endpoints import (add_new_customer,
                                                              get_customer)
 from backend.api.api_v1.endpoints.documents_endpoints import get_document
 from backend.api.api_v1.routers import api_router
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db, init_db
+from backend.utils.helpers import format_analysis
 
 API_V1_STR = "/api/v1"
 
