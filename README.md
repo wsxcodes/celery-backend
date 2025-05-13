@@ -68,6 +68,6 @@ Founder of Eterny
 
 - [Privacy Policy](#)  
 - Contact: hello@theeterny.com  
-- Follow us: [LinkedIn](https://www.linkedin.com/company/the-eterny/) | [Instagram](https://www.instagram.com/the_eterny) | [Facebook](https://www.facebook.com/people/The-Eterny)
+- Follow us: [LinkedIn](https://www.linkedin.com/company/the-eterny/) | [Instagram](https://www.instagram.com/the_eterny) | [Facebook](https://www.facebook.com/people/The-Eterny/61562243742369)
 
 &copy; 2025 Eterny. All rights reserved.
