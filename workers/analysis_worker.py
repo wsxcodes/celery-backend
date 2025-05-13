@@ -167,6 +167,23 @@ def main():
             )
 
             # -----------------------------------------------------------------------------------------------------------------------------
+            # Run the analysis criteria prompt
+            analysis_criteria = prompts["analysis_criteria"]
+            data = run_ai_completition(ai_client=ai_client, prompt=analysis_criteria, document_text=raw_text, output_language="Slovak")
+
+            usage = data.get("usage")
+            tokens_spent += usage["total_tokens"]
+
+            logger.info("Saving analysis criteria to database")
+            safe_request(
+                request_type="PATCH",
+                url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+                data={
+                    "ai_analysis_criteria": data["message"]
+                }
+            )
+
+            # -----------------------------------------------------------------------------------------------------------------------------
             # Map Eterny legacy document schemas
 
             logger.info("Mapping existing Eterny.io Document Schemas")
