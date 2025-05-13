@@ -10,6 +10,7 @@ from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
 
 from backend import config
+from backend.utils.helpers import format_analysis
 from backend.api.api_v1.endpoints.customer_endpoints import (add_new_customer,
                                                              get_customer)
 from backend.api.api_v1.endpoints.documents_endpoints import get_document
@@ -141,6 +142,7 @@ async def read_document(request: Request, uuid: str, db=Depends(get_db)):
     document_dict["file_size_humanized"] = humanize.naturalsize(document.file_size)
     document_dict["uploaded_at"] = document.uploaded_at.strftime("%b %d, %Y")
     document_dict["filename"] = document_dict["filename"].replace(" ", "_")
+    document_dict["ai_analysis_criteria"] = format_analysis(document_dict["ai_analysis_criteria"])
 
     if document.ai_expires:
         document_dict["ai_expires"] = document.ai_expires.strftime("%b %d, %Y")
