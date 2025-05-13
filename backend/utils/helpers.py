@@ -4,6 +4,7 @@ import re
 import requests
 
 from backend import config
+import httpx
 
 logger = logging.getLogger(__name__)
 
@@ -124,3 +125,29 @@ def update_tokens_spent(document_uuid: str, add_tokens_spent: int) -> bool:
         logger.error(f"Failed to update analysis_cost for document {document_uuid}")
 
     return True
+
+
+async def update_tokens_spent_async(document_uuid: str, add_tokens_spent: int) -> bool:
+    logger.info(f"Updating tokens_spent asynchronously for document {document_uuid} by {add_tokens_spent}")
+    try:
+        async with httpx.AsyncClient() as client:
+            # Fetch current metadata
+            get_url = config.API_URL + f"/api/v1/document/get/{document_uuid}"
+            response = await client.get(get_url)
+            response.raise_for_status()
+            metadata = response.json()
+            current = metadata.get("analysis_cost", 0)
+            new_total = current + add_tokens_spent
+
+            # Update metadata with new token total
+            patch_url = config.API_URL + f"/api/v1/document/metadata/{document_uuid}"
+            update_resp = await client.patch(patch_url, json={"analysis_cost": new_total})
+            update_resp.raise_for_status()
+
+        logger.info(f"analysis_cost updated to {new_total} for document {document_uuid}")
+        return True
+    except httpx.HTTPStatusError as e:
+        logger.error(f"HTTP error occurred: {str(e)}")
+    except Exception as e:
+        logger.error(f"Error occurred: {str(e)}")
+    return False
