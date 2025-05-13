@@ -244,7 +244,7 @@ def main():
         else:
             logger.info("No pending documents found")
 
-        time.sleep(0.5)
+        time.sleep(1)
 
 
 if __name__ == "__main__":
