@@ -143,7 +143,7 @@
       padding: 0.5rem 1rem;
     }
     .chat-container.maximized {
-      height: auto;
+      height: 500px;
     }
     .chat-header {
       display: flex;
@@ -162,7 +162,9 @@
       transform: rotate(180deg);
     }
     .chat-content {
-      display: block;
+      display: flex;
+      flex-direction: column;
+      height: calc(100% - 2.5rem);
       margin-top: 0.5rem;
       transition: opacity 0.3s ease-in-out;
     }
@@ -202,7 +204,7 @@
       background-color: #2563eb;
     }
     .chat-dialog {
-      max-height: 200px;
+      flex: 1;
       overflow-y: auto;
       margin-top: 1rem;
       padding: 0.75rem;
@@ -732,10 +734,10 @@
     </div>
 
     <!-- Chat with Document -->
-    <div class="chat-container minimized" id="chat-container">
+    <div class="chat-container maximized" id="chat-container">
       <div class="chat-header" id="chat-header">
         <h3 class="text-lg font-semibold text-white">Chat with this Document</h3>
-        <svg id="chat-toggle" class="chat-toggle minimized h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg id="chat-toggle" class="chat-toggle h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
         </svg>
       </div>
@@ -757,7 +759,7 @@
             <svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>
             </svg>
-            <p>The penalty for early termination is a fee equivalent to two months' rent, as specified in Section 4.3 of the agreement.</p>
+            <p>The penalty for early termination is a fee equivalent to two months' rent, as specified in Section 4.3 of the agreement. Additionally, the tenant must provide a 60-day written notice before the intended termination date. Failure to comply with the notice period may trigger an extra charge of 50% of one month's rent, as outlined in the penalty clause.</p>
           </div>
           <br/>
           <div class="chat-dialog-question">
@@ -770,7 +772,20 @@
             <svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>
             </svg>
-            <p>The tenant is responsible for routine maintenance, including cleaning and minor repairs, as outlined in Section 5.2 of the agreement.</p>
+            <p>The tenant is responsible for routine maintenance, including cleaning common areas, replacing light bulbs, and addressing minor repairs such as leaky faucets, as outlined in Section 5.2 of the agreement. For major structural issues, the landlord retains responsibility. The tenant must report any significant damage within seven days of occurrence to avoid liability.</p>
+          </div>
+          <br/>
+          <div class="chat-dialog-question">
+            <svg class="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <p>Is subletting permitted under the lease?</p>
+          </div>
+          <div class="chat-dialog-answer">
+            <svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>
+            </svg>
+            <p>Subletting is prohibited without prior written consent from the landlord, as stated in Section 6.4. If the tenant wishes to sublet, they must submit a written request at least 30 days in advance. The landlord has 14 days to approve or deny the request, and unauthorized subletting may result in termination of the lease.</p>
           </div>
         </div>
       </div>
