@@ -10,7 +10,9 @@
 
 Never miss an expiring contract, overlooked liability, or outdated insurance. Our AI audits, summarizes, and keeps every document category—from Identity to Everything—in check.
 
-All your finances, investments, and important documents in one place. Secure, organized, and always within reach.
+All your finances, investments, and important documents in one place. 
+
+Secure, organized, and always within reach.
 
 ## Features
 
