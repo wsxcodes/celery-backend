@@ -489,20 +489,24 @@
           <h2 class="text-2xl font-bold text-white mb-4">Analysis Criteria</h2>
           <div class="p-4 bg-gray-700 rounded-lg">
             <div class="space-y-2">
-              <p class="text-gray-300 text-sm">The document was analyzed based on the AI prompt: "What to watch out for and thoroughly check 10 times in this type of document."</p>
-              <ul class="list-disc list-inside text-gray-300 text-sm space-y-1">
-                <li>Completeness of signatures from all parties</li>
-                <li>Compliance with local leasing regulations</li>
-                <li>Clarity and fairness of termination clauses</li>
-                <li>Reasonableness of penalty terms for early termination</li>
-                <li>Renewal notice periods and conditions</li>
-                <li>Maintenance obligations for tenant and landlord</li>
-                <li>Payment schedules and late fee structures</li>
-                <li>Dispute resolution mechanisms</li>
-                <li>Property condition and inspection clauses</li>
-                <li>Insurance requirements for the property</li>
-              </ul>
-              <p class="text-gray-300 text-sm mt-2">These criteria ensure the document is legally sound, fair, and clear in its terms.</p>
+
+              {{document.ai_analysis_criteria|safe}}
+              
+              <!-- <p class="text-gray-300 text-sm">
+                The document was analyzed based on the AI prompt: "What to watch out for and thoroughly check 10 times in this type of document."</p>
+                <ul class="list-disc list-inside text-gray-300 text-sm space-y-1">
+                  <li>Completeness of signatures from all parties</li>
+                  <li>Compliance with local leasing regulations</li>
+                  <li>Clarity and fairness of termination clauses</li>
+                  <li>Reasonableness of penalty terms for early termination</li>
+                  <li>Renewal notice periods and conditions</li>
+                  <li>Maintenance obligations for tenant and landlord</li>
+                  <li>Payment schedules and late fee structures</li>
+                  <li>Dispute resolution mechanisms</li>
+                  <li>Property condition and inspection clauses</li>
+                  <li>Insurance requirements for the property</li>
+                </ul>
+              <p class="text-gray-300 text-sm mt-2">These criteria ensure the document is legally sound, fair, and clear in its terms.</p> -->
             </div>
           </div>
         </div>
