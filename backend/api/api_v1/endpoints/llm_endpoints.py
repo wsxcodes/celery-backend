@@ -130,20 +130,13 @@ async def chat_completion_streaming(
         total_tokens = prompt_tokens + completion_tokens
         logger.info("Token usage - prompt: %d, completion: %d, total: %d", prompt_tokens, completion_tokens, total_tokens)
 
-        # DEBUG: inspect stream usage object
-        logger.info("Finalizing stream; stream.usage object: %s", getattr(stream, "usage", None))
-        
         # Record token usage asynchronously after streaming completes
         try:
-            # DEBUG: safely fetch usage object and total_tokens
-            usage_obj = getattr(stream, "usage", None)
-            logger.info("Stream usage object: %s, total_tokens: %s", usage_obj, getattr(usage_obj, "total_tokens", None))
-            if usage_obj is not None and getattr(usage_obj, "total_tokens", None) is not None:
-                await update_tokens_spent_async(
-                    document_uuid=document_uuid,
-                    add_tokens_spent=total_tokens,
-                )
-                logger.info("Tokens spent updated for document %s", document_uuid)
+            await update_tokens_spent_async(
+                document_uuid=document_uuid,
+                add_tokens_spent=total_tokens,
+            )
+            logger.info("Tokens spent updated for document %s, total tokens: %d", document_uuid, total_tokens)
         except Exception as e:
             logger.error("Failed to update tokens for document %s: %s", document_uuid, e)
         yield "data: [DONE]\n\n"
