@@ -1,8 +1,6 @@
 
 # Eterny
 
-![Eterny Logo](/path/to/logo.png)
-
 ## How it Works
 
 ### Get Started
