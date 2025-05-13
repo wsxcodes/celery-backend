@@ -4,9 +4,9 @@ from typing import List, Literal
 from fastapi import APIRouter, Body, Depends, HTTPException
 
 from backend.api.api_v1.endpoints.documents_endpoints import get_document
+from backend.db.schemas.rag_schemas import MessagePayload, RAGMessage
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
-from backend.db.schemas.rag_schemas import MessagePayload, RAGMessage
 
 logger = logging.getLogger(__name__)
 
