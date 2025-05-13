@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from fastapi import APIRouter, HTTPException, Query
 from sse_starlette.sse import EventSourceResponse
@@ -8,6 +8,7 @@ from sse_starlette.sse import EventSourceResponse
 from backend.decorators import log_endpoint
 from backend.dependencies import ai_client
 from backend.utils.helpers import update_tokens_spent_async
+import tiktoken
 
 logger = logging.getLogger(__name__)
 
@@ -103,6 +104,14 @@ async def chat_completion_streaming(
         raise HTTPException(status_code=502, detail="AI service error")
 
     async def event_generator():
+        # Initialize encoder and token counters
+        try:
+            enc = tiktoken.encoding_for_model(model)
+        except Exception:
+            enc = tiktoken.get_encoding("cl100k_base")
+        prompt_tokens = sum(len(enc.encode(msg)) for msg in [system_message, user_message])
+        completion_chunks: List[str] = []
+
         for chunk in stream:
             # skip chunks without choices or delta
             choices = getattr(chunk, "choices", None)
@@ -113,10 +122,17 @@ async def chat_completion_streaming(
             content = getattr(delta, "content", None)
             if not content:
                 continue
+            completion_chunks.append(content)
             yield f"data: {json.dumps({'content': content})}\n\n"
+
+        # Compute token usage manually
+        completion_tokens = sum(len(enc.encode(c)) for c in completion_chunks)
+        total_tokens = prompt_tokens + completion_tokens
+        logger.info("Token usage - prompt: %d, completion: %d, total: %d", prompt_tokens, completion_tokens, total_tokens)
 
         # DEBUG: inspect stream usage object
         logger.info("Finalizing stream; stream.usage object: %s", getattr(stream, "usage", None))
+        
         # Record token usage asynchronously after streaming completes
         try:
             # DEBUG: safely fetch usage object and total_tokens
@@ -125,7 +141,7 @@ async def chat_completion_streaming(
             if usage_obj is not None and getattr(usage_obj, "total_tokens", None) is not None:
                 await update_tokens_spent_async(
                     document_uuid=document_uuid,
-                    add_tokens_spent=stream.usage.total_tokens,
+                    add_tokens_spent=total_tokens,
                 )
                 logger.info("Tokens spent updated for document %s", document_uuid)
         except Exception as e:
