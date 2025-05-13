@@ -27,6 +27,10 @@
     Temperature:
     <input id="temp" type="number" step="0.1" value="0.5" />
   </label>
+  <label>
+    Document UUID:
+    <input id="document_uuid" value="" />
+  </label>
   <button id="start">Start Streaming</button>
   <div id="output"></div>
 
@@ -36,11 +40,13 @@
       const usr = encodeURIComponent(document.getElementById('user').value);
       const model = encodeURIComponent(document.getElementById('model').value);
       const temp = encodeURIComponent(document.getElementById('temp').value);
+      const doc = encodeURIComponent(document.getElementById('document_uuid').value);
       const url = `http://localhost:8880/api/v1/llm/chat_completition_streaming`
                 + `?system_message=${sys}`
                 + `&user_message=${usr}`
                 + `&model=${model}`
-                + `&temperature=${temp}`;
+                + `&temperature=${temp}`
+                + `&document_uuid=${doc}`;
 
       const out = document.getElementById('output');
       out.textContent = '';  // clear old blood
