@@ -57,5 +57,16 @@ def init_db():
             file_count INTEGER NOT NULL
         )
     """)
+    cursor.execute("PRAGMA foreign_keys = ON;")
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            document_uuid TEXT NOT NULL,
+            message_type TEXT NOT NULL CHECK(message_type IN ('question', 'answer')),
+            content TEXT NOT NULL,
+            created_at DATETIME NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),
+            FOREIGN KEY (document_uuid) REFERENCES files(uuid) ON DELETE CASCADE
+        )
+    """)
     conn.commit()
     conn.close()
