@@ -1,5 +1,5 @@
-import re
 import logging
+import re
 
 import requests
 
@@ -55,6 +55,7 @@ def safe_request(*, request_type, url, data):
         logger.error(f"API call failed: {e} - {msg}")
         return None
 
+
 def format_analysis(text: str) -> str:
     """
     Convert a plain-text analysis plan into the desired HTML structure.
@@ -80,7 +81,7 @@ def format_analysis(text: str) -> str:
         heading_text = f"{m.group(1)}. {m.group(2)}"
         # Determine the text range for items under this heading
         start_idx = m.end()
-        end_idx = matches[i+1].start() if i+1 < len(matches) else len(head)
+        end_idx = matches[i+1].start() if i+1 < len(matches) else len(head)  # NoQA
         items_block = head[start_idx:end_idx].strip()
         # Split on ' - ' to get individual items
         items = [itm.strip() for itm in items_block.split(' - ') if itm.strip()]
