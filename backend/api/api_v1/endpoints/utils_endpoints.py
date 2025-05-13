@@ -134,6 +134,8 @@ async def extract_text_from_image(uuid: str, db=Depends(get_db)) -> str:
 
     # XXX TODO utilise LLM
 
+    # XXX TODO LLM should extract metadata as well such as document type and any descriptive info it can produce really
+
     image = await get_document(uuid=uuid, db=db)
     if not image:
         raise HTTPException(status_code=404, detail="Document not found")
