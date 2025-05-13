@@ -7,7 +7,7 @@ from sse_starlette.sse import EventSourceResponse
 
 from backend.decorators import log_endpoint
 from backend.dependencies import ai_client
-from backend.utils.helpers import update_tokens_spent
+from backend.utils.helpers import update_tokens_spent_async
 
 logger = logging.getLogger(__name__)
 
@@ -62,8 +62,8 @@ async def chat_completion(
         usage["total_tokens"],
     )
 
-    # Record token usage
-    update_tokens_spent(
+    # Record token usage asynchronously
+    await update_tokens_spent_async(
         document_uuid=document_uuid,
         add_tokens_spent=usage["total_tokens"],
     )
