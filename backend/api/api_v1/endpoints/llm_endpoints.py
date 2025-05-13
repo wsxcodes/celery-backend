@@ -4,6 +4,7 @@ from typing import Any, Dict
 
 from fastapi import APIRouter, HTTPException, Query
 from sse_starlette.sse import EventSourceResponse
+from backend.utils.helpers import update_tokens_spent
 
 from backend.decorators import log_endpoint
 from backend.dependencies import ai_client
@@ -20,8 +21,6 @@ logger.setLevel(logging.INFO)
 
 
 router = APIRouter()
-
-# XXX record the token usage in the database
 
 
 @router.get("/chat_completition")
@@ -62,6 +61,13 @@ async def chat_completion(
         usage["completion_tokens"],
         usage["total_tokens"],
     )
+
+    # Record token usage
+    update_tokens_spent(
+        document_uuid=document_uuid,
+        add_tokens_spent=usage["total_tokens"],
+    )
+    logger.info("Tokens spent updated for document %s", document_uuid)
 
     return {
         "status": "success",
@@ -107,6 +113,8 @@ async def chat_completion_streaming(
                 continue
             yield f"data: {json.dumps({'content': content})}\n\n"
         yield "data: [DONE]\n\n"
+
+    # XXX record the token usage in the database
 
     return EventSourceResponse(
         event_generator(),
