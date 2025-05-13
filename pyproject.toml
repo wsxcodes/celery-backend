@@ -29,6 +29,7 @@ dependencies = [
     "poppler-utils (>=0.1.0,<0.2.0)",
     "requests (>=2.32.3,<3.0.0)",
     "pypandoc (>=1.15,<2.0)",
+    "sse-starlette (>=2.3.5,<3.0.0)",
 ]
 
 
