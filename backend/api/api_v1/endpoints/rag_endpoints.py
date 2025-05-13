@@ -17,6 +17,8 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+# XXX TODO consider tasks and alerts in the RAG feature
+
 
 @router.post("/")
 @log_endpoint
