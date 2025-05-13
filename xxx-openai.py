@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 # -----------------------------------------------------------------------------------------------------------------------------
 
-document_uuid = "31b2f4c8-09f2-4c5a-a1c5-fce83bd1e923"
+document_uuid = "9a902752-52f9-4b52-974c-21ec0c185889"
 
 # -----------------------------------------------------------------------------------------------------------------------------
 
@@ -78,25 +78,12 @@ tokens_spent = 0
 # print(usage)
 
 # -----------------------------------------------------------------------------------------------------------------------------
-# Map existing Eterny.io Document Schemas
-simple_prompt = prompts["map_existing_eterny.io_schemas"]
 
-with open("prompts/prompts.json", "r") as f:
-    eterny_legacy_schema = f.read()
-
-raw_text += "\n\n schema:\n" + eterny_legacy_schema
-data = run_ai_completition(ai_client=ai_client, prompt=simple_prompt, document_text=raw_text, output_language="English")
-legacy_schema_dict = json.loads(data["message"])
+analysis_criteria = prompts["analysis_criteria"]
+data = run_ai_completition(ai_client=ai_client, prompt=analysis_criteria, document_text=raw_text, output_language="Slovak")
 
 usage = data.get("usage")
 tokens_spent += usage["total_tokens"]
 
-logger.info("Update Eterny.io legacy schema to database")
-safe_request(
-    request_type="PATCH",
-    url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
-    data={"ai_enterny_legacy_schema": str(legacy_schema_dict)},
-)
-
-print(legacy_schema_dict)
+print(data)
 print(usage)
