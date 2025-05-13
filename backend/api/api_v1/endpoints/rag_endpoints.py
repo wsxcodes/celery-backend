@@ -5,7 +5,7 @@ from fastapi import APIRouter, Body, Depends
 
 from backend.api.api_v1.endpoints.documents_endpoints import get_document
 from backend.decorators import log_endpoint
-from backend.dependencies import get_db
+from backend.dependencies import ai_client, get_db
 
 logger = logging.getLogger(__name__)
 
@@ -16,8 +16,6 @@ router = APIRouter()
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-
-# XXX TODO consider tasks and alerts in the RAG feature
 
 
 @router.post("/")
@@ -30,6 +28,9 @@ async def ask_question_about_document(
     """RAG ask endpoint."""
     # XXX tokens_spent should be added to the document metadata
     document = await get_document(uuid, db)
+
+    # XXX TODO add tasks and alerts in the RAG feature
+
     logger.info(f"Document found: {document}")
     return {
         "status": "XXX",
