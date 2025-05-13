@@ -33,14 +33,14 @@ document = safe_request(
         )
 raw_text = document.json()["raw_text"]
 
-output_language = "Slovak"
+output_language = "Czech"
 tokens_spent = 0
 
 # -----------------------------------------------------------------------------------------------------------------------------
 
 # # Run the smart summary prompt
 # smart_summary = prompts["smart_summary"]
-# data = run_ai_completition(ai_client=ai_client, prompt=smart_summary, document_text=raw_text, output_language="Slovak")
+# data = run_ai_completition(ai_client=ai_client, prompt=smart_summary, document_text=raw_text, output_language=output_language)
 
 # usage = data.get("usage")
 # tokens_spent += usage["total_tokens"]
@@ -68,7 +68,7 @@ tokens_spent = 0
 # Example simple prompt
 
 # simple_prompt = prompts["example_prompt_simple"]
-# data = run_ai_completition(ai_client=ai_client, prompt=simple_prompt, document_text="", output_language="Slovak")
+# data = run_ai_completition(ai_client=ai_client, prompt=simple_prompt, document_text="", output_language=output_language)
 
 # usage = data.get("usage")
 # tokens_spent += usage["total_tokens"]
@@ -79,7 +79,7 @@ tokens_spent = 0
 # -----------------------------------------------------------------------------------------------------------------------------
 
 analysis_criteria = prompts["analysis_criteria"]
-data = run_ai_completition(ai_client=ai_client, prompt=analysis_criteria, document_text=raw_text, output_language="Slovak")
+data = run_ai_completition(ai_client=ai_client, prompt=analysis_criteria, document_text=raw_text, output_language=output_language)
 
 usage = data.get("usage")
 tokens_spent += usage["total_tokens"]
