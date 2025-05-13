@@ -187,6 +187,8 @@ async def generate_file_preview(uuid: str, db=Depends(get_db)) -> str:
                 detail="Unsupported file format. Supported formats: PDF, DOC, DOCX, RTF, TXT, MD, ODT"
             )
 
+        # XXX TODO images should be resized to a standard size and recorded in the database
+
         if not image:
             raise HTTPException(status_code=500, detail="Failed to generate preview image")
 
