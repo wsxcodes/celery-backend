@@ -58,55 +58,37 @@ def safe_request(*, request_type, url, data):
 
 def format_analysis(text: str) -> str:
     """
-    Convert a plain-text analysis plan into the desired HTML structure.
+    Convert a plain-text analysis plan into HTML structure.
     Expects:
-      - Text containing a start statement, bullet points prefixed with '- ', and a closing statement.
+      - A start statement, bullet points prefixed with ' - ', and an optional closing statement.
     """
-    # Split into head (start + bullets) and closing based on '---'
-    parts = text.split('---', 1)
-    head = parts[0].strip()
-    closing = parts[1].strip() if len(parts) > 1 else ''
+    # Regex to extract bullet points at start of lines prefixed by '- '
+    bullet_pattern = re.compile(r"(?m)^-\s+(.+)$")
+    bullets = bullet_pattern.findall(text)
+    matches = list(bullet_pattern.finditer(text))
 
-    # Find all numbered bold headings
-    section_pattern = re.compile(r"\*\*\s*(\d+)\.\s*(.*?)\*\*")
-    matches = list(section_pattern.finditer(head))
-    # Extract start statement (everything before the first section heading)
+    # Extract start statement (everything before the first bullet)
     if matches:
-        start = head[:matches[0].start()].strip()
+        start = text[:matches[0].start()].strip()
+        last_end = matches[-1].end()
+        closing = text[last_end:].strip()
     else:
-        start = head
-    sections = []
-    for i, m in enumerate(matches):
-        # Extract heading text
-        heading_text = f"{m.group(1)}. {m.group(2)}"
-        # Determine the text range for items under this heading
-        start_idx = m.end()
-        end_idx = matches[i+1].start() if i+1 < len(matches) else len(head)  # NoQA
-        items_block = head[start_idx:end_idx].strip()
-        # Split on ' - ' to get individual items
-        items = [itm.strip() for itm in items_block.split(' - ') if itm.strip()]
-        # Remove any leading hyphens
-        items = [re.sub(r'^-+\s*', '', itm) for itm in items]
-        sections.append((heading_text, items))
-
-    # Convert '**bold**' markdown in start and closing only
-    bold_pattern = re.compile(r"\*\*(.*?)\*\*")
-    start = bold_pattern.sub(r"<b>\1</b>", start)
-    closing = bold_pattern.sub(r"<b>\1</b>", closing)
+        start = text.strip()
+        closing = ""
 
     # Build HTML
     html = []
     html.append('<p class="text-gray-300 text-sm">')
     html.append(f'  {start}')
     html.append('</p>')
-    for heading_text, items in sections:
-        # Heading line with two breaks before and after
-        html.append(f'<br/><b>{heading_text}</b><br/>')
+    if bullets:
         html.append('<ul class="list-disc list-inside text-gray-300 text-sm space-y-1">')
-        for itm in items:
-            html.append(f'  <li>{itm}</li>')
+        for itm in bullets:
+            html.append(f'  <li>{itm.strip()}</li>')
         html.append('</ul>')
-    html.append('<p class="text-gray-300 text-sm mt-2">')
-    html.append(f'  {closing}')
-    html.append('</p>')
+    if closing:
+        html.append('<p class="text-gray-300 text-sm mt-2">')
+        html.append(f'  {closing}')
+        html.append('</p>')
+
     return "\n".join(html)
