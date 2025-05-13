@@ -5,6 +5,7 @@ import logging
 from typing import Any, Dict
 
 from fastapi import APIRouter, HTTPException, Query
+from sse_starlette.sse import EventSourceResponse
 
 from backend.decorators import log_endpoint
 from backend.dependencies import ai_client
@@ -70,12 +71,48 @@ async def chat_completion(
         "usage": usage,
     }
 
-# @router.get("/chat_completition_streaming")
-# @log_endpoint
-# async def chat_completion_streaming() -> ??:
-#     """Chat completion endpoint."""
-#     # XXX tokens_spent should be added to the document metadata
-#     return {
-#         "status": "XXX",
-#         "message": "TODO"
-#     }
+
+@router.get("/chat_completition_streaming")
+@log_endpoint
+async def chat_completion_streaming(
+    system_message: str = Query(..., description="The system prompt"),
+    user_message: str = Query(..., description="The user prompt"),
+    model: str = Query(..., description="Model name, e.g. 'gpt-4.1'"),
+    temperature: float = Query(0.5, ge=0.0, le=1.0, description="Sampling temperature"),
+) -> EventSourceResponse:
+    """Chat completion streaming endpoint."""
+    try:
+        stream = ai_client.chat.completions.create(
+            model=model,
+            temperature=temperature,
+            messages=[
+                {"role": "system", "content": system_message},
+                {"role": "user", "content": user_message},
+            ],
+            stream=True,
+        )
+    except Exception as e:
+        logger.error("AI streaming error: %s", e, exc_info=True)
+        raise HTTPException(status_code=502, detail="AI service error")
+
+    def event_generator():
+        for chunk in stream:
+            # skip chunks without choices or delta
+            choices = getattr(chunk, "choices", None)
+            if not choices:
+                continue
+            choice = choices[0]
+            delta = getattr(choice, "delta", None)
+            content = getattr(delta, "content", None)
+            if not content:
+                continue
+            yield f"data: {json.dumps({'content': content})}\n\n"
+        yield "data: [DONE]\n\n"
+
+    return EventSourceResponse(
+        event_generator(),
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no"
+        }
+    )
