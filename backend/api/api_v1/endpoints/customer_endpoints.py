@@ -19,6 +19,8 @@ logger.setLevel(logging.INFO)
 router = APIRouter()
 
 
+# XXX TODO provide token spending report for each customer
+
 @router.post("/")
 @log_endpoint
 async def add_new_customer(customer_id: str, output_language: str = "Czech", db=Depends(get_db)) -> dict:
