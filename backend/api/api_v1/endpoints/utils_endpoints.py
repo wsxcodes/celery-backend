@@ -2,6 +2,9 @@ import logging
 import mimetypes
 from pathlib import Path
 
+
+import subprocess
+
 from fastapi import APIRouter, Depends, HTTPException
 
 from backend import config
@@ -89,8 +92,24 @@ async def extract_text_from_document(uuid: str, db=Depends(get_db)) -> str:
 
         if file_extension == '.pdf':
             return extract_pdf_text(file_path)
-        elif file_extension in ('.doc', '.docx'):
+        elif file_extension == '.docx':
             return extract_docx_text(file_path)
+        elif file_extension == '.doc':
+            # fallback for legacy .doc files using antiword
+            try:
+                result = subprocess.run(
+                    ['antiword', str(file_path)],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    check=True
+                )
+                return result.stdout.decode('utf-8')
+            except subprocess.CalledProcessError as e:
+                logger.error(f"Antiword failed to process {file_path}: {str(e)}")
+                raise HTTPException(
+                    status_code=500,
+                    detail=f"Error processing legacy .doc file: {str(e)}"
+                )
         elif file_extension == '.rtf':
             return extract_rtf_text(file_path)
         elif file_extension == '.txt':
