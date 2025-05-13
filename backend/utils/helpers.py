@@ -1,10 +1,10 @@
 import logging
 import re
 
+import httpx
 import requests
 
 from backend import config
-import httpx
 
 logger = logging.getLogger(__name__)
 
