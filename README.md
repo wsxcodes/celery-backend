@@ -21,8 +21,6 @@ Secure, organized, and always within reach.
   Face ID and SSO integration
 - **AI Document Intelligence**  
   Automatic classification, extraction, and smart search
-- **Intelligent Oversight for Every Corner of Your Life**  
-  Never miss an expiring contract, overlooked liability, or outdated insurance. Our AI audits, summarizes, and keeps every document category—from Identity to Everything—in check.
 
 ## Why Eterny
 
