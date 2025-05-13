@@ -29,6 +29,7 @@ async def ask_question_about_document(
     # XXX tokens_spent should be added to the document metadata
     document = await get_document(uuid, db)
 
+    # XXX TODO rag to init conversation about the finding (alerts, tasks, insights)
     # XXX TODO add tasks and alerts in the RAG feature
 
     logger.info(f"Document found: {document}")
