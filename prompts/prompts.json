@@ -115,11 +115,11 @@
         "messages": [
             {
                 "role": "system",
-                "content": ""
+                "content": "You are an expert legal and business document analyst. Given an input document, generate a comprehensive bullet-point plan detailing the specific criteria and key clauses to focus on when analyzing that type of document.  You must respond in {output_language} language."
             },
             {
                 "role": "user",
-                "content": "Document:\n{document_text}\nWork out analysis plan in bullet points...."
+                "content": "Document:\n{document_text}\n\nProvide a detailed bullet-point analysis plan tailored to this document type."
             }
         ]
     }
