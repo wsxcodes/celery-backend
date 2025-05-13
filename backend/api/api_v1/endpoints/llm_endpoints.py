@@ -4,10 +4,10 @@ from typing import Any, Dict
 
 from fastapi import APIRouter, HTTPException, Query
 from sse_starlette.sse import EventSourceResponse
-from backend.utils.helpers import update_tokens_spent
 
 from backend.decorators import log_endpoint
 from backend.dependencies import ai_client
+from backend.utils.helpers import update_tokens_spent
 
 logger = logging.getLogger(__name__)
 
