@@ -17,6 +17,8 @@ logger = logging.getLogger(__name__)
 prompts = prompt_generators.load_prompts()
 
 
+# XXX TODO retry policy 
+
 # XXX TODO update "ai_expires" field in the database when applicable
 
 # XXX detect expiry dates, renewal clauses, trial periods - also update "ai_expires" field in the database
