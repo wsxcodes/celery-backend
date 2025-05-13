@@ -22,6 +22,8 @@ logger.setLevel(logging.INFO)
 
 router = APIRouter()
 
+# XXX TODO check that the document_uuid exists, otherwise refuse the request
+
 
 @router.get("/chat_completition")
 @log_endpoint
@@ -100,7 +102,7 @@ async def chat_completion_streaming(
         logger.error("AI streaming error: %s", e, exc_info=True)
         raise HTTPException(status_code=502, detail="AI service error")
 
-    def event_generator():
+    async def event_generator():
         for chunk in stream:
             # skip chunks without choices or delta
             choices = getattr(chunk, "choices", None)
@@ -112,9 +114,23 @@ async def chat_completion_streaming(
             if not content:
                 continue
             yield f"data: {json.dumps({'content': content})}\n\n"
-        yield "data: [DONE]\n\n"
 
-    # XXX record the token usage in the database
+        # DEBUG: inspect stream usage object
+        logger.info("Finalizing stream; stream.usage object: %s", getattr(stream, "usage", None))
+        # Record token usage asynchronously after streaming completes
+        try:
+            # DEBUG: safely fetch usage object and total_tokens
+            usage_obj = getattr(stream, "usage", None)
+            logger.info("Stream usage object: %s, total_tokens: %s", usage_obj, getattr(usage_obj, "total_tokens", None))
+            if usage_obj is not None and getattr(usage_obj, "total_tokens", None) is not None:
+                await update_tokens_spent_async(
+                    document_uuid=document_uuid,
+                    add_tokens_spent=stream.usage.total_tokens,
+                )
+                logger.info("Tokens spent updated for document %s", document_uuid)
+        except Exception as e:
+            logger.error("Failed to update tokens for document %s: %s", document_uuid, e)
+        yield "data: [DONE]\n\n"
 
     return EventSourceResponse(
         event_generator(),
