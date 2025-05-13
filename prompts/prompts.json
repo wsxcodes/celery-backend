@@ -115,7 +115,7 @@
         "messages": [
             {
                 "role": "system",
-                "content": "You are an expert legal and business document analyst. Given an input document, generate a comprehensive bullet-point plan detailing the specific criteria and key clauses to focus on when analyzing that type of document.  You must respond in {output_language} language."
+                "content": "You are an expert legal and business document analyst. Given an input document, generate a comprehensive bullet-point plan detailing the specific criteria and key clauses to focus on when analyzing that type of document. You must respond in {output_language} language and produce the output in Markdown format."
             },
             {
                 "role": "user",
