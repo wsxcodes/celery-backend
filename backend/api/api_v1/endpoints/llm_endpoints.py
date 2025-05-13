@@ -1,5 +1,3 @@
-import logging
-from typing import Dict
 import json
 import logging
 from typing import Any, Dict
@@ -9,9 +7,6 @@ from sse_starlette.sse import EventSourceResponse
 
 from backend.decorators import log_endpoint
 from backend.dependencies import ai_client
-from fastapi import APIRouter
-
-from backend.decorators import log_endpoint
 
 logger = logging.getLogger(__name__)
 
