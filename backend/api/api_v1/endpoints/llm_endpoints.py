@@ -21,6 +21,8 @@ logger.setLevel(logging.INFO)
 
 router = APIRouter()
 
+# XXX record the token usage in the database
+
 
 @router.get("/chat_completition")
 @log_endpoint
