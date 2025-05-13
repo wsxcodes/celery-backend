@@ -169,7 +169,7 @@ def main():
             # -----------------------------------------------------------------------------------------------------------------------------
             # Run the analysis criteria prompt
             analysis_criteria = prompts["analysis_criteria"]
-            data = run_ai_completition(ai_client=ai_client, prompt=analysis_criteria, document_text=raw_text, output_language="Slovak")
+            data = run_ai_completition(ai_client=ai_client, prompt=analysis_criteria, document_text=raw_text, output_language=output_language)
 
             usage = data.get("usage")
             tokens_spent += usage["total_tokens"]
@@ -184,7 +184,7 @@ def main():
             )
 
             # -----------------------------------------------------------------------------------------------------------------------------
-            # Map Eterny legacy document schemas
+            # Map Eterny legacy document schemas - in English
 
             logger.info("Mapping existing Eterny.io Document Schemas")
             simple_prompt = prompts["map_existing_eterny.io_schemas"]
