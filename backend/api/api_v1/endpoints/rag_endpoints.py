@@ -5,7 +5,7 @@ from fastapi import APIRouter, Body, Depends
 
 from backend.api.api_v1.endpoints.documents_endpoints import get_document
 from backend.decorators import log_endpoint
-from backend.dependencies import ai_client, get_db
+from backend.dependencies import get_db
 
 logger = logging.getLogger(__name__)
 
