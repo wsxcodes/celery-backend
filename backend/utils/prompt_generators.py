@@ -14,7 +14,7 @@ def load_prompts() -> dict:
     return prompts
 
 
-def run_ai_completition(ai_client, prompt: dict, document_text=None, output_language="Slovak"):
+def run_ai_completition(ai_client, prompt: dict, document_text=None, output_language="Czech"):
     """
     Generate a smart summary for the given prompt text using the loaded template.
     """
