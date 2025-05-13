@@ -1,6 +1,14 @@
 import sqlite3
 
+from openai import AzureOpenAI
+
+from backend import config
 from backend.config import DB_PATH
+
+ai_client = AzureOpenAI(
+    azure_endpoint=config.AZURE_OPENAI_ENDPOINT,
+    api_version=config.OPENAI_API_VERSION
+)
 
 
 def get_db():
