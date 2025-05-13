@@ -1,7 +1,7 @@
-from typing import Optional, Dict
-from pydantic import BaseModel, model_validator
 from datetime import datetime
-from typing import Literal
+from typing import Literal, Optional
+
+from pydantic import BaseModel, model_validator
 
 
 class MessagePayload(BaseModel):
