@@ -4,9 +4,8 @@ import logging
 import random
 import time
 
-from openai import AzureOpenAI
-
 from backend import config
+from backend.dependencies import ai_client
 from backend.utils import prompt_generators
 from backend.utils.helpers import safe_request
 from backend.utils.prompt_generators import run_ai_completition
@@ -14,11 +13,6 @@ from backend.utils.prompt_generators import run_ai_completition
 logging.basicConfig(level=logging.INFO)
 
 logger = logging.getLogger(__name__)
-
-ai_client = AzureOpenAI(
-    azure_endpoint=config.AZURE_OPENAI_ENDPOINT,
-    api_version=config.OPENAI_API_VERSION
-)
 
 prompts = prompt_generators.load_prompts()
 
