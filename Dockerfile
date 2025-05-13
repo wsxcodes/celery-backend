@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     nginx \
     certbot \
     python3-certbot-nginx \
+    antiword \
     curl \
     wget \
     gcc \
