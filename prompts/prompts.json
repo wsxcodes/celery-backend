@@ -108,5 +108,19 @@
                 "content": "Document:\n{document_text}\n\nAnalyze the document to infer the JSON schema and extract all entities into that schema. Output only valid JSON."
             }
         ]
+    },
+    "analysis_criteria": {
+        "model": "gpt-4.1",
+        "temperature": 0.0,
+        "messages": [
+            {
+                "role": "system",
+                "content": ""
+            },
+            {
+                "role": "user",
+                "content": "Document:\n{document_text}\nWork out analysis plan in bullet points...."
+            }
+        ]
     }
 }
