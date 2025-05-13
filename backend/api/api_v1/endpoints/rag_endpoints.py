@@ -1,12 +1,12 @@
 import logging
-from typing import Dict
+from typing import List, Literal
 
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body, Depends, HTTPException
 
 from backend.api.api_v1.endpoints.documents_endpoints import get_document
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
-from backend.db.schemas.rag_schemas import MessagePayload
+from backend.db.schemas.rag_schemas import MessagePayload, RAGMessage
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +29,7 @@ async def ask_question_about_document(
     uuid: str,
     question: str = Body(...),
     db=Depends(get_db)
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """RAG ask endpoint."""
     # XXX tokens_spent should be added to the document metadata
     document = await get_document(uuid, db)
@@ -44,17 +44,61 @@ async def ask_question_about_document(
     }
 
 
-@router.post("/message")
+@router.post("/message", response_model=RAGMessage)
 @log_endpoint
-async def record_messages(document_uuid: str, payload: MessagePayload = Body(...), db=Depends(get_db)) -> Dict[str, str]:
-    """RAG message endpoint."""
+async def record_messages(
+    document_uuid: str,
+    payload: MessagePayload = Body(...),
+    db=Depends(get_db)
+) -> RAGMessage:
+    cursor = db.cursor()
+    # enforce alternation: no two questions or two answers in a row
+    cursor.execute(
+        "SELECT message_type FROM messages WHERE document_uuid = ? ORDER BY id DESC LIMIT 1",
+        (document_uuid,)
+    )
+    last = cursor.fetchone()
+    new_type = 'question' if payload.question else 'answer'
+    if last and last["message_type"] == new_type:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Previous message was {last['message_type']!r}; must alternate."
+        )
+    content = payload.question or payload.answer
+    cursor.execute(
+        "INSERT INTO messages (document_uuid, message_type, content) VALUES (?, ?, ?)",
+        (document_uuid, new_type, content)
+    )
+    db.commit()
+    message_id = cursor.lastrowid
+    cursor.execute(
+        "SELECT id, document_uuid, message_type, content, created_at FROM messages WHERE id = ?",
+        (message_id,)
+    )
+    row = cursor.fetchone()
+    return RAGMessage(**row)
 
-    if payload.question:
-        logger.info(f"Message received: question - {payload.question}")
-    elif payload.answer:
-        logger.info(f"Message received: answer - {payload.answer}")
 
-    return {
-        "status": "XXX",
-        "message": "TODO"
-    }
+@router.get("/messages/{document_uuid}", response_model=List[RAGMessage])
+@log_endpoint
+async def get_messages(
+    document_uuid: str,
+    order: Literal["asc", "desc"] = "desc",
+    db=Depends(get_db)
+) -> List[RAGMessage]:
+    # validate ordering parameter
+    order = order.lower()
+    if order not in ("asc", "desc"):
+        raise HTTPException(
+            status_code=400,
+            detail="Query parameter 'order' must be 'asc' or 'desc'"
+        )
+    cursor = db.cursor()
+    sql = (
+        "SELECT id, document_uuid, message_type, content, created_at "
+        "FROM messages WHERE document_uuid = ? "
+        f"ORDER BY id {order.upper()}"
+    )
+    cursor.execute(sql, (document_uuid,))
+    rows = cursor.fetchall()
+    return [RAGMessage(**row) for row in rows]
