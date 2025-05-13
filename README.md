@@ -25,7 +25,7 @@ All your finances, investments, and important documents in one place. Secure, or
 
 Take full control of your portfolio—contracts, documents, insurance policies, investments—and never risk losing track of essential information. Eterny organizes everything you need, eliminating the clutter you don’t.
 
-[Get your vault](#)
+[Get your vault](https://www.eterny.io/)
 
 ## How Eterny Improves Your Life
 
@@ -38,7 +38,7 @@ Take full control of your portfolio—contracts, documents, insurance policies, 
 - **Secure and effortless sharing**  
   Grant access to trusted contacts without complications.
 
-[Get started for free](#)
+[Get started for free](https://www.eterny.io/)
 
 ## The Story of Eterny
 
