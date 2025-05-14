@@ -40,6 +40,18 @@
       </p>
     </footer>
 
+    {% if jan %}
+    <section id="about" class="mt-16 bg-gradient-to-r from-indigo-800 via-blue-800 to-teal-800 text-white rounded-xl p-8 max-w-5xl mx-auto">
+      <h2 class="text-3xl font-bold mb-4 text-center">Developed by Jan Filips</h2>
+      <p class="text-center mb-6">Passionate about crafting intuitive AI-powered experiences.</p>
+      <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6">
+        <a href="https://github.com/janfilips" target="_blank" class="px-6 py-3 bg-gray-900 hover:bg-gray-700 rounded-full font-medium transition">GitHub</a>
+        <a href="https://www.linkedin.com/in/janfilips/" target="_blank" class="px-6 py-3 bg-gray-900 hover:bg-gray-700 rounded-full font-medium transition">LinkedIn</a>
+        <a href="mailto:janfilipsgt@gmail.com?subject=Hire%20Jan%20Filips" class="px-6 py-3 bg-yellow-500 hover:bg-yellow-400 rounded-full font-medium transition">Hire Me</a>
+      </div>
+    </section>
+    {% endif %}
+
   </div>
 
 {% endblock %}
