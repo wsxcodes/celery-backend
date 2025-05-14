@@ -78,11 +78,25 @@ tokens_spent = 0
 
 # -----------------------------------------------------------------------------------------------------------------------------
 
-analysis_criteria = prompts["analysis_criteria"]
-data = run_ai_completition(ai_client=ai_client, prompt=analysis_criteria, document_text=raw_text, output_language=output_language)
+document = safe_request(
+            request_type="GET",
+            url=config.API_URL + f"/api/v1/document/get/{document_uuid}",
+            data={},
+        )
+ai_analysis_criteria = document.json()["ai_analysis_criteria"]
+
+
+features_and_insights = prompts["features_and_insights"]
+data = run_ai_completition(ai_client=ai_client, prompt=features_and_insights, document_extra=ai_analysis_criteria, output_language=output_language)
 
 usage = data.get("usage")
 tokens_spent += usage["total_tokens"]
 
-print(data)
-print(usage)
+logger.info("Saving Analysis Features & Insights to database")
+safe_request(
+    request_type="PATCH",
+    url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+    data={
+        "ai_features_and_insights": data["features_and_insights"]
+    }
+)
