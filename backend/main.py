@@ -102,7 +102,7 @@ async def read_home(request: Request, db=Depends(get_db)):
             "customer": customer,
             "output_language": customer["output_language"],
             "is_developer": is_developer,
-            "has_documents": has_documents
+            "has_documents": has_documents["documents"]
         }
     )
 
