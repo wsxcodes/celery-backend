@@ -208,7 +208,7 @@ def main():
                 request_type="PATCH",
                 url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
                 data={
-                    "ai_alerts_and_actions": data["alerts_and_actions"]
+                    "ai_alerts_and_actions": json.dumps(data["alerts_and_actions"])
                 }
             )
 
