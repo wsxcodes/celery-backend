@@ -8,6 +8,7 @@ from fastapi import APIRouter, Body, Depends, HTTPException
 from backend.db.schemas.customers_schemas import Customer, UpdateCustomer
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
+from backend.db.schemas.documents_schemas import Document
 
 logger = logging.getLogger(__name__)
 
@@ -108,9 +109,12 @@ async def list_customer_documents(customer_id: str, db=Depends(get_db)):
 
     # Fetch documents from the database
     cursor = db.execute("""
-        SELECT id, customer_id, uuid, filename, file_size, file_hash, uploaded_at,
+        SELECT id, customer_id, uuid, filename, file_hash, file_preview, uploaded_at,
                analysis_status, analysis_started_at, analysis_completed_at, analysis_cost,
-               ai_alert, ai_category, ai_summary_short, ai_summary_long as ai_summary_long
+               ai_alert, ai_expires, ai_category, ai_sub_category, ai_summary_short,
+               ai_summary_long, ai_analysis_criteria, ai_features_and_insights,
+               ai_alerts_and_actions, ai_enterny_legacy_schema, file_size, raw_text,
+               health_score
         FROM files
         WHERE customer_id = ?
         ORDER BY uploaded_at DESC
