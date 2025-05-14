@@ -8,7 +8,6 @@ from fastapi import APIRouter, Body, Depends, HTTPException
 from backend.db.schemas.customers_schemas import Customer, UpdateCustomer
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
-from backend.db.schemas.documents_schemas import Document
 
 logger = logging.getLogger(__name__)
 
