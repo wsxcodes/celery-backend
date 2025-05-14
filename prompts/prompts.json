@@ -188,7 +188,7 @@
       "messages":[
          {
             "role": "system",
-            "content": "You are an expert document analysis assistant. XXX Respond in {output_language} language."
+            "content": "You are an expert document analysis assistant. Using the provided document text, analysis criteria, and features & insights, generate structured Alerts & Actions in the specified format. For each item, include the findings title, description, suggested action, and findings type. Respond in {output_language} language."
          },
          {
             "role":"user",
