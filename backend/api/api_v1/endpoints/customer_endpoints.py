@@ -103,11 +103,11 @@ async def update_customer(customer_id: str, update: UpdateCustomer = Body(...), 
 
 @router.get("/documents/{customer_id}", response_model=dict)
 @log_endpoint
-async def list_customer_documents(customer_id: str, db=Depends(get_db)):
+async def list_customer_documents(customer_id: str, limit: int = None, db=Depends(get_db)):
     logger = logging.getLogger(__name__)
 
-    # Fetch documents from the database
-    cursor = db.execute("""
+    # Build SQL query with optional LIMIT
+    query = """
         SELECT id, customer_id, uuid, filename, file_hash, file_preview, uploaded_at,
                analysis_status, analysis_started_at, analysis_completed_at, analysis_cost,
                ai_alert, ai_expires, ai_category, ai_sub_category, ai_summary_short,
@@ -117,7 +117,14 @@ async def list_customer_documents(customer_id: str, db=Depends(get_db)):
         FROM files
         WHERE customer_id = ?
         ORDER BY uploaded_at DESC
-    """, (customer_id,))
+    """
+    params = [customer_id]
+    if limit is not None:
+        query += " LIMIT ?"
+        params.append(limit)
+
+    # Fetch documents from the database
+    cursor = db.execute(query, tuple(params))
     rows = cursor.fetchall()
 
     docs = [dict(row) for row in rows]
@@ -138,19 +145,20 @@ async def list_customer_documents(customer_id: str, db=Depends(get_db)):
     # Enrich categorized_documents with file_size_human and uploaded_at_human
     for cat_index, cat in enumerate(categorized_documents):
         for doc_index, doc in enumerate(cat.get("documents", [])):
-            # Log raw file_size before humanizing
             if "file_size" in doc:
                 doc["file_size_human"] = humanize.naturalsize(doc["file_size"], binary=False)
-
-            # Check the raw uploaded_at before humanizing
             if "uploaded_at" in doc:
-                # Convert the uploaded_at string to datetime
                 try:
                     uploaded_at_utc = datetime.fromisoformat(doc["uploaded_at"]).replace(tzinfo=timezone.utc)
                     now_utc = datetime.now(timezone.utc)
                     doc["uploaded_at_human"] = humanize.naturaltime(now_utc - uploaded_at_utc)
                 except ValueError:
-                    logger.warning("uploaded_at for doc %d in category %d is not in the correct datetime format: %s", doc_index + 1, cat_index + 1, doc["uploaded_at"])
+                    logger.warning(
+                        "uploaded_at for doc %d in category %d is not in the correct datetime format: %s",
+                        doc_index + 1,
+                        cat_index + 1,
+                        doc["uploaded_at"]
+                    )
 
     return {
         "documents": docs,
