@@ -14,7 +14,7 @@ def load_prompts() -> dict:
     return prompts
 
 
-def run_ai_completition(ai_client, prompt: dict, document_text=None, output_language="Czech"):
+def run_ai_completition(ai_client, prompt: dict, document_text=None, document_extra=None, output_language="Czech"):
     """
     Generate a smart summary for the given prompt text using the loaded template.
     """
@@ -25,6 +25,9 @@ def run_ai_completition(ai_client, prompt: dict, document_text=None, output_lang
         user_content = user_template.replace("{document_text}", document_text)
     else:
         user_content = user_template
+
+    if document_extra:
+        user_content = user_content.replace("{document_extra}", document_extra)
 
     if "schema" in prompt:
         response = ai_client.chat.completions.create(
