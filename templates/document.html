@@ -518,8 +518,59 @@
         <div class="section-card p-6 bg-gray-800 rounded-xl">
           <h2 class="text-2xl font-bold text-white mb-4">Alerts & Actions</h2>
           <div class="space-y-4">
-            <!-- Expiry/Deadline Management -->
+
+            {% for record in document.ai_alerts_and_actions %}
             <div class="alert-card action-required p-4 bg-gray-700 rounded-lg">
+              <div class="flex items-center space-x-3">
+
+                {% if record.findings_type == "alert" %}
+                  <svg class="h-6 w-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                  </svg>
+                {% endif %}
+                {% if record.findings_type == "reminder" %}
+                  <svg class="h-6 w-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                {% endif %}
+                {% if record.findings_type == "action_required" %}
+                  <svg class="h-6 w-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                  </svg>
+                {% endif %}
+                {% if record.findings_type == "insights_available" %}
+                  <svg class="h-6 w-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                  </svg>
+                {% endif %}
+
+                <div>
+                  <p class="text-white font-medium">{{record.findings_title}}</p>
+
+                  {% if record.findings_type == "alert" %}
+                    <p class="text-red-400 text-sm font-medium mt-1">{{record.suggested_action}}</p>
+                  {% endif %}
+                  {% if record.findings_type == "reminder" %}
+                    <p class="text-orange-400 text-sm font-medium mt-1">{{record.suggested_action}}</p>
+                  {% endif %}
+                  {% if record.findings_type == "action_required" %}
+                    <p class="text-orange-400 text-sm font-medium mt-1">{{record.suggested_action}}</p>
+                  {% endif %}
+                  {% if record.findings_type == "insights_available" %}
+                    <p class="text-blue-400 text-sm font-medium mt-1">{{record.suggested_action}}</p>
+                  {% endif %}
+
+                  <p class="text-gray-400 text-sm">{{record.description}}</p>
+
+                </div>
+
+              </div>
+            </div>
+
+            {% endfor %}
+
+            <!-- Example Alerts and Actions -->
+            <!-- <div class="alert-card action-required p-4 bg-gray-700 rounded-lg">
               <div class="flex items-center space-x-3">
                 <svg class="h-6 w-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -531,7 +582,6 @@
                 </div>
               </div>
             </div>
-            <!-- Compliance Alerts -->
             <div class="alert-card action-required p-4 bg-gray-700 rounded-lg">
               <div class="flex items-center space-x-3">
                 <svg class="h-6 w-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -544,7 +594,6 @@
                 </div>
               </div>
             </div>
-            <!-- Risk Analysis -->
             <div class="alert-card review-suggested p-4 bg-gray-700 rounded-lg">
               <div class="flex items-center space-x-3">
                 <svg class="h-6 w-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -557,9 +606,6 @@
                 </div>
               </div>
             </div>
-
-
-            <!-- Action Suggestions -->
             <div class="alert-card review-suggested p-4 bg-gray-700 rounded-lg">
               <div class="flex items-center space-x-3">
                 <svg class="h-6 w-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -571,7 +617,8 @@
                   <p class="text-blue-400 text-sm font-medium mt-1">Suggested Action: Discuss penalty terms with landlord.</p>
                 </div>
               </div>
-            </div>
+            </div> -->
+
           </div>
         </div>
 
