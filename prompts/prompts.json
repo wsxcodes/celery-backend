@@ -154,26 +154,29 @@
             "content":"This are AI generated instructions:\n{document_extra}\n\nWhat I need now is to generate a few (not too many) encapsulated \"Analysis Features & Insights\" for these, for example:\n\nExpiry/Deadline Management\nChecks upcoming lease expiry dates and notifies when renewal or termination actions are due.\n\nCompliance Alerts\nDetects missing signatures, ensures required fields are completed, and flags non-compliant clauses.\n\nRisk Analysis\nEvaluates financial and legal risks, including penalty terms and unusual contract clauses.\n\nBeneficiary & Heir Auditing\nNot applicable for this document type.\n\nAction Suggestions\nOffers recommended next steps based on analysis, such as negotiating terms or contacting stakeholders.\n"
          }
       ],
-      "schema":{
-         "type":"json_schema",
-         "json_schema":{
-            "name":"FeaturesAndInsightsSchema",
-            "strict":true,
-            "schema":{
-               "type":"object",
-               "properties":{
-                  "feature":{
-                     "type":"string"
-                  },
-                  "description":{
-                     "type":"string"
+      "schema": {
+         "type": "json_schema",
+         "json_schema": {
+            "name": "FeaturesAndInsightsSchema",
+            "strict": true,
+            "schema": {
+               "type": "object",
+               "properties": {
+                  "features_and_insights": {
+                     "type": "array",
+                     "items": {
+                        "type": "object",
+                        "properties": {
+                           "feature": { "type": "string" },
+                           "description": { "type": "string" }
+                        },
+                        "required": [ "feature", "description" ],
+                        "additionalProperties": false
+                     }
                   }
                },
-               "required":[
-                  "feature",
-                  "description"
-               ],
-               "additionalProperties":false
+               "required": [ "features_and_insights" ],
+               "additionalProperties": false
             }
          }
       }
