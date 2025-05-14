@@ -43,6 +43,7 @@ def init_db():
             ai_summary_short TEXT,
             ai_summary_long TEXT,
             ai_analysis_criteria TEXT,
+            ai_features_and_insights TEXT,
             file_size INTEGER,
             raw_text TEXT,
             health_score INTEGER DEFAULT 0,
