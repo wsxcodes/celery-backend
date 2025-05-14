@@ -49,7 +49,7 @@ Founder of Eterny
 
 > "We built Eterny because managing assets and documents shouldn’t be a never-ending task. Your legacy deserves a vault that thinks ahead."
 
-[Start planning now](#)
+[Start planning now](https://www.eterny.io/)
 
 ## Developers
 
