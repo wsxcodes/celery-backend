@@ -55,6 +55,7 @@ def main():
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Request document preview
+
             logger.info("Requesting document preview")
             preview_response = safe_request(
                 request_type="GET",
@@ -152,6 +153,33 @@ def main():
             )
 
             # -----------------------------------------------------------------------------------------------------------------------------
+            # Run the features and insights prompt
+
+            document = safe_request(
+                        request_type="GET",
+                        url=config.API_URL + f"/api/v1/document/get/{document_uuid}",
+                        data={},
+                    )
+            ai_analysis_criteria = document.json()["ai_analysis_criteria"]
+
+
+            features_and_insights = prompts["features_and_insights"]
+            data = run_ai_completition(ai_client=ai_client, prompt=features_and_insights, document_extra=ai_analysis_criteria, output_language=output_language)
+            features_and_insights_dict = json.loads(data["message"])
+
+            usage = data.get("usage")
+            tokens_spent += usage["total_tokens"]
+
+            logger.info("Saving Analysis Features & Insights to database")
+            safe_request(
+                request_type="PATCH",
+                url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+                data={
+                    "ai_features_and_insights": json.dumps(features_and_insights_dict)
+                }
+            )
+
+            # -----------------------------------------------------------------------------------------------------------------------------
             # Map Eterny legacy document schemas - in English
 
             logger.info("Mapping existing Eterny.io Document Schemas")
@@ -171,7 +199,7 @@ def main():
             safe_request(
                 request_type="PATCH",
                 url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
-                data={"ai_enterny_legacy_schema": str(legacy_schema_dict)},
+                data={"ai_enterny_legacy_schema": json.dumps(legacy_schema_dict)},
             )
 
             # -----------------------------------------------------------------------------------------------------------------------------
