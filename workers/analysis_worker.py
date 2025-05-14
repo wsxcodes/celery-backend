@@ -164,8 +164,7 @@ def main():
 
             features_and_insights = prompts["features_and_insights"]
             data = run_ai_completition(ai_client=ai_client, prompt=features_and_insights, document_extra=ai_analysis_criteria, output_language=output_language)
-
-            features_and_insights_dict = json.loads(data["features_and_insights"])
+            features_and_insights_dict = data["features_and_insights"]
 
             usage = data.get("usage")
             tokens_spent += usage["total_tokens"]
