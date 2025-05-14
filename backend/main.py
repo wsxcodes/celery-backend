@@ -134,12 +134,13 @@ async def read_document(request: Request, uuid: str, db=Depends(get_db)):
     # Visual Conversions for the template
     document_dict["analysis_started_at"] = document.analysis_started_at.strftime('%Y-%m-%d %H:%M:%S')
     document_dict["analysis_completed_at"] = document.analysis_completed_at.strftime('%Y-%m-%d %H:%M:%S')
-    document_dict["file_size_humanized"] = humanize.naturalsize(document.file_size)
-    document_dict["uploaded_at"] = document.uploaded_at.strftime("%b %d, %Y")
-    document_dict["filename"] = document_dict["filename"].replace(" ", "_")
     document_dict["ai_analysis_criteria"] = format_analysis(document_dict["ai_analysis_criteria"])
     document_dict["ai_enterny_legacy_schema"] = json.loads(document_dict["ai_enterny_legacy_schema"])
     document_dict["ai_features_and_insights"] = json.loads(document_dict["ai_features_and_insights"])
+    document_dict["ai_alerts_and_actions"] = json.loads(document_dict["ai_alerts_and_actions"])
+    document_dict["file_size_humanized"] = humanize.naturalsize(document.file_size)
+    document_dict["uploaded_at"] = document.uploaded_at.strftime("%b %d, %Y")
+    document_dict["filename"] = document_dict["filename"].replace(" ", "_")
 
     if document.ai_expires:
         document_dict["ai_expires"] = document.ai_expires.strftime("%b %d, %Y")
