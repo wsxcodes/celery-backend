@@ -580,8 +580,36 @@
         <div class="section-card p-6 bg-gray-800 rounded-xl">
           <h2 class="text-2xl font-bold text-white mb-4">Analysis Features & Insights</h2>
           <div class="space-y-4">
-            <!-- Expiry/Deadline Management -->
+
+            {% for insight in document.ai_features_and_insights %}
+
             <div class="feature-item flex items-center justify-between p-4 bg-gray-700 rounded-lg">
+              <div class="flex items-center space-x-3">
+                  {% if insight.applicable %}
+                    <svg class="h-6 w-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  {% else %}
+                    <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6"></path>
+                    </svg>
+                  {% endif %}
+                <div>
+                  <p class="text-white font-medium">{{insight.feature}}</p>
+                  <p class="text-gray-400 text-sm">{{insight.description}}</p>
+                </div>
+              </div>
+              {% if insight.applicable %}
+                <span class="text-green-400 font-medium text-sm">Passed</span>
+              {% else %}
+                <span class="text-gray-400 font-medium text-sm">N/A</span>
+              {% endif %}
+            </div>
+
+            {% endfor %}
+
+            <!-- Example features -->
+            <!-- <div class="feature-item flex items-center justify-between p-4 bg-gray-700 rounded-lg">
               <div class="flex items-center space-x-3">
                 <svg class="h-6 w-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
@@ -593,33 +621,6 @@
               </div>
               <span class="text-green-400 font-medium text-sm">Passed</span>
             </div>
-            <!-- Compliance Alerts -->
-            <div class="feature-item flex items-center justify-between p-4 bg-gray-700 rounded-lg">
-              <div class="flex items-center space-x-3">
-                <svg class="h-6 w-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <div>
-                  <p class="text-white font-medium">Compliance Alerts</p>
-                  <p class="text-gray-400 text-sm">Detects missing signatures, ensures required fields are completed, and flags non-compliant clauses.</p>
-                </div>
-              </div>
-              <span class="text-green-400 font-medium text-sm">Passed</span>
-            </div>
-            <!-- Risk Analysis -->
-            <div class="feature-item flex items-center justify-between p-4 bg-gray-700 rounded-lg">
-              <div class="flex items-center space-x-3">
-                <svg class="h-6 w-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <div>
-                  <p class="text-white font-medium">Risk Analysis</p>
-                  <p class="text-gray-400 text-sm">Evaluates financial and legal risks, including penalty terms and unusual contract clauses.</p>
-                </div>
-              </div>
-              <span class="text-green-400 font-medium text-sm">Passed</span>
-            </div>
-            <!-- Beneficiary & Heir Auditing -->
             <div class="feature-item flex items-center justify-between p-4 bg-gray-700 rounded-lg">
               <div class="flex items-center space-x-3">
                 <svg class="h-6 w-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -632,19 +633,7 @@
               </div>
               <span class="text-gray-400 font-medium text-sm">N/A</span>
             </div>
-            <!-- Action Suggestions -->
-            <div class="feature-item flex items-center justify-between p-4 bg-gray-700 rounded-lg">
-              <div class="flex items-center space-x-3">
-                <svg class="h-6 w-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <div>
-                  <p class="text-white font-medium">Action Suggestions</p>
-                  <p class="text-gray-400 text-sm">Offers recommended next steps based on analysis, such as negotiating terms or contacting stakeholders.</p>
-                </div>
-              </div>
-              <span class="text-green-400 font-medium text-sm">Passed</span>
-            </div>
+             -->
           </div>
         </div>
 
