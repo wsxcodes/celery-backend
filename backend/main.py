@@ -99,7 +99,7 @@ async def read_home(request: Request, db=Depends(get_db)):
             "session_id": session_id,
             "customer": customer,
             "output_language": customer["output_language"],
-            "developer": is_developer
+            "is_developer": is_developer
         }
     )
 
