@@ -17,11 +17,15 @@ logger = logging.getLogger(__name__)
 prompts = prompt_generators.load_prompts()
 
 
-# XXX TODO retry policy
+# XXX TODO retry policy on 3rd party API calls
 
 # XXX TODO update "ai_expires" field in the database when applicable
 
 # XXX TODO Mark off AI Alert
+
+# XXX TODO inject today's date into alerts prompt
+
+# XXX TODO celery workers with backoff strategy
 
 
 def main():
@@ -237,13 +241,6 @@ def main():
             )
 
             # -----------------------------------------------------------------------------------------------------------------------------
-            # XXX TODO Mark off AI Alert
-            # XXX TODO Mark off AI Alert
-            # XXX TODO Mark off AI Alert
-            # XXX TODO Mark off AI Alert
-            # XXX TODO Mark off AI Alert
-            # XXX TODO Mark off AI Alert
-            # XXX TODO Mark off AI Alert
             # XXX TODO Mark off AI Alert
 
             random_alert = random.choice(["insights_available", "action_required", "reminder", "alert", ""])
