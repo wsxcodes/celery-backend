@@ -9,10 +9,10 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
-from backend.api.api_v1.endpoints.customer_endpoints import list_customer_documents
+
 from backend import config
-from backend.api.api_v1.endpoints.customer_endpoints import (add_new_customer,
-                                                             get_customer)
+from backend.api.api_v1.endpoints.customer_endpoints import (
+    add_new_customer, get_customer, list_customer_documents)
 from backend.api.api_v1.endpoints.documents_endpoints import get_document
 from backend.api.api_v1.routers import api_router
 from backend.decorators import log_endpoint
