@@ -63,6 +63,9 @@
     .alert-card.review-suggested {
       border-color: #f97316;
     }
+    .alert-card.insights-available {
+      border-color: #2114d4;
+    }
     .alert-card {
       transition: transform 0.2s ease-in-out;
     }
@@ -520,7 +523,21 @@
           <div class="space-y-4">
 
             {% for record in document.ai_alerts_and_actions %}
+
+            {% if record.findings_type == "alert" %}
             <div class="alert-card action-required p-4 bg-gray-700 rounded-lg">
+            {% endif %}
+            {% if record.findings_type == "action_required" %}
+            <div class="alert-card action-required p-4 bg-gray-700 rounded-lg">
+            {% endif %}
+            {% if record.findings_type == "reminder" %}
+            <div class="alert-card review-suggested p-4 bg-gray-700 rounded-lg">
+            {% endif %}
+            {% if record.findings_type == "insights_available" %}
+            <div class="alert-card insights-available p-4 bg-gray-700 rounded-lg">
+            {% endif %}
+            
+
               <div class="flex items-center space-x-3">
 
                 {% if record.findings_type == "alert" %}
