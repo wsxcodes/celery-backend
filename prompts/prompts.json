@@ -181,5 +181,50 @@
             }
          }
       }
+   },
+   "alerts_and_actions":{
+      "model":"gpt-4.1",
+      "temperature":0.5,
+      "messages":[
+         {
+            "role": "system",
+            "content": "You are an expert document analysis assistant. XXX Respond in {output_language} language."
+         },
+         {
+            "role":"user",
+            "content":"Document text: {document_text}\n\nanalysis_criteria = \"{ai_analysis_criteria}\"\nfeatures_and_insights = \"{ai_features_and_insights}\"\n\nGenerate Alerts & Actions based on the criteria in the given format.\n\nExample Alerts & Actions format:\n\nexample_1:\nExpiry/Deadline Management\nLease expires Apr 14, 2026. Renewal notice required by Mar 15, 2026.\nSuggested Action: Schedule renewal notice for Mar 1, 2026.\ntype: reminder\n\nexample_2:\nCompliance Alerts\nMissing tenant signature detected.\nSuggested Action: Contact tenant to obtain signature.\ntype: alert\n\nexample_3:\nRisk Analysis\nEarly termination penalty is above industry norm.\nSuggested Action: Review penalty clause with legal team.\ntype: alert\n\nexample_4:\nAction Suggestions\nNegotiate penalty clause before renewal.\nSuggested Action: Discuss penalty terms with landlord.\ntype: action_required\n"
+         }
+      ],
+      "schema": {
+         "type": "json_schema",
+         "json_schema": {
+            "name": "FeaturesAndInsightsSchema",
+            "strict": true,
+            "schema": {
+               "type": "object",
+               "properties": {
+                  "alerts_and_actions": {
+                     "type": "array",
+                     "items": {
+                        "type": "object",
+                        "properties": {
+                           "findings_title": { "type": "string" },
+                           "description": { "type": "string" },
+                           "suggested_action": { "type": "string" },
+                           "findings_type": {
+                              "type": "string",
+                              "enum": [ "insights_available", "action_required", "reminder", "alert" ]
+                           }
+                        },
+                        "required": [ "findings_title", "description", "suggested_action", "findings_type"],
+                        "additionalProperties": false
+                     }
+                  }
+               },
+               "required": [ "alerts_and_actions" ],
+               "additionalProperties": false
+            }
+         }
+      }
    }
 }
