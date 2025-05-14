@@ -21,7 +21,7 @@ prompts = prompt_generators.load_prompts()
 
 # XXX TODO update "ai_expires" field in the database when applicable
 
-# XXX detect expiry dates, renewal clauses, trial periods - also update "ai_expires" field in the database
+# XXX TODO Mark off AI Alert
 
 
 def main():
@@ -137,6 +137,7 @@ def main():
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Run the analysis criteria prompt
+
             analysis_criteria = prompts["analysis_criteria"]
             data = run_ai_completition(ai_client=ai_client, prompt=analysis_criteria, document_text=raw_text, output_language=output_language)
 
@@ -175,6 +176,33 @@ def main():
                 url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
                 data={
                     "ai_features_and_insights": json.dumps(features_and_insights_dict)
+                }
+            )
+
+            # -----------------------------------------------------------------------------------------------------------------------------
+            # Run alerts and actions prompt
+
+            document = safe_request(
+                        request_type="GET",
+                        url=config.API_URL + f"/api/v1/document/get/{document_uuid}",
+                        data={},
+                    )
+            ai_analysis_criteria = document.json()["ai_analysis_criteria"]
+            ai_features_and_insights = document.json()["ai_features_and_insights"]
+
+
+            features_and_insights = prompts["alerts_and_actions"]
+            data = run_ai_completition(ai_client=ai_client, prompt=features_and_insights, document_text=raw_text, document_extra1=ai_analysis_criteria, document_extra2=ai_features_and_insights, output_language=output_language)
+
+            usage = data.get("usage")
+            tokens_spent += usage["total_tokens"]
+
+            logger.info("Saving Analysis Features & Insights to database")
+            safe_request(
+                request_type="PATCH",
+                url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+                data={
+                    "ai_alerts_and_actions": data["alerts_and_actions"]
                 }
             )
 
