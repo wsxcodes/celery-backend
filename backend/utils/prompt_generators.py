@@ -15,12 +15,12 @@ def load_prompts() -> dict:
 
 
 def run_ai_completition(
-        ai_client, 
-        prompt: dict, 
-        document_text=None, 
-        document_extra1=None, 
-        document_extra2=None, 
-        document_extra3=None, 
+        ai_client,
+        prompt: dict,
+        document_text=None,
+        document_extra1=None,
+        document_extra2=None,
+        document_extra3=None,
         output_language="Czech"
         ):
     """
