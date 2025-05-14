@@ -192,7 +192,14 @@ def main():
 
 
             features_and_insights = prompts["alerts_and_actions"]
-            data = run_ai_completition(ai_client=ai_client, prompt=features_and_insights, document_text=raw_text, document_extra1=ai_analysis_criteria, document_extra2=ai_features_and_insights, output_language=output_language)
+            data = run_ai_completition(
+                ai_client=ai_client, 
+                prompt=features_and_insights, 
+                document_text=raw_text, 
+                document_extra1=ai_analysis_criteria, 
+                document_extra2=ai_features_and_insights, 
+                output_language=output_language
+                )
 
             usage = data.get("usage")
             tokens_spent += usage["total_tokens"]
