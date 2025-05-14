@@ -181,6 +181,7 @@ def main():
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Run alerts and actions prompt
+            # XXX TODO inject today's date into the prompt
 
             document = safe_request(
                         request_type="GET",
