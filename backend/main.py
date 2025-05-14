@@ -69,6 +69,11 @@ def startup_event():
 async def read_home(request: Request, db=Depends(get_db)):
     logger = logging.getLogger(__name__)
 
+    # Check if the developer parameter is present in the query string
+    is_developer = "developer" in request.query_params
+    if is_developer:
+        logger.info("Developer parameter detected")
+
     session_id = request.session.get("session_id")
     if session_id:
         logger.info("Existing session_id found: %s", session_id)
@@ -93,9 +98,16 @@ async def read_home(request: Request, db=Depends(get_db)):
             "request": request,
             "session_id": session_id,
             "customer": customer,
-            "output_language": customer["output_language"]
+            "output_language": customer["output_language"],
+            "developer": is_developer
         }
     )
+
+
+@app.get("/jan", response_class=HTMLResponse, include_in_schema=False)
+@log_endpoint
+async def read_jan(request: Request, db=Depends(get_db)):
+    return RedirectResponse(url="/?developer", status_code=302)
 
 
 @app.get("/404", response_class=HTMLResponse, include_in_schema=False)
