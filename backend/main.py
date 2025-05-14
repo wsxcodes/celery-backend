@@ -138,7 +138,8 @@ async def read_document(request: Request, uuid: str, db=Depends(get_db)):
     document_dict["uploaded_at"] = document.uploaded_at.strftime("%b %d, %Y")
     document_dict["filename"] = document_dict["filename"].replace(" ", "_")
     document_dict["ai_analysis_criteria"] = format_analysis(document_dict["ai_analysis_criteria"])
-    document_dict["ai_enterny_legacy_schema"] = json.loads(document_dict["ai_enterny_legacy_schema"])    
+    document_dict["ai_enterny_legacy_schema"] = json.loads(document_dict["ai_enterny_legacy_schema"])
+    document_dict["ai_features_and_insights"] = json.loads(document_dict["ai_features_and_insights"])
 
     if document.ai_expires:
         document_dict["ai_expires"] = document.ai_expires.strftime("%b %d, %Y")
