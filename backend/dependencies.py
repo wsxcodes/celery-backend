@@ -44,10 +44,11 @@ def init_db():
             ai_summary_long TEXT,
             ai_analysis_criteria TEXT,
             ai_features_and_insights TEXT,
+            ai_alerts_and_actions TEXT,
+            ai_enterny_legacy_schema TEXT
             file_size INTEGER,
             raw_text TEXT,
-            health_score INTEGER DEFAULT 0,
-            ai_enterny_legacy_schema TEXT
+            health_score INTEGER DEFAULT 0
         )
     """)
     cursor.execute("""
