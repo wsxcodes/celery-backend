@@ -57,11 +57,14 @@
     .alert-card {
       border-left: 4px solid;
     }
-    .alert-card.action-required {
+    .alert-card.action-alert {
       border-color: #ef4444;
     }
-    .alert-card.review-suggested {
+    .alert-card.action-required {
       border-color: #f97316;
+    }
+    .alert-card.review-suggested {
+      border-color: #e6a714cb;
     }
     .alert-card.insights-available {
       border-color: #2114d4;
@@ -525,7 +528,7 @@
             {% for record in document.ai_alerts_and_actions %}
 
             {% if record.findings_type == "alert" %}
-            <div class="alert-card action-required p-4 bg-gray-700 rounded-lg">
+            <div class="alert-card action-alert p-4 bg-gray-700 rounded-lg">
             {% endif %}
             {% if record.findings_type == "action_required" %}
             <div class="alert-card action-required p-4 bg-gray-700 rounded-lg">
