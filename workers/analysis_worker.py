@@ -162,7 +162,6 @@ def main():
                     )
             ai_analysis_criteria = document.json()["ai_analysis_criteria"]
 
-
             features_and_insights = prompts["features_and_insights"]
             data = run_ai_completition(ai_client=ai_client, prompt=features_and_insights, document_extra=ai_analysis_criteria, output_language=output_language)
             features_and_insights_dict = json.loads(data["message"])
