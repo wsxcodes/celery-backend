@@ -9,7 +9,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.middleware.sessions import SessionMiddleware
-
+from backend.api.api_v1.endpoints.customer_endpoints import list_customer_documents
 from backend import config
 from backend.api.api_v1.endpoints.customer_endpoints import (add_new_customer,
                                                              get_customer)
@@ -91,6 +91,8 @@ async def read_home(request: Request, db=Depends(get_db)):
     customer = await get_customer(customer_id=session_id, db=db)
     logger.info("Customer data retrieved: %s", customer)
 
+    has_documents = await list_customer_documents(customer_id=session_id, limit=1, db=db)
+
     logger.info("Rendering index page with session_id: %s", session_id)
     return templates.TemplateResponse(
         "home.html",
@@ -99,7 +101,8 @@ async def read_home(request: Request, db=Depends(get_db)):
             "session_id": session_id,
             "customer": customer,
             "output_language": customer["output_language"],
-            "is_developer": is_developer
+            "is_developer": is_developer,
+            "has_documents": has_documents
         }
     )
 
