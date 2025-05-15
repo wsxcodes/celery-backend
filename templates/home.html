@@ -107,6 +107,12 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const dropZone = document.getElementById('dropZone');
+    function hideMarketingSections() {
+      const featureSection = document.getElementById('eterny-feature');
+      const storySection = document.getElementById('eterny-story');
+      if (featureSection) featureSection.style.display = 'none';
+      if (storySection) storySection.style.display = 'none';
+    }
     const fileInput = document.getElementById('fileInput');
     const uploadStatus = document.getElementById('uploadStatus');
     const documentsContainer = document.getElementById('documentsContainer');
@@ -297,6 +303,9 @@
     }
 
     function updateDocuments(categorizedDocuments) {
+      // Hide initial marketing sections when any documents are returned
+      const hasDocs = categorizedDocuments.some(group => group.documents && group.documents.length > 0);
+      if (hasDocs) hideMarketingSections();
       const newDocumentsString = JSON.stringify(categorizedDocuments);
       if (lastDocuments && newDocumentsString === JSON.stringify(lastDocuments)) {
         return; // No changes, skip rendering
