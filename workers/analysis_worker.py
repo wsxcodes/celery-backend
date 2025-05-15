@@ -171,9 +171,6 @@ def main():
             data = run_ai_completition(ai_client=ai_client, prompt=features_and_insights, document_extra1=ai_analysis_criteria, output_language=output_language)
             features_and_insights_dict = data["features_and_insights"]
 
-            print("*****"* 100)
-            print(features_and_insights_dict)
-
             usage = data.get("usage")
             tokens_spent += usage["total_tokens"]
 
@@ -244,16 +241,31 @@ def main():
             )
 
             # -----------------------------------------------------------------------------------------------------------------------------
-            # XXX TODO Mark off AI Alert
+            # Mark off AI Alert
 
-            random_alert = random.choice(["insights_available", "action_required", "reminder", "alert", ""])
+            priority = ['alert', 'action_required', 'reminder', 'insights_available']
+
+            # 1) Tag each entry
+            for entry in features_and_insights_dict:
+                entry['ai_alert'] = next(
+                    (flag for flag in priority if entry.get(flag, False)),
+                    None
+                )
+
+            # 2) Pick the top-level alert for the whole document
+            document_ai_alert = next(
+                (flag for flag in priority
+                if any(entry.get(flag) for entry in features_and_insights_dict)),
+                None
+            )
 
             logger.info("Marking document as processed")
-            safe_request(
-                request_type="PATCH",
-                url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
-                data={"ai_alert": random_alert},
-            )
+            if document_ai_alert:
+                safe_request(
+                    request_type="PATCH",
+                    url=f"{config.API_URL}/api/v1/document/metadata/{document_uuid}",
+                    data={"ai_alert": document_ai_alert},
+                )
             logger.info("Analysis completed successfully")
 
             # -----------------------------------------------------------------------------------------------------------------------------
