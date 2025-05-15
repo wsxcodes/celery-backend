@@ -50,18 +50,6 @@ async def add_new_customer(customer_id: str, output_language: str = "Czech", db=
     }
 
 
-@router.get("/all", response_model=List[Customer])
-@log_endpoint
-async def list_customers(db=Depends(get_db)):
-    cursor = db.execute("""
-        SELECT id, customer_id, output_language, file_count
-        FROM customers
-        ORDER BY customer_id
-    """)
-    rows = cursor.fetchall()
-    return [dict(row) for row in rows]
-
-
 @router.get("/{customer_id}", response_model=Customer)
 @log_endpoint
 async def get_customer(customer_id: str, db=Depends(get_db)):
@@ -164,3 +152,15 @@ async def list_customer_documents(customer_id: str, limit: int = None, db=Depend
         "documents": docs,
         "categorized_documents": categorized_documents
     }
+
+
+@router.get("/all", response_model=List[Customer])
+@log_endpoint
+async def list_customers(db=Depends(get_db)):
+    cursor = db.execute("""
+        SELECT id, customer_id, output_language, file_count
+        FROM customers
+        ORDER BY customer_id
+    """)
+    rows = cursor.fetchall()
+    return [dict(row) for row in rows]
