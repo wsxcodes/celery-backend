@@ -106,7 +106,6 @@ def main():
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Get customer info
-
             customer = safe_request(
                 request_type="GET",
                 url=config.API_URL + f"/api/v1/customer/{customer_id}",
@@ -218,7 +217,6 @@ def main():
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Map Eterny legacy document schemas - in English
-
             logger.info("Mapping existing Eterny.io Document Schemas")
             simple_prompt = prompts["map_existing_eterny.io_schemas"]
 
@@ -241,7 +239,6 @@ def main():
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Mark off AI Alert
-
             priority = ['alert', 'action_required', 'reminder', 'insights_available']
 
             # pick the highest‐priority alert present in the list
@@ -268,7 +265,6 @@ def main():
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Record the tokens spent
-
             update_tokens_spent(
                 document_uuid=document_uuid,
                 add_tokens_spent=tokens_spent
