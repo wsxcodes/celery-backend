@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Streaming Chat Demo</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 1rem;
+    }
+    #output {
+      white-space: pre-wrap;
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+      height: 300px;
+      overflow-y: auto;
+      background: #f9f9f9;
+    }
+    label, input, button, textarea {
+      display: block;
+      margin-bottom: 0.5rem;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1>AI Stream Torture Chamber</h1>
+
+  <label>
+    Question:
+    <textarea id="question" rows="3">Hello, streaming world!</textarea>
+  </label>
+
+  <label>
+    Document UUID:
+    <input id="document_uuid" value="" />
+  </label>
+
+  <button id="start">Start Streaming</button>
+
+  <div id="output">Ready.</div>
+
+<script>
+  document.getElementById('start').addEventListener('click', () => {
+    const usr = encodeURIComponent(document.getElementById('question').value);
+    const doc = encodeURIComponent(document.getElementById('document_uuid').value);
+    const url = `http://localhost:8880/api/v1/rag/ask?document_uuid=${doc}&question=${usr}`;
+
+    const out = document.getElementById('output');
+    out.textContent = '[Streaming started]\n';
+    const evt = new EventSource(url);
+
+    evt.onmessage = e => {
+      let dataText = e.data.trim();
+      if (dataText.startsWith('data:')) {
+        dataText = dataText.replace(/^data:\s*/, '');
+      }
+
+      if (dataText === '[DONE]') {
+        evt.close();
+        return;
+      }
+
+      try {
+        const { content } = JSON.parse(dataText);
+        out.textContent += content;
+        out.scrollTop = out.scrollHeight;
+      } catch {
+        console.warn('Invalid chunk:', dataText);
+      }
+    };
+
+    evt.onerror = err => {
+      if (evt.readyState === EventSource.CLOSED) return;
+      console.error('Streaming error:', err);
+    };
+  });
+</script>
+</body>
+</html>
