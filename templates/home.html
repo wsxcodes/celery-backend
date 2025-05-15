@@ -120,7 +120,7 @@
     documentsContainer.addEventListener('mouseenter', () => { isHoveringDocuments = true; });
     documentsContainer.addEventListener('mouseleave', () => { isHoveringDocuments = false; });
     const clientId = '{{session_id}}';
-    const uploadEndpoint = `/api/v1/document/add/${clientId}`;
+    const uploadEndpoint = `/api/v1/document/${clientId}`;
     const documentsEndpoint = `/api/v1/customer/documents/${clientId}`;
     let lastDocuments = null; // Store last fetched documents for comparison
 
