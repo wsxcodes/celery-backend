@@ -102,7 +102,7 @@ def update_tokens_spent(document_uuid: str, add_tokens_spent: int) -> bool:
     # Fetch current metadata
     response = safe_request(
         request_type="GET",
-        url=config.API_URL + f"/api/v1/document/get/{document_uuid}",
+        url=config.API_URL + f"/api/v1/document/{document_uuid}",
         data={}
     )
     if not response or response.status_code != 200:
@@ -132,7 +132,7 @@ async def update_tokens_spent_async(document_uuid: str, add_tokens_spent: int) -
     try:
         async with httpx.AsyncClient() as client:
             # Fetch current metadata
-            get_url = config.API_URL + f"/api/v1/document/get/{document_uuid}"
+            get_url = config.API_URL + f"/api/v1/document/{document_uuid}"
             response = await client.get(get_url)
             response.raise_for_status()
             metadata = response.json()
