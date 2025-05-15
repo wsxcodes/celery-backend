@@ -171,7 +171,8 @@ def main():
             data = run_ai_completition(ai_client=ai_client, prompt=features_and_insights, document_extra1=ai_analysis_criteria, output_language=output_language)
             features_and_insights_dict = data["features_and_insights"]
 
-            print("***** pica", features_and_insights_dict)
+            print("*****"* 100)
+            print(features_and_insights_dict)
 
             usage = data.get("usage")
             tokens_spent += usage["total_tokens"]
