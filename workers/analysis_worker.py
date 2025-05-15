@@ -190,13 +190,15 @@ def main():
             ai_analysis_criteria = document.json()["ai_analysis_criteria"]
             ai_features_and_insights = document.json()["ai_features_and_insights"]
 
+            # XXX TODO re-consider providing ai_analysis_criteria and ai_features_and_insights
+
             features_and_insights = prompts["alerts_and_actions"]
             data = run_ai_completition(
                 ai_client=ai_client,
                 prompt=features_and_insights,
                 document_text=raw_text,
-                document_extra1=ai_analysis_criteria,
-                document_extra2=ai_features_and_insights,
+                # document_extra1=ai_analysis_criteria,
+                # document_extra2=ai_features_and_insights,
                 document_extra3=str(datetime.datetime.now().date()),
                 output_language=output_language
                 )
