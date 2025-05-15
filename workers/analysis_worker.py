@@ -159,7 +159,7 @@ def main():
             logger.info("Running AI analysis features & insights")
             document = safe_request(
                         request_type="GET",
-                        url=config.API_URL + f"/api/v1/document/get/{document_uuid}",
+                        url=config.API_URL + f"/api/v1/document/{document_uuid}",
                         data={},
                     )
             ai_analysis_criteria = document.json()["ai_analysis_criteria"]
@@ -185,7 +185,7 @@ def main():
             logger.info("Running alerts and actions prompt")
             document = safe_request(
                         request_type="GET",
-                        url=config.API_URL + f"/api/v1/document/get/{document_uuid}",
+                        url=config.API_URL + f"/api/v1/document/{document_uuid}",
                         data={},
                     )
             ai_analysis_criteria = document.json()["ai_analysis_criteria"]
