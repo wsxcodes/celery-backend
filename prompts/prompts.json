@@ -115,7 +115,7 @@
    },
    "map_entities_to_schema":{
       "model":"gpt-4.1",
-      "temperature":0.0,
+      "temperature":0.5,
       "messages":[
          {
             "role":"system",
@@ -129,7 +129,7 @@
    },
    "analysis_criteria":{
       "model":"gpt-4.1",
-      "temperature":0.0,
+      "temperature":0.5,
       "messages":[
          {
             "role":"system",
@@ -226,5 +226,19 @@
             }
          }
       }
+   },
+   "init_rag":{
+      "model":"gpt-4.1",
+      "temperature":0.0,
+      "messages":[
+         {
+            "role":"system",
+            "content":"XXX TODO"
+         },
+         {
+            "role":"user",
+            "content":"XXX TODO"
+         }
+      ]
    }
 }
