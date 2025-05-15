@@ -5,6 +5,7 @@ from typing import List, Literal
 import tiktoken
 from fastapi import APIRouter, Body, Depends, HTTPException, Query
 from sse_starlette.sse import EventSourceResponse
+from backend.utils.prompt_generators import load_prompts
 
 from backend.api.api_v1.endpoints.customer_endpoints import get_customer
 from backend.api.api_v1.endpoints.documents_endpoints import get_document
@@ -36,6 +37,8 @@ async def ask_question_about_document(
     # Get customer output language
     customer = await get_customer(customer_id, db)
     output_language = customer["output_language"]
+    prompts = load_prompts()
+
     print("customer", customer)
     print("output_language", output_language)
 
@@ -49,6 +52,8 @@ async def ask_question_about_document(
     conversation_history = await get_messages(document_uuid, order="desc", db=db)
     print(conversation_history)
     # XXX TODO rag to init conversation about the finding about the documents (alerts, tasks, insights)
+
+    # XXX TODO utilise init_rag and rag_query prompts
 
     # Record incoming question on a separate DB connection to avoid closed DB issue
     db_ctx = get_db()
