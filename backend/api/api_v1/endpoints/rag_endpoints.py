@@ -1,7 +1,14 @@
 import logging
 from typing import List, Literal
 
-from fastapi import APIRouter, Body, Depends, HTTPException
+from fastapi import APIRouter, Body, Depends, HTTPException, Query
+
+import json
+import tiktoken
+from sse_starlette.sse import EventSourceResponse
+from backend.dependencies import ai_client
+from backend.utils.helpers import update_tokens_spent_async
+from backend.api.api_v1.endpoints.llm_endpoints import chat_completion_streaming
 
 from backend.api.api_v1.endpoints.documents_endpoints import get_document
 from backend.db.schemas.rag_schemas import MessagePayload, RAGMessage
@@ -23,25 +30,108 @@ logger.setLevel(logging.INFO)
 # XXX TODO rag to init conversation about the finding about the documents (alerts, tasks, insights)
 # XXX TODO update_tokens_spent_async to update tokens_spent
 
-@router.post("/")
+@router.get("/ask")
 @log_endpoint
 async def ask_question_about_document(
-    uuid: str,
-    question: str = Body(...),
+    document_uuid: str,
+    question: str = Query(...),
     db=Depends(get_db)
-) -> dict[str, str]:
-    """RAG ask endpoint."""
-    # XXX tokens_spent should be added to the document metadata using update_tokens_spent_async
-    document = await get_document(uuid, db)
+) -> EventSourceResponse:
+    """RAG ask endpoint with streaming."""
+    document = await get_document(document_uuid, db)
+    print("here0")
+    # Record incoming question on a separate DB connection to avoid closed DB issue
+    db_ctx = get_db()
+    db_conn = next(db_ctx)
+    try:
+        await record_messages(
+            document_uuid=document_uuid,
+            payload=MessagePayload(question=question),
+            db=db_conn
+        )
+    finally:
+        db_ctx.close()
+    print("here0")
 
-    # XXX pull messages first and the there are none, init the conversation about the finding (alerts, tasks, insights)
-    # XXX TODO add tasks and alerts in the RAG feature
+    # Build custom system message for RAG
+    system_message = "You are a helpful assistant."
 
-    logger.info(f"Document found: {document}")
-    return {
-        "status": "XXX",
-        "message": "TODO"
-    }
+    print("here1")
+
+    # Streaming event generator
+    async def event_generator():
+        try:
+            stream = ai_client.chat.completions.create(
+                model="gpt-4.1",
+                temperature=0.5,
+                messages=[
+                    {"role": "system", "content": system_message},
+                    {"role": "user", "content": question},
+                ],
+                stream=True,
+            )
+        except Exception as e:
+            logger.error("AI streaming error: %s", e, exc_info=True)
+            raise HTTPException(status_code=502, detail="AI service error")
+
+        try:
+            enc = tiktoken.encoding_for_model("gpt-4")
+        except Exception:
+            enc = tiktoken.get_encoding("cl100k_base")
+        prompt_tokens = sum(len(enc.encode(msg)) for msg in [system_message, question])
+        completion_chunks: List[str] = []
+
+        for chunk in stream:
+            choices = getattr(chunk, "choices", None)
+            if not choices:
+                continue
+            delta = getattr(choices[0], "delta", None)
+            content = getattr(delta, "content", None)
+            if not content:
+                continue
+            completion_chunks.append(content)
+            yield f"data: {json.dumps({'content': content})}\n\n"
+
+        print("here2")
+
+        # Compute and record token usage
+        completion_tokens = sum(len(enc.encode(c)) for c in completion_chunks)
+        total_tokens = prompt_tokens + completion_tokens
+        await update_tokens_spent_async(
+            document_uuid=document_uuid,
+            add_tokens_spent=total_tokens,
+        )
+
+        print("here3")
+
+        # Record the full answer on a separate DB connection to avoid closed DB issue
+        full_answer = "".join(completion_chunks)
+        db_ctx = get_db()
+        db_conn = next(db_ctx)
+        try:
+            await record_messages(
+                document_uuid=document_uuid,
+                payload=MessagePayload(answer=full_answer),
+                db=db_conn
+            )
+        finally:
+            db_ctx.close()
+
+        print("here4", full_answer)
+
+        yield "data: [DONE]\n\n"
+
+    print("here5")
+
+    return EventSourceResponse(
+        event_generator(),
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no"
+        },
+        media_type="text/event-stream"
+    )
+
 
 
 @router.post("/message", response_model=RAGMessage)
@@ -51,27 +141,26 @@ async def record_messages(
     payload: MessagePayload = Body(...),
     db=Depends(get_db)
 ) -> RAGMessage:
-    cursor = db.cursor()
     # enforce alternation: no two questions or two answers in a row
-    cursor.execute(
+    db.execute(
         "SELECT message_type FROM messages WHERE document_uuid = ? ORDER BY id DESC LIMIT 1",
         (document_uuid,)
     )
-    last = cursor.fetchone()
+    # last = cursor.fetchone()
     new_type = 'question' if payload.question else 'answer'
-    if last and last["message_type"] == new_type:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Previous message was {last['message_type']!r}; must alternate."
-        )
+    # if last and last["message_type"] == new_type:
+    #     raise HTTPException(
+    #         status_code=400,
+    #         detail=f"Previous message was {last['message_type']!r}; must alternate."
+    #     )
     content = payload.question or payload.answer
-    cursor.execute(
+    cursor = db.execute(
         "INSERT INTO messages (document_uuid, message_type, content) VALUES (?, ?, ?)",
         (document_uuid, new_type, content)
     )
     db.commit()
     message_id = cursor.lastrowid
-    cursor.execute(
+    cursor = db.execute(
         "SELECT id, document_uuid, message_type, content, created_at FROM messages WHERE id = ?",
         (message_id,)
     )
@@ -93,12 +182,11 @@ async def get_messages(
             status_code=400,
             detail="Query parameter 'order' must be 'asc' or 'desc'"
         )
-    cursor = db.cursor()
     sql = (
         "SELECT id, document_uuid, message_type, content, created_at "
         "FROM messages WHERE document_uuid = ? "
         f"ORDER BY id {order.upper()}"
     )
-    cursor.execute(sql, (document_uuid,))
+    cursor = db.execute(sql, (document_uuid,))
     rows = cursor.fetchall()
     return [RAGMessage(**row) for row in rows]
