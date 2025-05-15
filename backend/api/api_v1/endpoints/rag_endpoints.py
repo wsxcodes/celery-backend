@@ -31,10 +31,10 @@ async def ask_question_about_document(
     db=Depends(get_db)
 ) -> dict[str, str]:
     """RAG ask endpoint."""
-    # XXX tokens_spent should be added to the document metadata
+    # XXX tokens_spent should be added to the document metadata using update_tokens_spent_async
     document = await get_document(uuid, db)
 
-    # XXX TODO rag to init conversation about the finding (alerts, tasks, insights)
+    # XXX pull messages first and the there are none, init the conversation about the finding (alerts, tasks, insights)
     # XXX TODO add tasks and alerts in the RAG feature
 
     logger.info(f"Document found: {document}")
