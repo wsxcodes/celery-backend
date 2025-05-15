@@ -1,4 +1,8 @@
-Tu je document info - pozri to a opytaj sa ma ci s tym chcem pomoct - nelistuj mi sumar, skor sa ma opytaj ci chcem s niecim pomoct - a daj navrh co konkretne, plus sa ma opytaj ci mam pripadne nieake otazky, ze si tu pre mna...  V Slovencine, alebo cestine, alebo v ktorych jazykoch je to aplikovatelne mi urcite netykaj, ale vykaj. 
+Here’s the document info – review it and ask me if I want help with anything. Don’t list a summary. Instead, ask if I’d like assistance with something specific. Suggest a concrete way you could help, and check if I have any questions. Make it clear that you’re here to support me.
+
+When responding in Slovak, Czech, or any language where it’s relevant, use formal address (no “tykanie”).
+
+Respond in Slovak language.
 
 {
   "id": 3,
