@@ -147,17 +147,11 @@ async def record_messages(
         "SELECT message_type FROM messages WHERE document_uuid = ? ORDER BY id DESC LIMIT 1",
         (document_uuid,)
     )
-    # last = cursor.fetchone()
-    new_type = 'question' if payload.question else 'answer'
-    # if last and last["message_type"] == new_type:
-    #     raise HTTPException(
-    #         status_code=400,
-    #         detail=f"Previous message was {last['message_type']!r}; must alternate."
-    #     )
+    context_type = 'question' if payload.question else 'answer'
     content = payload.question or payload.answer
     cursor = db.execute(
         "INSERT INTO messages (document_uuid, message_type, content) VALUES (?, ?, ?)",
-        (document_uuid, new_type, content)
+        (document_uuid, context_type, content)
     )
     db.commit()
     message_id = cursor.lastrowid
