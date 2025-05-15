@@ -141,8 +141,6 @@ def main():
             analysis_criteria = prompts["analysis_criteria"]
             data = run_ai_completition(ai_client=ai_client, prompt=analysis_criteria, document_text=raw_text, output_language=output_language)
 
-            # XXX BUG ai_analysis_criteria and ai_features_and_insights are not being populated
-
             usage = data.get("usage")
             tokens_spent += usage["total_tokens"]
 
