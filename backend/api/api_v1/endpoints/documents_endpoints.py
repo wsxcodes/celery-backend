@@ -25,7 +25,7 @@ logger.setLevel(logging.INFO)
 # XXX TODO assure that the owner of the file is the customer and is the only one who can access it
 
 
-@router.post("/add/{customer_id}")
+@router.post("/{customer_id}")
 @log_endpoint
 async def add_new_document(
     customer_id: str,
@@ -96,7 +96,7 @@ async def add_new_document(
     }
 
 
-@router.get("/get/{uuid}", response_model=Document)
+@router.get("/{uuid}", response_model=Document)
 @log_endpoint
 async def get_document(
     uuid: str,
