@@ -59,7 +59,6 @@ def main():
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Request document preview
-
             logger.info("Requesting document preview")
             preview_response = safe_request(
                 request_type="GET",
@@ -88,7 +87,6 @@ def main():
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Extract text from the document
-
             logger.info("Extracting text from document")
             raw_text = safe_request(
                 request_type="GET",
@@ -99,7 +97,6 @@ def main():
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Save the extracted text to the database
-
             logger.info("Saving extracted text to database")
             safe_request(
                 request_type="PATCH",
@@ -120,7 +117,7 @@ def main():
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Run the smart summary prompt
-
+            logger.info("Running AI smart summary")
             smart_summary = prompts["smart_summary"]
             data = run_ai_completition(ai_client=ai_client, prompt=smart_summary, document_text=raw_text, output_language=output_language)
 
@@ -141,7 +138,7 @@ def main():
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Run the analysis criteria prompt
-
+            logger.info("Running AI analysis criteria")
             analysis_criteria = prompts["analysis_criteria"]
             data = run_ai_completition(ai_client=ai_client, prompt=analysis_criteria, document_text=raw_text, output_language=output_language)
 
@@ -159,7 +156,7 @@ def main():
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Run the features and insights prompt
-
+            logger.info("Running AI analysis features & insights")
             document = safe_request(
                         request_type="GET",
                         url=config.API_URL + f"/api/v1/document/get/{document_uuid}",
@@ -185,8 +182,7 @@ def main():
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Run alerts and actions prompt
-            # XXX TODO inject today's date into the prompt
-
+            logger.info("Running alerts and actions prompt")
             document = safe_request(
                         request_type="GET",
                         url=config.API_URL + f"/api/v1/document/get/{document_uuid}",
@@ -202,6 +198,7 @@ def main():
                 document_text=raw_text,
                 document_extra1=ai_analysis_criteria,
                 document_extra2=ai_features_and_insights,
+                document_extra3=str(datetime.datetime.now().date()),
                 output_language=output_language
                 )
 
