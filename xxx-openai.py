@@ -29,7 +29,7 @@ prompts = prompt_generators.load_prompts()
 
 document = safe_request(
             request_type="GET",
-            url=config.API_URL + f"/api/v1/document/get/{document_uuid}",
+            url=config.API_URL + f"/api/v1/document/{document_uuid}",
             data={},
         )
 raw_text = document.json()["raw_text"]
@@ -81,7 +81,7 @@ tokens_spent = 0
 
 # document = safe_request(
 #             request_type="GET",
-#             url=config.API_URL + f"/api/v1/document/get/{document_uuid}",
+#             url=config.API_URL + f"/api/v1/document/{document_uuid}",
 #             data={},
 #         )
 # ai_analysis_criteria = document.json()["ai_analysis_criteria"]
