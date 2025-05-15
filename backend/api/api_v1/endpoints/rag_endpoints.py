@@ -102,10 +102,13 @@ async def ask_question_about_document(
         # Compute and record token usage
         completion_tokens = sum(len(enc.encode(c)) for c in completion_chunks)
         total_tokens = prompt_tokens + completion_tokens
+
+        # Record token usage asynchronously
         await update_tokens_spent_async(
             document_uuid=document_uuid,
             add_tokens_spent=total_tokens,
         )
+        logger.info("Tokens spent updated for document %s", document_uuid)
 
         # Record the full answer on a separate DB connection to avoid closed DB issue
         full_answer = "".join(completion_chunks)
@@ -119,9 +122,6 @@ async def ask_question_about_document(
             )
         finally:
             db_ctx.close()
-
-        # XXX TODO update_tokens_spent_async to update tokens_spent
-        print("total_tokens", total_tokens)
 
         yield "data: [DONE]\n\n"
 
