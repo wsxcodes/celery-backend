@@ -6,11 +6,11 @@ from pydantic import BaseModel
 
 
 class AIAlert(str, Enum):
-    none = None
-    insights_available = "insights_available"
-    action_required = "action_required"
-    reminder = "reminder"
     alert = "alert"
+    action_required = "action_required"
+    insights_available = "insights_available"
+    reminder = "reminder"
+    none = None
 
 
 class AnalysisStatus(str, Enum):
