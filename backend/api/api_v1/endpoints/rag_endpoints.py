@@ -8,7 +8,7 @@ import tiktoken
 from sse_starlette.sse import EventSourceResponse
 from backend.dependencies import ai_client
 from backend.utils.helpers import update_tokens_spent_async
-from backend.api.api_v1.endpoints.llm_endpoints import chat_completion_streaming
+from backend.api.api_v1.endpoints.customer_endpoints import get_customer
 
 from backend.api.api_v1.endpoints.documents_endpoints import get_document
 from backend.db.schemas.rag_schemas import MessagePayload, RAGMessage
@@ -29,15 +29,23 @@ logger.setLevel(logging.INFO)
 @router.get("/ask")
 @log_endpoint
 async def ask_question_about_document(
+    customer_id: str,
     document_uuid: str,
     question: str = Query(...),
     db=Depends(get_db)
 ) -> EventSourceResponse:
     """RAG ask endpoint with streaming."""
+    # Get customer output language
+    customer = await get_customer(customer_id, db)
+    output_language = customer["output_language"]
+    print("customer", customer)
+    print("output_language", output_language)
 
     # XXX TODO add tasks and alerts in the RAG feature
-    # document = await get_document(document_uuid, db)
-    # print(document)
+    document = await get_document(document_uuid, db)
+    print(document)
+
+    # XXX TODO assure document ownership
 
     # Get message history
     messages = await get_messages(document_uuid, order="desc", db=db)
