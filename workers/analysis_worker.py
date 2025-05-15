@@ -208,12 +208,14 @@ def main():
             usage = data.get("usage")
             tokens_spent += usage["total_tokens"]
 
+            ai_alerts_and_actions = data["alerts_and_actions"]
+
             logger.info("Saving Analysis Features & Insights to database")
             safe_request(
                 request_type="PATCH",
                 url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
                 data={
-                    "ai_alerts_and_actions": json.dumps(data["alerts_and_actions"])
+                    "ai_alerts_and_actions": json.dumps(ai_alerts_and_actions)
                 }
             )
 
@@ -245,27 +247,26 @@ def main():
 
             priority = ['alert', 'action_required', 'reminder', 'insights_available']
 
-            # 1) Tag each entry
-            for entry in features_and_insights_dict:
-                entry['ai_alert'] = next(
-                    (flag for flag in priority if entry.get(flag, False)),
-                    None
-                )
-
-            # 2) Pick the top-level alert for the whole document
+            # pick the highest‐priority alert present in the list
             document_ai_alert = next(
                 (flag for flag in priority
-                if any(entry.get(flag) for entry in features_and_insights_dict)),
+                if any(item.get('findings_type') == flag for item in ai_alerts_and_actions)),
                 None
             )
 
-            logger.info("Marking document as processed")
+            # build your payload
+            payload = {
+                "ai_alerts_and_actions": json.dumps(ai_alerts_and_actions)
+            }
             if document_ai_alert:
-                safe_request(
-                    request_type="PATCH",
-                    url=f"{config.API_URL}/api/v1/document/metadata/{document_uuid}",
-                    data={"ai_alert": document_ai_alert},
-                )
+                payload["ai_alert"] = document_ai_alert
+
+            logger.info("Marking document as processed")
+            safe_request(
+                request_type="PATCH",
+                url=f"{config.API_URL}/api/v1/document/metadata/{document_uuid}",
+                data=payload
+            )
             logger.info("Analysis completed successfully")
 
             # -----------------------------------------------------------------------------------------------------------------------------
