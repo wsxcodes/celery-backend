@@ -1,19 +1,17 @@
+import json
 import logging
 from typing import List, Literal
 
-from fastapi import APIRouter, Body, Depends, HTTPException, Query
-
-import json
 import tiktoken
+from fastapi import APIRouter, Body, Depends, HTTPException, Query
 from sse_starlette.sse import EventSourceResponse
-from backend.dependencies import ai_client
-from backend.utils.helpers import update_tokens_spent_async
-from backend.api.api_v1.endpoints.customer_endpoints import get_customer
 
+from backend.api.api_v1.endpoints.customer_endpoints import get_customer
 from backend.api.api_v1.endpoints.documents_endpoints import get_document
 from backend.db.schemas.rag_schemas import MessagePayload, RAGMessage
 from backend.decorators import log_endpoint
-from backend.dependencies import get_db
+from backend.dependencies import ai_client, get_db
+from backend.utils.helpers import update_tokens_spent_async
 
 logger = logging.getLogger(__name__)
 
@@ -122,12 +120,10 @@ async def ask_question_about_document(
         finally:
             db_ctx.close()
 
-
         # XXX TODO update_tokens_spent_async to update tokens_spent
         print("total_tokens", total_tokens)
 
         yield "data: [DONE]\n\n"
-
 
     return EventSourceResponse(
         event_generator(),
@@ -137,7 +133,6 @@ async def ask_question_about_document(
         },
         media_type="text/event-stream"
     )
-
 
 
 @router.post("/message", response_model=RAGMessage)
