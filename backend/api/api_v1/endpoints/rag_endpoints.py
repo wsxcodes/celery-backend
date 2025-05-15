@@ -26,10 +26,6 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-# XXX TODO add tasks and alerts in the RAG feature
-# XXX TODO rag to init conversation about the finding about the documents (alerts, tasks, insights)
-# XXX TODO update_tokens_spent_async to update tokens_spent
-
 @router.get("/ask")
 @log_endpoint
 async def ask_question_about_document(
@@ -38,8 +34,16 @@ async def ask_question_about_document(
     db=Depends(get_db)
 ) -> EventSourceResponse:
     """RAG ask endpoint with streaming."""
-    document = await get_document(document_uuid, db)
-    print("here0")
+
+    # XXX TODO add tasks and alerts in the RAG feature
+    # document = await get_document(document_uuid, db)
+    # print(document)
+
+    # Get message history
+    messages = await get_messages(document_uuid, order="desc", db=db)
+    print(messages)
+    # XXX TODO rag to init conversation about the finding about the documents (alerts, tasks, insights)
+
     # Record incoming question on a separate DB connection to avoid closed DB issue
     db_ctx = get_db()
     db_conn = next(db_ctx)
@@ -51,12 +55,9 @@ async def ask_question_about_document(
         )
     finally:
         db_ctx.close()
-    print("here0")
 
     # Build custom system message for RAG
     system_message = "You are a helpful assistant."
-
-    print("here1")
 
     # Streaming event generator
     async def event_generator():
@@ -92,8 +93,6 @@ async def ask_question_about_document(
             completion_chunks.append(content)
             yield f"data: {json.dumps({'content': content})}\n\n"
 
-        print("here2")
-
         # Compute and record token usage
         completion_tokens = sum(len(enc.encode(c)) for c in completion_chunks)
         total_tokens = prompt_tokens + completion_tokens
@@ -101,8 +100,6 @@ async def ask_question_about_document(
             document_uuid=document_uuid,
             add_tokens_spent=total_tokens,
         )
-
-        print("here3")
 
         # Record the full answer on a separate DB connection to avoid closed DB issue
         full_answer = "".join(completion_chunks)
@@ -117,11 +114,12 @@ async def ask_question_about_document(
         finally:
             db_ctx.close()
 
-        print("here4", full_answer)
+
+        # XXX TODO update_tokens_spent_async to update tokens_spent
+        print("total_tokens", total_tokens)
 
         yield "data: [DONE]\n\n"
 
-    print("here5")
 
     return EventSourceResponse(
         event_generator(),
