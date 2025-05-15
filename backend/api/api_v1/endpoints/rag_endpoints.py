@@ -19,9 +19,9 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-# XXX TODO rag to init conversation about the finding about the documents (alerts, tasks, insights)
 # XXX TODO add tasks and alerts in the RAG feature
-
+# XXX TODO rag to init conversation about the finding about the documents (alerts, tasks, insights)
+# XXX TODO update_tokens_spent_async to update tokens_spent
 
 @router.post("/")
 @log_endpoint
