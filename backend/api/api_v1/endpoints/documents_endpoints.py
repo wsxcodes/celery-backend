@@ -159,14 +159,13 @@ async def update_document_version(customer_id: str, filename: str, file: UploadF
 
 @router.delete("/delete/{customer_id}/{filename}")
 @log_endpoint
-async def delete_document(customer_id: str, filename: str) -> Dict[str, str]:
+async def delete_document(customer_id: str, filename: str, db=Depends(get_db)):
     file_path = os.path.join(BASE_UPLOAD_DIR, customer_id, filename)
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File not found")
     os.remove(file_path)
 
     # Update file_count for customer
-    db = next(get_db())
     db.execute(
         "UPDATE customers SET file_count = file_count - 1 WHERE customer_id = ? AND file_count > 0",
         (customer_id,)
