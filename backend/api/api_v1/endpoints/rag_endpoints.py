@@ -46,8 +46,8 @@ async def ask_question_about_document(
     # XXX TODO assure document ownership
 
     # Get message history
-    messages = await get_messages(document_uuid, order="desc", db=db)
-    print(messages)
+    conversation_history = await get_messages(document_uuid, order="desc", db=db)
+    print(conversation_history)
     # XXX TODO rag to init conversation about the finding about the documents (alerts, tasks, insights)
 
     # Record incoming question on a separate DB connection to avoid closed DB issue
