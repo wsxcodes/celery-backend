@@ -920,8 +920,9 @@
           iconAnswer.setAttribute('viewBox', '0 0 24 24');
           iconAnswer.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>';
 
-          pAnswer = document.createElement('p');
-          pAnswer.textContent = '';
+          pAnswer = document.createElement('div');
+          pAnswer.classList.add('streamed-answer');
+          pAnswer.innerHTML = '';
 
           wrapperAnswer.appendChild(iconAnswer);
           wrapperAnswer.appendChild(pAnswer);
@@ -1116,8 +1117,9 @@
       iconAnswer.setAttribute('viewBox', '0 0 24 24');
       iconAnswer.innerHTML = '<circle cx="12" cy="12" r="10" stroke-width="4" class="opacity-25" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M4 12a8 8 0 018-8" class="opacity-75" />';
 
-      pAnswer = document.createElement('p');
-      pAnswer.textContent = '';
+      pAnswer = document.createElement('div');
+      pAnswer.classList.add('streamed-answer');
+      pAnswer.innerHTML = '';
 
       wrapperAnswer.appendChild(iconAnswer);
       wrapperAnswer.appendChild(pAnswer);
@@ -1149,7 +1151,12 @@
           spinnerReplaced = true;
         }
 
-        pAnswer.textContent += content;
+        const lines = content.split('\n');
+        for (const line of lines) {
+          const div = document.createElement('div');
+          div.innerHTML = line === '' ? '&nbsp;' : line;
+          pAnswer.appendChild(div);
+        }
       } catch {
         console.warn('Invalid chunk:', dataText);
       }
