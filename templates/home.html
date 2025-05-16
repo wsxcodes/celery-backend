@@ -277,10 +277,11 @@
       if (isFetching || isHoveringDocuments) return;
       isFetching = true;
       try {
-        const response = await fetch(documentsEndpoint, {
+        const response = await fetch(`${documentsEndpoint}?t=${Date.now()}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
+            'Cache-Control': 'no-store',
           },
         });
 
