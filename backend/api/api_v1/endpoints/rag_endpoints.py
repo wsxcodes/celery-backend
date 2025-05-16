@@ -49,6 +49,11 @@ async def ask_question_about_document(
 
     conversation_history = await get_messages(document_uuid, order="asc", db=db)
 
+    print("*" * 150)
+    print("Conversation history:")
+    print(conversation_history)
+    print("*" * 150)
+
     prompt = prompts["rag_query"]
     user_message = f"Question: {question}\n\nOur conversation history: {repr(conversation_history)}\n\nToday is {datetime.datetime.now()}."
     system_message = prompt["messages"][0]["content"].replace("{output_language}", output_language)
@@ -56,7 +61,7 @@ async def ask_question_about_document(
     if not conversation_history:
         # Initiate conversation with the document
         prompt = prompts["init_rag"]
-        # XXX BUG AI tvrdi, ze nema k dispozicii obsah dokumentu - double check this!
+        # XXX BUG init message is not being recorder - AI nema k dispozicii obsah dokumentu
         document_info = construct_docu_info_in_text(document)
         user_message = prompt["messages"][1]["content"].replace("{document_info}", document_info)
         system_message = prompt["messages"][0]["content"].replace("{output_language}", output_language)
