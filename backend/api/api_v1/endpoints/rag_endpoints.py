@@ -34,11 +34,12 @@ async def ask_question_about_document(
     db=Depends(get_db)
 ) -> EventSourceResponse:
     """RAG ask endpoint with streaming."""
-    # XXX TODO assure document ownership
     # Get customer output language
     customer = await get_customer(customer_id, db)
     output_language = customer["output_language"]
     prompts = load_prompts()
+
+    # XXX TODO assure document ownership
 
     conversation_history = await get_messages(document_uuid, order="asc", db=db)
 
