@@ -886,11 +886,12 @@
     questionInput.value = '';
 
     // Show spinner answer immediately after opening the stream
-    let wrapperAnswer, pAnswer;
+    let wrapperAnswer, pAnswer, iconAnswer;
     wrapperAnswer = document.createElement('div');
     wrapperAnswer.classList.add('chat-dialog-answer');
 
-    const iconAnswer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    // Always persist the spinner icon
+    iconAnswer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     iconAnswer.setAttribute('class', 'h-5 w-5 text-green-400 animate-spin');
     iconAnswer.setAttribute('fill', 'none');
     iconAnswer.setAttribute('stroke', 'currentColor');
@@ -924,16 +925,22 @@
 
       if (dataText === '[DONE]') {
         evt.close();
+        if (iconAnswer) iconAnswer.style.display = 'none';
         return;
       }
 
       try {
         const { content } = JSON.parse(dataText);
 
-        // Replace spinner with real icon on first content
-        if (iconAnswer && iconAnswer.classList.contains('animate-spin') && !spinnerReplaced) {
-          iconAnswer.classList.remove('animate-spin');
-          iconAnswer.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>';
+        // Add the final icon as a new sibling element when the first streamed content arrives
+        if (!spinnerReplaced) {
+          const finalIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          finalIcon.setAttribute('class', 'h-5 w-5 text-green-400');
+          finalIcon.setAttribute('fill', 'none');
+          finalIcon.setAttribute('stroke', 'currentColor');
+          finalIcon.setAttribute('viewBox', '0 0 24 24');
+          finalIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>';
+          wrapperAnswer.insertBefore(finalIcon, pAnswer);
           spinnerReplaced = true;
         }
 
@@ -1132,12 +1139,12 @@
     const url = `http://localhost:8880/api/v1/rag/ask?customer_id=${encodedCustomer}&document_uuid=${encodedUUID}&question=${question}`;
     const evt = new EventSource(url);
 
-    // Immediately create and show the spinner and icon before any API response
-    let wrapperAnswer, pAnswer;
+    // Always create and show the spinner icon before any API response, persistently
+    let wrapperAnswer, pAnswer, iconAnswer;
     wrapperAnswer = document.createElement('div');
     wrapperAnswer.classList.add('chat-dialog-answer');
 
-    const iconAnswer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    iconAnswer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     iconAnswer.setAttribute('class', 'h-5 w-5 text-green-400 animate-spin');
     iconAnswer.setAttribute('fill', 'none');
     iconAnswer.setAttribute('stroke', 'currentColor');
@@ -1164,16 +1171,22 @@
 
       if (dataText === '[DONE]') {
         evt.close();
+        if (iconAnswer) iconAnswer.style.display = 'none';
         return;
       }
 
       try {
         const { content } = JSON.parse(dataText);
 
-        // Replace spinner with real icon on first content
-        if (iconAnswer && iconAnswer.classList.contains('animate-spin') && !spinnerReplaced) {
-          iconAnswer.classList.remove('animate-spin');
-          iconAnswer.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>';
+        // Add the final icon as a new sibling element when the first streamed content arrives
+        if (!spinnerReplaced) {
+          const finalIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          finalIcon.setAttribute('class', 'h-5 w-5 text-green-400');
+          finalIcon.setAttribute('fill', 'none');
+          finalIcon.setAttribute('stroke', 'currentColor');
+          finalIcon.setAttribute('viewBox', '0 0 24 24');
+          finalIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>';
+          wrapperAnswer.insertBefore(finalIcon, pAnswer);
           spinnerReplaced = true;
         }
 
