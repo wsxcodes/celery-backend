@@ -70,21 +70,13 @@ async def ask_question_about_document(
     # Streaming event generator
     async def event_generator():
         try:
-            messages = [
-                {"role": "system",    "content": system_message},
-                *[
-                    {
-                        "role": "user" if m.message_type == "question" else "assistant",
-                        "content": m.content
-                    }
-                    for m in conversation_history
-                ],
-                {"role": "user",      "content": user_message},
-            ]
             stream = ai_client.chat.completions.create(
                 model="gpt-4.1",
                 temperature=0.5,
-                messages=messages,
+                messages=[
+                    {"role": "system", "content": system_message},
+                    {"role": "user", "content": user_message},
+                ],
                 stream=True,
             )
         except Exception as e:
