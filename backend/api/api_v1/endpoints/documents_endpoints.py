@@ -22,7 +22,9 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger.setLevel(logging.INFO)
 
-# XXX TODO assure that the owner of the file is the customer and is the only one who can access it
+# XXX TODO Assure document ownership
+# if document.customer_id != customer_id:
+#     raise HTTPException(status_code=403, detail="Document does not belong to this customer")
 
 
 @router.post("/{customer_id}")
