@@ -5,7 +5,7 @@ from typing import List
 import humanize
 from fastapi import APIRouter, Body, Depends, HTTPException
 
-from backend.db.schemas.customers_schemas import Customer, UpdateCustomer
+from backend.db.schemas.customers_schemas import Customer, UpdateCustomer, AImode
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
 
@@ -35,10 +35,10 @@ async def add_new_customer(customer_id: str, output_language: str = "Czech", db=
 
     cursor = db.execute(
         """
-        INSERT INTO customers (customer_id, output_language, file_count)
-        VALUES (?, ?, ?)
+        INSERT INTO customers (customer_id, output_language, file_count, ai_mode)
+        VALUES (?, ?, ?, ?)
         """,
-        (customer_id, output_language, 0)
+        (customer_id, output_language, 0, AImode.standard.value)
     )
     db.commit()
     customer_id_int = cursor.lastrowid
@@ -54,7 +54,7 @@ async def add_new_customer(customer_id: str, output_language: str = "Czech", db=
 @log_endpoint
 async def get_customer(customer_id: str, db=Depends(get_db)):
     cursor = db.execute("""
-        SELECT id, customer_id, output_language, file_count
+        SELECT id, customer_id, output_language, ai_mode, file_count
         FROM customers
         WHERE customer_id = ?
     """, (customer_id,))
@@ -82,7 +82,7 @@ async def update_customer(customer_id: str, update: UpdateCustomer = Body(...), 
     db.commit()
 
     updated = db.execute("""
-        SELECT id, customer_id, output_language, file_count
+        SELECT id, customer_id, output_language, ai_mode, file_count
         FROM customers
         WHERE customer_id = ?
     """, (customer_id,)).fetchone()
@@ -158,7 +158,7 @@ async def list_customer_documents(customer_id: str, limit: int = None, db=Depend
 @log_endpoint
 async def list_customers(db=Depends(get_db)):
     cursor = db.execute("""
-        SELECT id, customer_id, output_language, file_count
+        SELECT id, customer_id, output_language, ai_mode, file_count
         FROM customers
         ORDER BY customer_id
     """)
