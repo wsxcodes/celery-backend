@@ -1013,7 +1013,7 @@
       return;
     }
 
-    messages.reverse().forEach(msg => {
+    messages.reverse().slice(1).forEach(msg => {
       const isQuestion = msg.message_type === 'question';
       const wrapper = document.createElement('div');
       wrapper.classList.add(isQuestion ? 'chat-dialog-question' : 'chat-dialog-answer');
