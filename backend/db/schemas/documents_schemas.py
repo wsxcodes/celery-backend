@@ -34,6 +34,7 @@ class Document(BaseModel):
     analysis_cost: int = 0
     ai_alert: Optional[AIAlert] = AIAlert.none
     ai_expires: Optional[datetime] = None
+    ai_is_expired: Optional[bool] = None
     ai_category: Optional[str] = ""
     ai_sub_category: Optional[str] = ""
     ai_summary_short: Optional[str] = ""
@@ -54,6 +55,7 @@ class DocumentUpdate(BaseModel):
     analysis_cost: int = 0
     ai_alert: Optional[AIAlert] = AIAlert.none
     ai_expires: Optional[datetime] = None
+    ai_is_expired: Optional[bool] = None
     ai_category: Optional[str] = ""
     ai_sub_category: Optional[str] = ""
     ai_summary_short: Optional[str] = ""
