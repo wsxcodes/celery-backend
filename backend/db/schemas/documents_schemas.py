@@ -42,7 +42,7 @@ class Document(BaseModel):
     ai_features_and_insights: Optional[str] = ""
     ai_alerts_and_actions: Optional[str] = ""
     ai_enterny_legacy_schema: Optional[str] = ""
-    raw_text: Optional[str] = ""
+    document_raw_text: Optional[str] = ""
     health_score: Optional[int] = 0
 
 
@@ -61,6 +61,6 @@ class DocumentUpdate(BaseModel):
     ai_analysis_criteria: Optional[str] = ""
     ai_features_and_insights: Optional[str] = ""
     ai_alerts_and_actions: Optional[str] = ""
-    raw_text: Optional[str] = ""
+    document_raw_text: Optional[str] = ""
     health_score: Optional[int] = 0
     ai_enterny_legacy_schema: Optional[str] = ""
