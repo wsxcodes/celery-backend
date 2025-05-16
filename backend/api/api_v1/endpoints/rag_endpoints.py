@@ -65,11 +65,6 @@ async def ask_question_about_document(
             db_ctx.close()
 
 
-    # XXX TODO utilise init_rag and rag_query prompts
-
-    # XXX TODO rag_query
-
-
     # Build custom system message for RAG
     system_message = "You are a helpful assistant."
 
