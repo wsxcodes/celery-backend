@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 prompts = prompt_generators.load_prompts()
 
 # XXX TODO update "ai_expires" field in the database when applicable
+# XXX TODO add a retry policy on the smart_summary in format...
 
 # XXX TODO ai heath score analysis (utilise the prompt document_health_approximation)
 # XXX TODO if the document is epxired, significantly degrade document health score
