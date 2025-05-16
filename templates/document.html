@@ -931,7 +931,18 @@
           dialog.scrollTop = 0;
         }
 
-        pAnswer.textContent += content;
+        // New logic: only insert <br> for '\n', otherwise append as text
+        if (content === '\n') {
+          const br = document.createElement('br');
+          pAnswer.appendChild(br);
+        } else {
+          const lastNode = pAnswer.lastChild;
+          if (lastNode && lastNode.nodeType === Node.TEXT_NODE) {
+            lastNode.textContent += content;
+          } else {
+            pAnswer.appendChild(document.createTextNode(content));
+          }
+        }
         // Optionally scroll to bottom as more content arrives
         // dialog.scrollTop = dialog.scrollHeight;
       } catch {
@@ -996,7 +1007,14 @@
       }
 
       const p = document.createElement('p');
-      p.textContent = msg.content;
+      // p.textContent = msg.content;
+      // Instead, render with line breaks respected:
+      const lines = msg.content.split('\n');
+      lines.forEach(line => {
+        const div = document.createElement('div');
+        div.innerHTML = line === '' ? '&nbsp;' : line;
+        p.appendChild(div);
+      });
 
       wrapper.appendChild(icon);
       wrapper.appendChild(p);
@@ -1151,11 +1169,17 @@
           spinnerReplaced = true;
         }
 
-        const lines = content.split('\n');
-        for (const line of lines) {
-          const div = document.createElement('div');
-          div.innerHTML = line === '' ? '&nbsp;' : line;
-          pAnswer.appendChild(div);
+        // New logic: only insert <br> for '\n', otherwise append as text
+        if (content === '\n') {
+          const br = document.createElement('br');
+          pAnswer.appendChild(br);
+        } else {
+          const lastNode = pAnswer.lastChild;
+          if (lastNode && lastNode.nodeType === Node.TEXT_NODE) {
+            lastNode.textContent += content;
+          } else {
+            pAnswer.appendChild(document.createTextNode(content));
+          }
         }
       } catch {
         console.warn('Invalid chunk:', dataText);
