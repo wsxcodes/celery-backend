@@ -151,3 +151,21 @@ async def update_tokens_spent_async(document_uuid: str, add_tokens_spent: int) -
     except Exception as e:
         logger.error(f"Error occurred: {str(e)}")
     return False
+
+
+def construct_docu_info_in_text(document) -> str:
+    """
+    Construct a document information string from the document metadata.
+    """
+    doc_info = (
+        f"Document Name: {document.filename}\n"
+        f"Document Size: {document.file_size} bytes\n"
+        f"Document Category: {document.ai_category}\n"
+        f"Document Sub-Category: {document.ai_sub_category}\n"
+        f"AI proposed document AI analysis criteria: {document.ai_analysis_criteria}\n"
+        f"AI proposed things to look at: {document.ai_features_and_insights}\n"
+        f"AI proposed alerts and actions: {document.ai_alerts_and_actions}\n"
+        f"\n\n"
+        f"Document Raw Text:\n{document.document_raw_text}\n"
+    )
+    return doc_info
