@@ -56,6 +56,7 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             customer_id TEXT NOT NULL UNIQUE,
             output_language TEXT DEFAULT 'Czech',
+            ai_mode TEXT DEFAULT 'standard' CHECK(ai_mode IN ('standard', 'pedantic')),
             file_count INTEGER NOT NULL
         )
     """)
