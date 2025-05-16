@@ -27,6 +27,8 @@ prompts = prompt_generators.load_prompts()
 
 # XXX TODO celery workers with backoff strategy
 
+# XXX TODO encrypt files
+
 
 def main():
     while True:
