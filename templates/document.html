@@ -858,10 +858,78 @@
   // Chat Logic
   chatForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const question = document.getElementById('chat-question').value;
-    // Placeholder for RAG-based chat logic
-    alert(`Question submitted: ${question}`); // Replace with actual RAG implementation
-    chatForm.reset();
+    const questionInput = document.getElementById('chat-question');
+    const question = questionInput.value.trim();
+    if (!question) return;
+
+    const dialog = document.querySelector('.chat-dialog');
+
+    // Append the user's question immediately
+    const wrapper = document.createElement('div');
+    wrapper.classList.add('chat-dialog-question');
+
+    const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    icon.setAttribute('class', 'h-5 w-5 text-blue-400');
+    icon.setAttribute('fill', 'none');
+    icon.setAttribute('stroke', 'currentColor');
+    icon.setAttribute('viewBox', '0 0 24 24');
+    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9.004 9.004 0 0112 15c2.21 0 4.216.802 5.879 2.128M15 10a3 3 0 11-6 0 3 3 0 016 0z" />';
+    const p = document.createElement('p');
+    p.textContent = question;
+
+    wrapper.appendChild(icon);
+    wrapper.appendChild(p);
+    dialog.appendChild(wrapper);
+    dialog.appendChild(document.createElement('br'));
+
+    questionInput.value = '';
+
+    const wrapperAnswer = document.createElement('div');
+    wrapperAnswer.classList.add('chat-dialog-answer');
+    const iconAnswer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    iconAnswer.setAttribute('class', 'h-5 w-5 text-green-400');
+    iconAnswer.setAttribute('fill', 'none');
+    iconAnswer.setAttribute('stroke', 'currentColor');
+    iconAnswer.setAttribute('viewBox', '0 0 24 24');
+    iconAnswer.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>';
+    const pAnswer = document.createElement('p');
+    pAnswer.textContent = '';
+    wrapperAnswer.appendChild(iconAnswer);
+    wrapperAnswer.appendChild(pAnswer);
+    dialog.appendChild(wrapperAnswer);
+    dialog.appendChild(document.createElement('br'));
+
+    const encodedQuestion = encodeURIComponent(question);
+    const encodedUUID = encodeURIComponent("{{document.uuid}}");
+    const encodedCustomer = encodeURIComponent("{{document.customer_id}}");
+
+    const url = `http://localhost:8880/api/v1/rag/ask?customer_id=${encodedCustomer}&document_uuid=${encodedUUID}&question=${encodedQuestion}`;
+    const evt = new EventSource(url);
+
+    evt.onmessage = e => {
+      let dataText = e.data.trim();
+      if (dataText.startsWith('data:')) {
+        dataText = dataText.replace(/^data:\s*/, '');
+      }
+
+      if (dataText === '[DONE]') {
+        evt.close();
+        return;
+      }
+
+      try {
+        const { content } = JSON.parse(dataText);
+        pAnswer.textContent += content;
+        dialog.scrollTop = dialog.scrollHeight;
+      } catch {
+        console.warn('Invalid chunk:', dataText);
+      }
+    };
+
+    evt.onerror = err => {
+      if (evt.readyState === EventSource.CLOSED) return;
+      console.error('Streaming error:', err);
+    };
   });
 
   chatHeader.addEventListener('click', () => {
