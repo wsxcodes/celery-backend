@@ -1,5 +1,6 @@
 import json
 import logging
+import datetime
 from typing import List, Literal
 
 import tiktoken
@@ -48,7 +49,7 @@ async def ask_question_about_document(
     conversation_history = await get_messages(document_uuid, order="asc", db=db)
 
     prompt = prompts["rag_query"]
-    user_message = f"Question: {question}\n\nOur conversation history: {repr(conversation_history)}"
+    user_message = f"Question: {question}\n\nOur conversation history: {repr(conversation_history)}\n\nToday is {datetime.datetime.now()}."
     system_message = prompt["messages"][0]["content"].replace("{output_language}", output_language)
 
     if not conversation_history:
