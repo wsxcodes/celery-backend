@@ -5,7 +5,8 @@ from typing import List
 import humanize
 from fastapi import APIRouter, Body, Depends, HTTPException
 
-from backend.db.schemas.customers_schemas import Customer, UpdateCustomer, AImode
+from backend.db.schemas.customers_schemas import (AImode, Customer,
+                                                  UpdateCustomer)
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
 
