@@ -32,7 +32,7 @@ prompts = prompt_generators.load_prompts()
 # XXX TODO encrypt files
 
 
-# XXX ISSUE TODO problem s deploymentom:
+# XXX ISSUE TODO azure hosted gpt-4.1 limits.....
 # INFO:httpx:HTTP Request: POST https://pavel-mak6dt2h-eastus2.cognitiveservices.azure.com/openai/deployments/gpt-4.1/chat/completions?api-version=2025-01-01-preview
 # "HTTP/1.1 429 Too Many Requests"
 
