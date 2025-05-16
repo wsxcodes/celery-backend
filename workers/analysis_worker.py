@@ -91,12 +91,12 @@ def main():
             # -----------------------------------------------------------------------------------------------------------------------------
             # Extract text from the document
             logger.info("Extracting text from document")
-            raw_text = safe_request(
+            document_raw_text = safe_request(
                 request_type="GET",
                 url=config.API_URL + f"/api/v1/utils/extract-text-from-file?uuid={document_uuid}",
                 data={},
             )
-            raw_text = raw_text.json()
+            document_raw_text = document_raw_text.json()
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Save the extracted text to the database
@@ -104,7 +104,7 @@ def main():
             safe_request(
                 request_type="PATCH",
                 url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
-                data={"raw_text": raw_text},
+                data={"document_raw_text": document_raw_text},
             )
 
             # -----------------------------------------------------------------------------------------------------------------------------
@@ -121,7 +121,7 @@ def main():
             # Run the smart summary prompt
             logger.info("Running AI smart summary")
             smart_summary = prompts["smart_summary"]
-            data = run_ai_completition(ai_client=ai_client, prompt=smart_summary, document_text=raw_text, output_language=output_language)
+            data = run_ai_completition(ai_client=ai_client, prompt=smart_summary, document_text=document_raw_text, output_language=output_language)
 
             usage = data.get("usage")
             tokens_spent += usage["total_tokens"]
@@ -142,7 +142,7 @@ def main():
             # Run the analysis criteria prompt
             logger.info("Running AI analysis criteria")
             analysis_criteria = prompts["analysis_criteria"]
-            data = run_ai_completition(ai_client=ai_client, prompt=analysis_criteria, document_text=raw_text, output_language=output_language)
+            data = run_ai_completition(ai_client=ai_client, prompt=analysis_criteria, document_text=document_raw_text, output_language=output_language)
 
             usage = data.get("usage")
             tokens_spent += usage["total_tokens"]
@@ -207,7 +207,7 @@ def main():
             data = run_ai_completition(
                 ai_client=ai_client,
                 prompt=features_and_insights,
-                document_text=raw_text,
+                document_text=document_raw_text,
                 document_extra1=str(datetime.datetime.now().date()),
                 document_extra2=document_extra2,
                 output_language=output_language
@@ -235,8 +235,8 @@ def main():
             with open("prompts/prompts.json", "r") as f:
                 eterny_legacy_schema = f.read()
 
-            raw_text += "\n\n schema:\n" + eterny_legacy_schema
-            data = run_ai_completition(ai_client=ai_client, prompt=simple_prompt, document_text=raw_text, output_language="English")
+            document_raw_text += "\n\n schema:\n" + eterny_legacy_schema
+            data = run_ai_completition(ai_client=ai_client, prompt=simple_prompt, document_text=document_raw_text, output_language="English")
             legacy_schema_dict = json.loads(data["message"])
 
             usage = data.get("usage")
