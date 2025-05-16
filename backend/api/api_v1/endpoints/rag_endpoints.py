@@ -41,7 +41,9 @@ async def ask_question_about_document(
     output_language = customer["output_language"]
     document = await get_document(document_uuid, db)
 
-    # XXX TODO assure document ownership
+    # Assure document ownership
+    if document.customer_id != customer_id:
+        raise HTTPException(status_code=403, detail="Document does not belong to this customer")
 
     conversation_history = await get_messages(document_uuid, order="asc", db=db)
 
