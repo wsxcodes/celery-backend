@@ -926,23 +926,21 @@
       if (dataText === '[DONE]') {
         evt.close();
         if (iconAnswer) iconAnswer.style.display = 'none';
+
+        // Append final icon at the end of streaming
+        const finalIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        finalIcon.setAttribute('class', 'h-5 w-5 text-green-400');
+        finalIcon.setAttribute('fill', 'none');
+        finalIcon.setAttribute('stroke', 'currentColor');
+        finalIcon.setAttribute('viewBox', '0 0 24 24');
+        finalIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>';
+        wrapperAnswer.insertBefore(finalIcon, pAnswer);
+
         return;
       }
 
       try {
         const { content } = JSON.parse(dataText);
-
-        // Add the final icon as a new sibling element when the first streamed content arrives
-        if (!spinnerReplaced) {
-          const finalIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          finalIcon.setAttribute('class', 'h-5 w-5 text-green-400');
-          finalIcon.setAttribute('fill', 'none');
-          finalIcon.setAttribute('stroke', 'currentColor');
-          finalIcon.setAttribute('viewBox', '0 0 24 24');
-          finalIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>';
-          wrapperAnswer.insertBefore(finalIcon, pAnswer);
-          spinnerReplaced = true;
-        }
 
         // New logic: handle \n and \n\n for line breaks, otherwise append as text
         const parts = content.split(/(\n\n|\n)/);
@@ -1161,8 +1159,6 @@
     dialog.prepend(wrapperAnswer);
     dialog.scrollTop = 0;
 
-    let spinnerReplaced = false;
-
     evt.onmessage = e => {
       let dataText = e.data.trim();
       if (dataText.startsWith('data:')) {
@@ -1172,23 +1168,21 @@
       if (dataText === '[DONE]') {
         evt.close();
         if (iconAnswer) iconAnswer.style.display = 'none';
+
+        // Append final icon at the end of streaming
+        const finalIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        finalIcon.setAttribute('class', 'h-5 w-5 text-green-400');
+        finalIcon.setAttribute('fill', 'none');
+        finalIcon.setAttribute('stroke', 'currentColor');
+        finalIcon.setAttribute('viewBox', '0 0 24 24');
+        finalIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>';
+        wrapperAnswer.insertBefore(finalIcon, pAnswer);
+
         return;
       }
 
       try {
         const { content } = JSON.parse(dataText);
-
-        // Add the final icon as a new sibling element when the first streamed content arrives
-        if (!spinnerReplaced) {
-          const finalIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-          finalIcon.setAttribute('class', 'h-5 w-5 text-green-400');
-          finalIcon.setAttribute('fill', 'none');
-          finalIcon.setAttribute('stroke', 'currentColor');
-          finalIcon.setAttribute('viewBox', '0 0 24 24');
-          finalIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>';
-          wrapperAnswer.insertBefore(finalIcon, pAnswer);
-          spinnerReplaced = true;
-        }
 
         // New logic: handle \n and \n\n for line breaks, otherwise append as text
         const parts = content.split(/(\n\n|\n)/);
