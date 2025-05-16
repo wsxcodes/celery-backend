@@ -190,14 +190,25 @@ def main():
                         data={},
                     )
 
-            # XXX TODO pedantic mode (!!)
+            customer = safe_request(
+                        request_type="GET",
+                        url=config.API_URL + f"/api/v1/customer/{customer_id}",
+                        data={},
+                    )
+            customer = customer.json()
+            logger.info(f"Customer AI mode: {customer['ai_mode']}")
+
+            document_extra2 = ""
+            if customer["ai_mode"] == "pedantic":
+                document_extra2 = "analysis_criteria = \"{ai_analysis_criteria}\"\nfeatures_and_insights = \"{ai_features_and_insights}\"\n\n"
 
             features_and_insights = prompts["alerts_and_actions"]
             data = run_ai_completition(
                 ai_client=ai_client,
                 prompt=features_and_insights,
                 document_text=raw_text,
-                document_extra3=str(datetime.datetime.now().date()),
+                document_extra1=str(datetime.datetime.now().date()),
+                document_extra2=document_extra2,
                 output_language=output_language
                 )
 
