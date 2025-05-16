@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 prompts = prompt_generators.load_prompts()
 
-# XXX TODO update "ai_expires" field in the database when applicable
+# XXX TODO update "ai_expires" and is_expired field in the database when applicable
 # XXX TODO differentiate between "expires" and "expired" status
 # XXX TODO maybe add a retry policy on the smart_summary in format...
 
