@@ -947,7 +947,7 @@
   
   // Load previous messages on dialog open
   async function loadPreviousMessages() {
-    const response = await fetch('http://localhost:8880/api/v1/rag/messages/{{document.uuid}}?order=asc');
+    const response = await fetch('http://localhost:8880/api/v1/rag/messages/{{document.uuid}}?order=desc');
     if (!response.ok) {
       console.error('Failed to fetch chat history');
       return;
@@ -981,10 +981,9 @@
 
       wrapper.appendChild(icon);
       wrapper.appendChild(p);
-      dialog.appendChild(wrapper);
-
-      const br = document.createElement('br');
-      dialog.appendChild(br);
+      // Instead of appendChild, use prepend so messages are added to the top
+      dialog.prepend(document.createElement('br'));
+      dialog.prepend(wrapper);
     });
   }
 
