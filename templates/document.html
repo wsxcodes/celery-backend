@@ -864,7 +864,7 @@
 
     const dialog = document.querySelector('.chat-dialog');
 
-    // Append the user's question immediately
+    // Prepend the user's question immediately
     const wrapper = document.createElement('div');
     wrapper.classList.add('chat-dialog-question');
 
@@ -879,8 +879,9 @@
 
     wrapper.appendChild(icon);
     wrapper.appendChild(p);
-    dialog.appendChild(wrapper);
-    dialog.appendChild(document.createElement('br'));
+    dialog.prepend(document.createElement('br'));
+    dialog.prepend(wrapper);
+    dialog.scrollTop = 0;
 
     questionInput.value = '';
 
@@ -896,8 +897,9 @@
     pAnswer.textContent = '';
     wrapperAnswer.appendChild(iconAnswer);
     wrapperAnswer.appendChild(pAnswer);
-    dialog.appendChild(wrapperAnswer);
-    dialog.appendChild(document.createElement('br'));
+    dialog.prepend(document.createElement('br'));
+    dialog.prepend(wrapperAnswer);
+    dialog.scrollTop = 0;
 
     const encodedQuestion = encodeURIComponent(question);
     const encodedUUID = encodeURIComponent("{{document.uuid}}");
