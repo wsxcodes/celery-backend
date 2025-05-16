@@ -225,7 +225,7 @@
     .chat-dialog-question svg {
       flex-shrink: 0;
       margin-right: 0.5rem;
-      margin-top: 0.25rem;
+      margin-top: 0.125rem;
     }
     .chat-dialog-question p {
       color: #e5e7eb;
@@ -239,7 +239,7 @@
     .chat-dialog-answer svg {
       flex-shrink: 0;
       margin-right: 0.5rem;
-      margin-top: 0.25rem;
+      margin-top: 0.125rem;
     }
     .chat-dialog-answer p {
       color: #d1d5db;
@@ -901,8 +901,12 @@
       icon.setAttribute('fill', 'none');
       icon.setAttribute('stroke', 'currentColor');
       icon.setAttribute('viewBox', '0 0 24 24');
-      icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="' +
-        (isQuestion ? 'M5 13l4 4L19 7' : 'M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01') + '"></path>';
+      if (isQuestion) {
+        // User/profile icon
+        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9.004 9.004 0 0112 15c2.21 0 4.216.802 5.879 2.128M15 10a3 3 0 11-6 0 3 3 0 016 0z" />';
+      } else {
+        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>';
+      }
 
       const p = document.createElement('p');
       p.textContent = msg.content;
