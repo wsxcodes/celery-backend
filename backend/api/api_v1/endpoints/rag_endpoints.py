@@ -55,6 +55,7 @@ async def ask_question_about_document(
     if not conversation_history:
         # Initiate conversation with the document
         prompt = prompts["init_rag"]
+        # XXX BUG AI tvrdi, ze nema k dispozicii obsah dokumentu!
         user_message = prompt["messages"][1]["content"].replace("{document}", str(document))
         system_message = prompt["messages"][0]["content"].replace("{output_language}", output_language)
     else:
