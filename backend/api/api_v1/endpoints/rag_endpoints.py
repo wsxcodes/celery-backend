@@ -18,6 +18,8 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
+prompts = load_prompts()
+
 
 # Ensure logging is properly configured
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -37,7 +39,7 @@ async def ask_question_about_document(
     # Get customer output language
     customer = await get_customer(customer_id, db)
     output_language = customer["output_language"]
-    prompts = load_prompts()
+    document = await get_document(document_uuid, db)
 
     # XXX TODO assure document ownership
 
@@ -49,9 +51,9 @@ async def ask_question_about_document(
 
     if not conversation_history:
         # Initiate conversation with the document
-        document = await get_document(document_uuid, db)
         prompt = prompts["init_rag"]
         user_message = prompt["messages"][1]["content"].replace("{document}", str(document))
+        system_message = prompt["messages"][0]["content"].replace("{output_language}", output_language)
     else:
         # Record incoming question on a separate DB connection to avoid closed DB issue
         db_ctx = get_db()
@@ -64,10 +66,6 @@ async def ask_question_about_document(
             )
         finally:
             db_ctx.close()
-
-
-    # Build custom system message for RAG
-    system_message = "You are a helpful assistant."
 
     # Streaming event generator
     async def event_generator():
