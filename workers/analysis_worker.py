@@ -189,7 +189,7 @@ def main():
                         url=config.API_URL + f"/api/v1/document/{document_uuid}",
                         data={},
                     )
-            
+
             # XXX TODO pedantic mode (!!)
 
             features_and_insights = prompts["alerts_and_actions"]
