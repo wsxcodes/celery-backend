@@ -1,6 +1,6 @@
+import datetime
 import json
 import logging
-import datetime
 from typing import List, Literal
 
 import tiktoken
@@ -12,7 +12,8 @@ from backend.api.api_v1.endpoints.documents_endpoints import get_document
 from backend.db.schemas.rag_schemas import MessagePayload, RAGMessage
 from backend.decorators import log_endpoint
 from backend.dependencies import ai_client, get_db
-from backend.utils.helpers import update_tokens_spent_async
+from backend.utils.helpers import (construct_docu_info_in_text,
+                                   update_tokens_spent_async)
 from backend.utils.prompt_generators import load_prompts
 
 logger = logging.getLogger(__name__)
@@ -55,8 +56,9 @@ async def ask_question_about_document(
     if not conversation_history:
         # Initiate conversation with the document
         prompt = prompts["init_rag"]
-        # XXX BUG AI tvrdi, ze nema k dispozicii obsah dokumentu!
-        user_message = prompt["messages"][1]["content"].replace("{document}", str(document))
+        # XXX BUG AI tvrdi, ze nema k dispozicii obsah dokumentu - double check this!
+        document_info = construct_docu_info_in_text(document)
+        user_message = prompt["messages"][1]["content"].replace("{document_info}", document_info)
         system_message = prompt["messages"][0]["content"].replace("{output_language}", output_language)
     else:
         # Record incoming question on a separate DB connection to avoid closed DB issue
