@@ -34,38 +34,41 @@ async def ask_question_about_document(
     db=Depends(get_db)
 ) -> EventSourceResponse:
     """RAG ask endpoint with streaming."""
+    # XXX TODO assure document ownership
     # Get customer output language
     customer = await get_customer(customer_id, db)
     output_language = customer["output_language"]
     prompts = load_prompts()
 
-    print("customer", customer)
-    print("output_language", output_language)
+    conversation_history = await get_messages(document_uuid, order="asc", db=db)
 
-    # XXX TODO add tasks and alerts in the RAG feature
-    document = await get_document(document_uuid, db)
-    print(document)
+    prompt = prompts["rag_query"]
+    user_message = f"Question: {question}\n\nOur conversation history: {repr(conversation_history)}"
+    system_message = prompt["messages"][0]["content"].replace("{output_language}", output_language)
 
-    # XXX TODO assure document ownership
+    if not conversation_history:
+        # Initiate conversation with the document
+        document = await get_document(document_uuid, db)
+        prompt = prompts["init_rag"]
+        user_message = prompt["messages"][1]["content"].replace("{document}", str(document))
+    else:
+        # Record incoming question on a separate DB connection to avoid closed DB issue
+        db_ctx = get_db()
+        db_conn = next(db_ctx)
+        try:
+            await record_messages(
+                document_uuid=document_uuid,
+                payload=MessagePayload(question=question),
+                db=db_conn
+            )
+        finally:
+            db_ctx.close()
 
-    # Get message history
-    conversation_history = await get_messages(document_uuid, order="desc", db=db)
-    print(conversation_history)
-    # XXX TODO rag to init conversation about the finding about the documents (alerts, tasks, insights)
 
     # XXX TODO utilise init_rag and rag_query prompts
 
-    # Record incoming question on a separate DB connection to avoid closed DB issue
-    db_ctx = get_db()
-    db_conn = next(db_ctx)
-    try:
-        await record_messages(
-            document_uuid=document_uuid,
-            payload=MessagePayload(question=question),
-            db=db_conn
-        )
-    finally:
-        db_ctx.close()
+    # XXX TODO rag_query
+
 
     # Build custom system message for RAG
     system_message = "You are a helpful assistant."
@@ -73,13 +76,21 @@ async def ask_question_about_document(
     # Streaming event generator
     async def event_generator():
         try:
+            messages = [
+                {"role": "system",    "content": system_message},
+                *[
+                    {
+                        "role": "user" if m.message_type == "question" else "assistant",
+                        "content": m.content
+                    }
+                    for m in conversation_history
+                ],
+                {"role": "user",      "content": user_message},
+            ]
             stream = ai_client.chat.completions.create(
                 model="gpt-4.1",
                 temperature=0.5,
-                messages=[
-                    {"role": "system", "content": system_message},
-                    {"role": "user", "content": question},
-                ],
+                messages=messages,
                 stream=True,
             )
         except Exception as e:
