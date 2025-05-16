@@ -931,18 +931,23 @@
           dialog.scrollTop = 0;
         }
 
-        // New logic: only insert <br> for '\n', otherwise append as text
-        if (content === '\n') {
-          const br = document.createElement('br');
-          pAnswer.appendChild(br);
-        } else {
-          const lastNode = pAnswer.lastChild;
-          if (lastNode && lastNode.nodeType === Node.TEXT_NODE) {
-            lastNode.textContent += content;
+        // New logic: handle \n and \n\n for line breaks, otherwise append as text
+        const parts = content.split(/(\n\n|\n)/);
+        parts.forEach(part => {
+          if (part === '\n\n') {
+            pAnswer.appendChild(document.createElement('br'));
+            pAnswer.appendChild(document.createElement('br'));
+          } else if (part === '\n') {
+            pAnswer.appendChild(document.createElement('br'));
           } else {
-            pAnswer.appendChild(document.createTextNode(content));
+            const lastNode = pAnswer.lastChild;
+            if (lastNode && lastNode.nodeType === Node.TEXT_NODE) {
+              lastNode.textContent += part;
+            } else {
+              pAnswer.appendChild(document.createTextNode(part));
+            }
           }
-        }
+        });
         // Optionally scroll to bottom as more content arrives
         // dialog.scrollTop = dialog.scrollHeight;
       } catch {
@@ -1169,18 +1174,23 @@
           spinnerReplaced = true;
         }
 
-        // New logic: only insert <br> for '\n', otherwise append as text
-        if (content === '\n') {
-          const br = document.createElement('br');
-          pAnswer.appendChild(br);
-        } else {
-          const lastNode = pAnswer.lastChild;
-          if (lastNode && lastNode.nodeType === Node.TEXT_NODE) {
-            lastNode.textContent += content;
+        // New logic: handle \n and \n\n for line breaks, otherwise append as text
+        const parts = content.split(/(\n\n|\n)/);
+        parts.forEach(part => {
+          if (part === '\n\n') {
+            pAnswer.appendChild(document.createElement('br'));
+            pAnswer.appendChild(document.createElement('br'));
+          } else if (part === '\n') {
+            pAnswer.appendChild(document.createElement('br'));
           } else {
-            pAnswer.appendChild(document.createTextNode(content));
+            const lastNode = pAnswer.lastChild;
+            if (lastNode && lastNode.nodeType === Node.TEXT_NODE) {
+              lastNode.textContent += part;
+            } else {
+              pAnswer.appendChild(document.createTextNode(part));
+            }
           }
-        }
+        });
       } catch {
         console.warn('Invalid chunk:', dataText);
       }
