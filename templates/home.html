@@ -278,11 +278,11 @@
       isFetching = true;
       try {
         const response = await fetch(`${documentsEndpoint}?t=${Date.now()}`, {
-          cache: 'no-store',
           method: 'GET',
+          cache: 'no-cache',
+          credentials: 'same-origin',
           headers: {
             'Accept': 'application/json',
-            'Cache-Control': 'no-store',
           },
         });
 
