@@ -133,7 +133,6 @@ async def update_document_metadata(uuid: str, update: DocumentUpdate, db=Depends
     # if document.customer_id != customer_id:
     #     raise HTTPException(status_code=403, detail="Document does not belong to this customer")
 
-
     fields = []
     values = []
 
