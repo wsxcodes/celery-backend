@@ -49,11 +49,6 @@ async def ask_question_about_document(
 
     conversation_history = await get_messages(document_uuid, order="asc", db=db)
 
-    print("*" * 150)
-    print("Conversation history:")
-    print(conversation_history)
-    print("*" * 150)
-
     prompt = prompts["rag_query"]
     user_message = f"Question: {question}\n\nOur conversation history: {repr(conversation_history)}\n\nToday is {datetime.datetime.now()}."
     system_message = prompt["messages"][0]["content"].replace("{output_language}", output_language)
