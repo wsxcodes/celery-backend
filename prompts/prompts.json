@@ -241,18 +241,18 @@
          }
       ]
    },
-   "rag_query":{
-      "model":"gpt-4.1",
-      "temperature":0.5,
-      "messages":[
-         {
-            "role":"system",
-            "content":"XXX TODO"
-         },
-         {
-            "role":"user",
-            "content":"XXX TODO"
-         }
-      ]
+   "rag_query": {
+     "model": "gpt-4.1",
+     "temperature": 0.5,
+     "messages": [
+       {
+         "role": "system",
+         "content": "You are an AI assistant specializing in document analysis and retrieval-augmented generation. Use the provided document information and treat any conversation history only as supportive context. Answer the user's question accurately and concisely in {output_language} language."
+       },
+       {
+         "role": "user",
+         "content": ""
+       }
+     ]
    }
 }
