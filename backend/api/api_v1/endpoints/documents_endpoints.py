@@ -22,10 +22,6 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger.setLevel(logging.INFO)
 
-# XXX TODO Assure document ownership
-# if document.customer_id != customer_id:
-#     raise HTTPException(status_code=403, detail="Document does not belong to this customer")
-
 
 @router.post("/{customer_id}")
 @log_endpoint
@@ -110,6 +106,10 @@ async def get_document(
         (uuid,)
     ).fetchone()
 
+    # XXX TODO Assure document ownership
+    # if document.customer_id != customer_id:
+    #     raise HTTPException(status_code=403, detail="Document does not belong to this customer")
+
     if not row:
         logger.info(f"Document not found for UUID: {uuid}")
         raise HTTPException(status_code=404, detail="Document not found")
@@ -128,6 +128,11 @@ async def update_document_metadata(uuid: str, update: DocumentUpdate, db=Depends
 
     if not data:
         raise HTTPException(status_code=400, detail="No valid fields to update")
+
+    # XXX TODO Assure document ownership
+    # if document.customer_id != customer_id:
+    #     raise HTTPException(status_code=403, detail="Document does not belong to this customer")
+
 
     fields = []
     values = []
@@ -162,6 +167,10 @@ async def update_document_version(customer_id: str, filename: str, file: UploadF
 @router.delete("/delete/{customer_id}/{filename}")
 @log_endpoint
 async def delete_document(customer_id: str, filename: str, db=Depends(get_db)):
+    # XXX TODO Assure document ownership
+    # if document.customer_id != customer_id:
+    #     raise HTTPException(status_code=403, detail="Document does not belong to this customer")
+
     file_path = os.path.join(BASE_UPLOAD_DIR, customer_id, filename)
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File not found")
