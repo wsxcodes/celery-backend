@@ -32,7 +32,7 @@ document = safe_request(
             url=config.API_URL + f"/api/v1/document/{document_uuid}",
             data={},
         )
-raw_text = document.json()["raw_text"]
+document_raw_text = document.json()["document_raw_text"]
 
 output_language = "Czech"
 tokens_spent = 0
@@ -41,7 +41,7 @@ tokens_spent = 0
 
 # # Run the smart summary prompt
 # smart_summary = prompts["smart_summary"]
-# data = run_ai_completition(ai_client=ai_client, prompt=smart_summary, document_text=raw_text, output_language=output_language)
+# data = run_ai_completition(ai_client=ai_client, prompt=smart_summary, document_text=document_raw_text, output_language=output_language)
 
 # usage = data.get("usage")
 # tokens_spent += usage["total_tokens"]
