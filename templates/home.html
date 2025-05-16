@@ -239,14 +239,14 @@
         } else {
           const error = await response.json();
           const errorMessage = error.detail || error.message || 'Unknown error';
-          showStatus(`Failed to upload ${file.name}:<br/><br/><b><font size=6>${errorMessage}</font></b>`, 'text-red-400', true);
+          showStatus(`Failed to upload ${file.name}:<br/><b><font size=6>${errorMessage}</font></b>`, 'text-red-400', true);
         }
       } catch (error) {
         uploadingMessage.remove();
         if (!uploadStatus.hasChildNodes()) {
           uploadStatus.classList.add('hidden');
         }
-        showStatus(`Error uploading ${file.name}:<br/><br/><b><font size=6>${error.message}</font></b>`, 'text-red-400', true);
+        showStatus(`Error uploading ${file.name}:<br/><b><font size=6>${error.message}</font></b>`, 'text-red-400', true);
       }
     }
 
