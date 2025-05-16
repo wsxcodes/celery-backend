@@ -237,7 +237,7 @@
          },
          {
             "role":"user",
-            "content":"Here’s the document info – review it and ask me if I want help with anything. Don’t list a summary. Instead, ask if I’d like assistance with something specific. Suggest a concrete way you could help, and check if I have any questions. Make it clear that you’re here to support me.\nWhen responding in Slovak, Czech, or any language where it’s relevant, use formal address (no “tykanie”).\n\n{document}"
+            "content":"Here’s the document info – review it and ask me if I want help with anything. Don’t list a summary. Do not thank me. Instead, ask if I’d like assistance with something specific. Suggest a concrete way you could help, and check if I have any questions. Make it clear that you’re here to support me.\nWhen responding in Slovak, Czech, or any language where it’s relevant, use formal address (no “tykanie”).\n\n{document}"
          }
       ]
    },
