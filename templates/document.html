@@ -885,21 +885,8 @@
 
     questionInput.value = '';
 
-    const wrapperAnswer = document.createElement('div');
-    wrapperAnswer.classList.add('chat-dialog-answer');
-    const iconAnswer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    iconAnswer.setAttribute('class', 'h-5 w-5 text-green-400');
-    iconAnswer.setAttribute('fill', 'none');
-    iconAnswer.setAttribute('stroke', 'currentColor');
-    iconAnswer.setAttribute('viewBox', '0 0 24 24');
-    iconAnswer.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>';
-    const pAnswer = document.createElement('p');
-    pAnswer.textContent = '';
-    wrapperAnswer.appendChild(iconAnswer);
-    wrapperAnswer.appendChild(pAnswer);
-    dialog.prepend(document.createElement('br'));
-    dialog.prepend(wrapperAnswer);
-    dialog.scrollTop = 0;
+    // Delay creation of wrapperAnswer and icon until after first chunk
+    let wrapperAnswer, pAnswer;
 
     const encodedQuestion = encodeURIComponent(question);
     const encodedUUID = encodeURIComponent("{{document.uuid}}");
@@ -921,8 +908,31 @@
 
       try {
         const { content } = JSON.parse(dataText);
+
+        if (!wrapperAnswer) {
+          wrapperAnswer = document.createElement('div');
+          wrapperAnswer.classList.add('chat-dialog-answer');
+
+          const iconAnswer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+          iconAnswer.setAttribute('class', 'h-5 w-5 text-green-400');
+          iconAnswer.setAttribute('fill', 'none');
+          iconAnswer.setAttribute('stroke', 'currentColor');
+          iconAnswer.setAttribute('viewBox', '0 0 24 24');
+          iconAnswer.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>';
+
+          pAnswer = document.createElement('p');
+          pAnswer.textContent = '';
+
+          wrapperAnswer.appendChild(iconAnswer);
+          wrapperAnswer.appendChild(pAnswer);
+          dialog.prepend(document.createElement('br'));
+          dialog.prepend(wrapperAnswer);
+          dialog.scrollTop = 0;
+        }
+
         pAnswer.textContent += content;
-        dialog.scrollTop = dialog.scrollHeight;
+        // Optionally scroll to bottom as more content arrives
+        // dialog.scrollTop = dialog.scrollHeight;
       } catch {
         console.warn('Invalid chunk:', dataText);
       }
