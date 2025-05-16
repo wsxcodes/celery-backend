@@ -101,7 +101,7 @@ async def list_customer_documents(customer_id: str, limit: int = None, db=Depend
                analysis_status, analysis_started_at, analysis_completed_at, analysis_cost,
                ai_alert, ai_expires, ai_category, ai_sub_category, ai_summary_short,
                ai_summary_long, ai_analysis_criteria, ai_features_and_insights,
-               ai_alerts_and_actions, ai_enterny_legacy_schema, file_size, raw_text,
+               ai_alerts_and_actions, ai_enterny_legacy_schema, file_size, document_raw_text,
                health_score
         FROM files
         WHERE customer_id = ?
