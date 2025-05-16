@@ -16,10 +16,9 @@ logger = logging.getLogger(__name__)
 
 prompts = prompt_generators.load_prompts()
 
+# XXX TODO update "ai_expires" field in the database when applicable
 
 # XXX TODO retry policy on 3rd party API calls
-
-# XXX TODO update "ai_expires" field in the database when applicable
 
 # XXX TODO celery workers with backoff strategy
 
