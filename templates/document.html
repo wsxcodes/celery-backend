@@ -348,6 +348,10 @@
     .mapping-link:hover {
       background-color: rgba(59, 130, 246, 0.2);
     }
+    /* Larger font for the latest streamed answer */
+    .chat-dialog-answer.latest {
+      font-size: 1.125rem;
+    }
   </style>
 {% endblock %}
 
@@ -935,7 +939,7 @@
         finalIcon.setAttribute('viewBox', '0 0 24 24');
         finalIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>';
         wrapperAnswer.insertBefore(finalIcon, pAnswer);
-
+        wrapperAnswer.classList.add('latest');
         return;
       }
 
@@ -1177,7 +1181,7 @@
         finalIcon.setAttribute('viewBox', '0 0 24 24');
         finalIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5v-2a2 2 0 012-2h10a2 2 0 012 2v2h-4m-6 0h.01M12 16h.01"></path>';
         wrapperAnswer.insertBefore(finalIcon, pAnswer);
-
+        wrapperAnswer.classList.add('latest');
         return;
       }
 
