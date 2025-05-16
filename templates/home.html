@@ -278,6 +278,7 @@
       isFetching = true;
       try {
         const response = await fetch(`${documentsEndpoint}?t=${Date.now()}`, {
+          cache: 'no-store',
           method: 'GET',
           headers: {
             'Accept': 'application/json',
