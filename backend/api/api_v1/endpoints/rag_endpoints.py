@@ -61,22 +61,21 @@ async def ask_question_about_document(
     if not conversation_history:
         # Initiate conversation with the document
         prompt = prompts["init_rag"]
-        # XXX BUG init message is not being recorder - AI nema k dispozicii obsah dokumentu
         document_info = construct_docu_info_in_text(document)
         user_message = prompt["messages"][1]["content"].replace("{document_info}", document_info)
         system_message = prompt["messages"][0]["content"].replace("{output_language}", output_language)
-    else:
-        # Record incoming question on a separate DB connection to avoid closed DB issue
-        db_ctx = get_db()
-        db_conn = next(db_ctx)
-        try:
-            await record_messages(
-                document_uuid=document_uuid,
-                payload=MessagePayload(question=question),
-                db=db_conn
-            )
-        finally:
-            db_ctx.close()
+        question = user_message
+
+    db_ctx = get_db()
+    db_conn = next(db_ctx)
+    try:
+        await record_messages(
+            document_uuid=document_uuid,
+            payload=MessagePayload(question=question),
+            db=db_conn
+        )
+    finally:
+        db_ctx.close()
 
     # Streaming event generator
     async def event_generator():
