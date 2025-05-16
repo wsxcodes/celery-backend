@@ -21,8 +21,6 @@ prompts = prompt_generators.load_prompts()
 
 # XXX TODO update "ai_expires" field in the database when applicable
 
-# XXX TODO Mark off AI Alert
-
 # XXX TODO inject today's date into alerts prompt
 
 # XXX TODO celery workers with backoff strategy
