@@ -126,6 +126,9 @@ def main():
             # Run the smart summary prompt
             logger.info("Running AI smart summary")
             smart_summary = prompts["smart_summary"]
+
+            # XXX TODO add inject_date to the run_ai_completition function
+
             data = run_ai_completition(ai_client=ai_client, prompt=smart_summary, document_text=document_raw_text, output_language=output_language)
 
             usage = data.get("usage")
