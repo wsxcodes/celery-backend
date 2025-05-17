@@ -156,6 +156,7 @@ async def list_customer_documents(customer_id: str, limit: int = None, db=Depend
     }
 
 
+# XXX BUG says customers not found!
 @router.get("/all", response_model=List[Customer])
 @log_endpoint
 async def list_customers(db=Depends(get_db)):
