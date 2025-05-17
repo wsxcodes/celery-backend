@@ -23,6 +23,18 @@ router = APIRouter()
 # XXX TODO provide token spending report for each customer
 
 
+@router.get("/", response_model=List[Customer])
+@log_endpoint
+async def list_customers(db=Depends(get_db)):
+    cursor = db.execute("""
+        SELECT id, customer_id, output_language, ai_mode, file_count
+        FROM customers
+        ORDER BY customer_id
+    """)
+    rows = cursor.fetchall()
+    return [dict(row) for row in rows]
+
+
 @router.post("/")
 @log_endpoint
 async def add_new_customer(customer_id: str, output_language: str = "Czech", db=Depends(get_db)) -> dict:
@@ -154,16 +166,3 @@ async def list_customer_documents(customer_id: str, limit: int = None, db=Depend
         "documents": docs,
         "categorized_documents": categorized_documents
     }
-
-
-# XXX BUG says customers not found!
-@router.get("/all", response_model=List[Customer])
-@log_endpoint
-async def list_customers(db=Depends(get_db)):
-    cursor = db.execute("""
-        SELECT id, customer_id, output_language, ai_mode, file_count
-        FROM customers
-        ORDER BY customer_id
-    """)
-    rows = cursor.fetchall()
-    return [dict(row) for row in rows]
