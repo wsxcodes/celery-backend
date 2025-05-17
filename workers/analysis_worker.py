@@ -16,8 +16,6 @@ logger = logging.getLogger(__name__)
 
 prompts = prompt_generators.load_prompts()
 
-# XXX TODO update "ai_expires" and is_expired field in the database when applicable
-# XXX TODO differentiate between "expires" and "expired" status
 
 # XXX TODO retry policy on 3rd party API calls
 
