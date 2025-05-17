@@ -77,6 +77,7 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             document_uuid TEXT NOT NULL,
             version_path TEXT NOT NULL,
+            comment TEXT NOT NULL,
             uploaded_at TEXT NOT NULL,
             FOREIGN KEY (document_uuid) REFERENCES files(uuid) ON DELETE CASCADE
         )
