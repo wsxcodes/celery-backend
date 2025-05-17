@@ -94,16 +94,6 @@ async def add_new_document(
     }
 
 
-@router.get("/check_exists/{uuid}", response_model=Document, response_model_exclude_none=False)
-@log_endpoint
-async def check_that_the_document_exists(
-    uuid: str,
-    db=Depends(get_db)
-) -> bool:
-    # XXX TODO check if document exists
-    ...
-
-
 @router.get("/{uuid}", response_model=Document, response_model_exclude_none=False)
 @log_endpoint
 async def get_document(
@@ -175,6 +165,16 @@ async def update_document_metadata(uuid: str, update: DocumentUpdate, db=Depends
     updated_doc = Document(**dict(row))
     logger.info(f"update_document_metadata returning updated document for UUID {uuid}: %s", updated_doc.dict())
     return updated_doc
+
+
+@router.get("/check_exists/{uuid}", response_model=Document, response_model_exclude_none=False)
+@log_endpoint
+async def check_that_the_document_exists(
+    uuid: str,
+    db=Depends(get_db)
+) -> bool:
+    # XXX TODO check if document exists
+    ...
 
 
 @router.put("/version/{customer_id}/{filename}")
