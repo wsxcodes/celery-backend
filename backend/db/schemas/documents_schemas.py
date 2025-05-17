@@ -69,6 +69,7 @@ class DocumentUpdate(BaseModel):
 
 
 class DocumentVersion(BaseModel):
+    customer_id: str
     document_uuid: str
     version_path: str
     comment: str
