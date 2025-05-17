@@ -71,4 +71,5 @@ class DocumentUpdate(BaseModel):
 class DocumentVersion(BaseModel):
     document_uuid: str
     version_path: str
+    comment: str
     uploaded_at: datetime
