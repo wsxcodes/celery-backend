@@ -204,7 +204,7 @@ async def check_that_the_document_exists(
     return exists
 
 
-@router.put("/version/{customer_id}/{filename}")
+@router.put("/version")
 @log_endpoint
 async def update_document_version(
     customer_id: str,
@@ -226,6 +226,34 @@ async def update_document_version(
     print(current_document_path)
 
     return {"status": "XXX TODO", "x": current_document_path}
+
+
+@router.get("/versions")
+@log_endpoint
+async def get_document_versions(
+    customer_id: str,
+    uuid: str,
+    db=Depends(get_db)
+) -> List[DocumentVersion]:
+    # XXX TODO get this to work
+    # XXX TODO assure document ownership
+    rows = db.execute(
+        """
+        SELECT document_uuid, version_path, comment, uploaded_at
+        FROM document_versions
+        WHERE document_uuid = ?
+        ORDER BY uploaded_at DESC
+        """,
+        uuid
+    ).fetchall()
+
+    if not rows:
+        logger.info(f"No versions found for document UUID {uuid} and customer {customer_id}")
+        raise HTTPException(status_code=404, detail="No document versions found")
+
+    versions = [DocumentVersion(**dict(row)) for row in rows]
+    logger.info(f"Retrieved {len(versions)} versions for document UUID {uuid} and customer {customer_id}")
+    return versions
 
 
 @router.delete("/delete/{customer_id}/{filename}")
