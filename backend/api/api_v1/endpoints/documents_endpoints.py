@@ -23,8 +23,6 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger.setLevel(logging.INFO)
 
 
-# XXX TODO check_exists endpoint
-
 @router.post("/{customer_id}")
 @log_endpoint
 async def add_new_document(
@@ -94,6 +92,16 @@ async def add_new_document(
         "file_hash": file_hash,
         "file_size": file_size
     }
+
+
+@router.get("/check_exists/{uuid}", response_model=Document, response_model_exclude_none=False)
+@log_endpoint
+async def check_that_the_document_exists(
+    uuid: str,
+    db=Depends(get_db)
+) -> bool:
+    # XXX TODO check if document exists
+    ...
 
 
 @router.get("/{uuid}", response_model=Document, response_model_exclude_none=False)
