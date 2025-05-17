@@ -273,31 +273,35 @@ async def update_document_version(
     new_path = os.path.join(customer_dir, new_filename)
     with open(new_path, "wb") as buffer:
         buffer.write(contents)
-    new_hash = hashlib.sha256(contents).hexdigest()
 
-    # XXX Compute new file metadata
-    # file_size = len(contents)
-    # new_hash = new_hash
-    # uploaded_at = datetime.utcnow().isoformat()
-    # analysis_status = 'pending'
-    # analysis_started_at = None
-    # analysis_completed_at = None
+    # Compute new file metadata
+    file_size = len(contents)
+    uploaded_at = datetime.utcnow().isoformat()
+    analysis_status = 'pending'
+    analysis_started_at = None
+    analysis_completed_at = None
 
-    # Update file metadata
+    # Reset document to trigger re-analysis
+    logger.info("Resetting document to trigger re-analysis")
     db.execute(
         """
         UPDATE files
-        SET filename = ?, file_hash = ?, uploaded_at = ?
+        SET filename = ?, file_hash = ?, uploaded_at = ?, updated_at = ?, analysis_status = ?, analysis_started_at = ?, analysis_completed_at = ?, file_size = ?
         WHERE uuid = ?
         """,
-        (new_filename, new_hash, datetime.utcnow().isoformat(), uuid)
+        (
+            new_filename,
+            hashlib.sha256(contents).hexdigest(),
+            uploaded_at,
+            uploaded_at,
+            analysis_status,
+            analysis_started_at,
+            analysis_completed_at,
+            file_size,
+            uuid
+        )
     )
     db.commit()
-
-    # XXX TODO Reset document to trigger re-analysis
-    # XXX TODO remember to update file path in the document
-    logger.info("Resetting document to trigger re-analysis")
-    # await update_document_metadata(...)
 
     logger.info(f"Updated document for customer {customer_id}, UUID {uuid}, new file {file.filename}")
     return {"status": "success", "document_uuid": uuid, "version_path": backup_path}
