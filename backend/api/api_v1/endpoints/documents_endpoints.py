@@ -280,13 +280,14 @@ async def update_document_version(
     analysis_status = 'pending'
     analysis_started_at = None
     analysis_completed_at = None
+    ai_alert = None
 
     # Reset document to trigger re-analysis
     logger.info("Resetting document to trigger re-analysis")
     db.execute(
         """
         UPDATE files
-        SET filename = ?, file_hash = ?, uploaded_at = ?, updated_at = ?, analysis_status = ?, analysis_started_at = ?, analysis_completed_at = ?, file_size = ?
+        SET filename = ?, file_hash = ?, uploaded_at = ?, updated_at = ?, analysis_status = ?, analysis_started_at = ?, analysis_completed_at = ?, file_size = ?, ai_alert = ?
         WHERE uuid = ?
         """,
         (
@@ -298,6 +299,7 @@ async def update_document_version(
             analysis_started_at,
             analysis_completed_at,
             file_size,
+            ai_alert,
             uuid
         )
     )
