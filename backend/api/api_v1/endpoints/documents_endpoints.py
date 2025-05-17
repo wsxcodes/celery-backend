@@ -186,10 +186,26 @@ async def check_that_the_document_exists(
 
 @router.put("/version/{customer_id}/{filename}")
 @log_endpoint
-async def update_document_version(customer_id: str, filename: str, file: UploadFile = File(...)) -> Dict[str, str]:
+async def update_document_version(
+    customer_id: str,
+    uuid: str,
+    comment: str,
+    file: UploadFile = File(...),
+    db=Depends(get_db)
+) -> Dict[str, str]:
     # XXX TODO document versioning
     # XXX DocumentVersion schema should be used to store version history
-    return {"status": "XXX TODO"}
+
+    current_document = await get_document(uuid, db)
+
+    if current_document.customer_id != customer_id:
+        raise HTTPException(status_code=403, detail="Document does not belong to this customer")
+
+    current_document_path = os.path.join(BASE_UPLOAD_DIR, customer_id, current_document.filename)
+
+    print(current_document_path)
+
+    return {"status": "XXX TODO", "x": current_document_path}
 
 
 @router.delete("/delete/{customer_id}/{filename}")
