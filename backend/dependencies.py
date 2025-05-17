@@ -72,5 +72,14 @@ def init_db():
             FOREIGN KEY (document_uuid) REFERENCES files(uuid) ON DELETE CASCADE
         )
     """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS document_versions (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            document_uuid TEXT NOT NULL,
+            version_path TEXT NOT NULL,
+            uploaded_at TEXT NOT NULL,
+            FOREIGN KEY (document_uuid) REFERENCES files(uuid) ON DELETE CASCADE
+        )
+    """)
     conn.commit()
     conn.close()
