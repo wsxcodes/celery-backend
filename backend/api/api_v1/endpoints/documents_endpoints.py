@@ -286,6 +286,8 @@ async def update_document_version(
 
     # XXX TODO Reset document to trigger re-analysis
     # XXX TODO remember to update file path in the document
+    logger.info(f"Resetting document to trigger re-analysis")
+    # await update_document_metadata(...)
 
     logger.info(f"Updated document for customer {customer_id}, UUID {uuid}, new file {file.filename}")
     return {"status": "success", "document_uuid": uuid, "version_path": backup_path}
