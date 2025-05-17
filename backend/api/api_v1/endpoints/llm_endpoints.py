@@ -23,8 +23,6 @@ logger.setLevel(logging.INFO)
 
 router = APIRouter()
 
-# XXX TODO check that the document_uuid exists, otherwise refuse the request
-
 
 @router.get("/chat_completition")
 @log_endpoint
@@ -36,6 +34,7 @@ async def chat_completion(
     temperature: float = Query(0.5, ge=0.0, le=1.0, description="Sampling temperature"),
 ) -> Dict[str, Any]:
     """Chat completion endpoint."""
+    # XXX TODO check that the document exists using check_exists endpoint, otherwise refuse the request
     try:
         response = ai_client.chat.completions.create(
             model=model,
@@ -89,6 +88,7 @@ async def chat_completion_streaming(
     temperature: float = Query(0.5, ge=0.0, le=1.0, description="Sampling temperature"),
 ) -> EventSourceResponse:
     """Chat completion streaming endpoint."""
+    # XXX TODO check that the document exists using check_exists endpoint, otherwise refuse the request
     try:
         stream = ai_client.chat.completions.create(
             model=model,
