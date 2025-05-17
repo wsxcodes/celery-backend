@@ -258,7 +258,9 @@ async def update_document_version(
 
     # Save the new file
     contents = await file.read()
-    with open(current_path, "wb") as buffer:
+    new_filename = file.filename
+    new_path = os.path.join(customer_dir, new_filename)
+    with open(new_path, "wb") as buffer:
         buffer.write(contents)
     new_hash = hashlib.sha256(contents).hexdigest()
 
@@ -269,7 +271,7 @@ async def update_document_version(
         SET filename = ?, file_hash = ?, uploaded_at = ?
         WHERE uuid = ?
         """,
-        (file.filename, new_hash, datetime.utcnow().isoformat(), uuid)
+        (new_filename, new_hash, datetime.utcnow().isoformat(), uuid)
     )
     db.commit()
 
