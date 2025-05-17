@@ -23,6 +23,8 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger.setLevel(logging.INFO)
 
 
+# XXX TODO check_exists endpoint
+
 @router.post("/{customer_id}")
 @log_endpoint
 async def add_new_document(
