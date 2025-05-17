@@ -75,6 +75,7 @@ def init_db():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS document_versions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            customer_id TEXT NOT NULL,
             document_uuid TEXT NOT NULL,
             version_path TEXT NOT NULL,
             comment TEXT NOT NULL,
