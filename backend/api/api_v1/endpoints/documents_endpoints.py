@@ -6,7 +6,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Dict, List
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 
 from backend import config
 from backend.db.schemas.documents_schemas import (Document, DocumentUpdate,
@@ -89,14 +89,16 @@ async def add_new_document(
         """
         INSERT INTO document_versions (
             document_uuid,
+            customer_id,
             version_path,
             comment,
             uploaded_at
         )
-        VALUES (?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?)
         """,
         (
             file_uuid,
+            customer_id,
             file_path,
             "Initial upload",
             datetime.utcnow().isoformat()
@@ -204,28 +206,75 @@ async def check_that_the_document_exists(
     return exists
 
 
-@router.put("/version")
+@router.put("/{customer_id}/versions/{uuid}")
 @log_endpoint
 async def update_document_version(
     customer_id: str,
     uuid: str,
-    comment: str,
+    comment: str = Form(...),
     file: UploadFile = File(...),
     db=Depends(get_db)
-) -> Dict[str, str]:
-    # XXX TODO document versioning
-    # XXX DocumentVersion schema should be used to store version history
-
-    current_document = await get_document(uuid, db)
-
-    if current_document.customer_id != customer_id:
+) -> dict:
+    # Verify document exists and belongs to the customer
+    row = db.execute(
+        "SELECT filename, customer_id FROM files WHERE uuid = ?",
+        (uuid,)
+    ).fetchone()
+    if not row:
+        logger.info(f"Document not found for UUID: {uuid}")
+        raise HTTPException(status_code=404, detail="Document not found")
+    if row["customer_id"] != customer_id:
         raise HTTPException(status_code=403, detail="Document does not belong to this customer")
 
-    current_document_path = os.path.join(BASE_UPLOAD_DIR, customer_id, current_document.filename)
+    original_filename = row["filename"]
+    customer_dir = os.path.join(BASE_UPLOAD_DIR, customer_id)
+    current_path = os.path.join(customer_dir, original_filename)
+    if not os.path.exists(current_path):
+        raise HTTPException(status_code=404, detail="Original file not found on disk")
 
-    print(current_document_path)
+    # Backup existing file
+    timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
+    name_root, ext = os.path.splitext(original_filename)
+    backup_name = f"{name_root}_{timestamp}{ext}"
+    backup_path = os.path.join(customer_dir, backup_name)
+    os.rename(current_path, backup_path)
 
-    return {"status": "XXX TODO", "x": current_document_path}
+    # Record the old version
+    db.execute(
+        """
+        INSERT INTO document_versions
+          (document_uuid, customer_id, version_path, comment, uploaded_at)
+        VALUES (?, ?, ?, ?, ?)
+        """,
+        (
+            uuid,
+            customer_id,
+            backup_path,
+            comment,
+            datetime.utcnow().isoformat()
+        )
+    )
+    db.commit()
+
+    # Save the new file
+    contents = await file.read()
+    with open(current_path, "wb") as buffer:
+        buffer.write(contents)
+    new_hash = hashlib.sha256(contents).hexdigest()
+
+    # Update file metadata
+    db.execute(
+        """
+        UPDATE files
+        SET filename = ?, file_hash = ?, uploaded_at = ?
+        WHERE uuid = ?
+        """,
+        (file.filename, new_hash, datetime.utcnow().isoformat(), uuid)
+    )
+    db.commit()
+
+    logger.info(f"Updated document for customer {customer_id}, UUID {uuid}, new file {file.filename}")
+    return {"status": "success", "document_uuid": uuid, "version_path": backup_path}
 
 
 @router.get("/{customer_id}/versions/{uuid}", response_model=List[DocumentVersion])
@@ -237,12 +286,12 @@ async def get_document_versions(
 ) -> List[DocumentVersion]:
     rows = db.execute(
         """
-        SELECT document_uuid, version_path, comment, uploaded_at
+        SELECT document_uuid, customer_id, version_path, comment, uploaded_at
         FROM document_versions
-        WHERE document_uuid = ?
+        WHERE document_uuid = ? AND customer_id = ?
         ORDER BY uploaded_at DESC
         """,
-        (uuid,)
+        (uuid, customer_id)
     ).fetchall()
 
     if not rows:
@@ -288,23 +337,3 @@ async def list_pending_documents(limit: int = 10, db=Depends(get_db)):
     documents = [Document(**dict(row)) for row in rows]
     logger.info(f"Retrieved {len(documents)} pending documents (limit: {limit})")
     return documents
-
-
-@router.get("/versions/all", response_model=List[DocumentVersion])
-@log_endpoint
-async def list_all_document_versions(db=Depends(get_db)) -> List[DocumentVersion]:
-    # XXX TODO delete this endpoint
-    """
-    Temporary debug endpoint: list every entry in document_versions table.
-    """
-    rows = db.execute(
-        """
-        SELECT document_uuid, version_path, comment, uploaded_at
-        FROM document_versions
-        ORDER BY uploaded_at DESC
-        """
-    ).fetchall()
-
-    versions = [DocumentVersion(**dict(row)) for row in rows]
-    logger.info(f"Listing all document versions: {len(versions)} entries")
-    return versions
