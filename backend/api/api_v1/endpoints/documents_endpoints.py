@@ -288,3 +288,22 @@ async def list_pending_documents(limit: int = 10, db=Depends(get_db)):
     documents = [Document(**dict(row)) for row in rows]
     logger.info(f"Retrieved {len(documents)} pending documents (limit: {limit})")
     return documents
+
+
+@router.get("/versions/all", response_model=List[DocumentVersion])
+@log_endpoint
+async def list_all_document_versions(db=Depends(get_db)) -> List[DocumentVersion]:
+    """
+    Temporary debug endpoint: list every entry in document_versions table.
+    """
+    rows = db.execute(
+        """
+        SELECT document_uuid, version_path, comment, uploaded_at
+        FROM document_versions
+        ORDER BY uploaded_at DESC
+        """
+    ).fetchall()
+
+    versions = [DocumentVersion(**dict(row)) for row in rows]
+    logger.info(f"Listing all document versions: {len(versions)} entries")
+    return versions
