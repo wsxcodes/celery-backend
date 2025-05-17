@@ -66,3 +66,9 @@ class DocumentUpdate(BaseModel):
     document_raw_text: Optional[str] = ""
     health_score: Optional[int] = 0
     ai_enterny_legacy_schema: Optional[str] = ""
+
+
+class DocumentVersion(BaseModel):
+    document_uuid: str
+    version_path: str
+    uploaded_at: datetime
