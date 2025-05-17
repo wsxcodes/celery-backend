@@ -1,3 +1,4 @@
+import os
 import json
 import logging
 
@@ -157,7 +158,13 @@ async def read_document(request: Request, uuid: str, db=Depends(get_db)):
     document_dict["uploaded_at"] = document.uploaded_at.strftime("%b %d, %Y")
     document_dict["filename"] = document_dict["filename"].replace(" ", "_")
 
-    # XXX TODO shorten filename with ... if too long to fit in the UI
+    # Shorten filename if too long to fit in the UI
+    filename = document_dict["filename"]
+    name, ext = os.path.splitext(filename)
+    if len(filename) > 44:
+        max_name_length = 44 - len(ext) - 2  # 2 for ".."
+        name = name[:max_name_length] + ".."
+        document_dict["filename"] = name + ext
 
     if document.ai_expires:
         document_dict["ai_expires"] = document.ai_expires.strftime("%b %d, %Y")
