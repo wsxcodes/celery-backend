@@ -78,6 +78,8 @@ def init_db():
             customer_id TEXT NOT NULL,
             document_uuid TEXT NOT NULL,
             version_path TEXT NOT NULL,
+            file_hash TEXT NOT NULL,
+            file_size INTEGER,
             comment TEXT NOT NULL,
             uploaded_at TEXT NOT NULL,
             FOREIGN KEY (document_uuid) REFERENCES files(uuid) ON DELETE CASCADE
