@@ -134,7 +134,6 @@ def main():
             document_expires_str = data["document_expires"]
             document_expires = datetime.datetime.fromisoformat(document_expires_str)
 
-
             logger.info("Saving smart summary to database")
             safe_request(
                 request_type="PATCH",
