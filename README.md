@@ -44,6 +44,7 @@ Take full control of your portfolio—contracts, documents, insurance policies, 
 ## The Story of Eterny
 
 ![Jitka Paterová](https://media.licdn.com/dms/image/v2/D4D03AQEwm58svKRV1A/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1706263816713?e=1752710400&v=beta&t=qyI4CHeN8GM_Nul5X5edye-F7Nfc-PwL7khB99G42lc)
+
 **Jitka Paterová**
 Founder of Eterny
 
