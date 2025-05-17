@@ -53,21 +53,23 @@ async def add_new_document(
         buffer.write(contents)
 
     # Save metadata to DB
+    now_iso = datetime.utcnow().isoformat()
     db.execute(
         """
         INSERT INTO files (
-            uuid, customer_id, filename, file_hash, uploaded_at,
+            uuid, customer_id, filename, file_hash, uploaded_at, updated_at,
             analysis_status, analysis_started_at, analysis_completed_at, analysis_cost,
             file_size
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             file_uuid,
             customer_id,
             file.filename,
             file_hash,
-            datetime.utcnow().isoformat(),
+            now_iso,
+            now_iso,
             'pending',
             None,
             None,
