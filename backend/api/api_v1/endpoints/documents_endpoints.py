@@ -246,6 +246,9 @@ async def update_document_version(
     backup_path = os.path.join(customer_dir, backup_name)
     os.rename(current_path, backup_path)
 
+
+
+
     # Record the old version
     db.execute(
         """
@@ -272,6 +275,14 @@ async def update_document_version(
     with open(new_path, "wb") as buffer:
         buffer.write(contents)
     new_hash = hashlib.sha256(contents).hexdigest()
+
+    # XXX Compute new file metadata
+    # file_size = len(contents)
+    # new_hash = new_hash
+    # uploaded_at = datetime.utcnow().isoformat()
+    # analysis_status = 'pending'
+    # analysis_started_at = None
+    # analysis_completed_at = None
 
     # Update file metadata
     db.execute(
