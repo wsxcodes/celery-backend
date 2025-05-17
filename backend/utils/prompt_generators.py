@@ -1,3 +1,4 @@
+import datetime
 import json
 import logging
 
@@ -21,7 +22,8 @@ def run_ai_completition(
         document_extra1=None,
         document_extra2=None,
         document_extra3=None,
-        output_language="Czech"
+        output_language="Czech",
+        inject_date=False
         ):
     """
     Generate a smart summary for the given prompt text using the loaded template.
@@ -40,6 +42,10 @@ def run_ai_completition(
         user_content = user_content.replace("{document_extra2}", document_extra2)
     if document_extra3:
         user_content = user_content.replace("{document_extra3}", document_extra3)
+
+    if inject_date:
+        date_to_prompt = "Today is " + str(datetime.datetime.now().date())
+        user_content = date_to_prompt + ". " + user_content
 
     if "schema" in prompt:
         response = ai_client.chat.completions.create(
