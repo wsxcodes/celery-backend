@@ -85,7 +85,7 @@
                   },
                   "sub_category":{
                      "type":"string",
-                     "description":"Categorize the document into a sub-category of the top category. For example, if the top category is 'Contract', the sub-categories could be 'Employment Contract', 'Sales Contract', 'Lease Agreement', etc. If the top category is 'Court Case', the sub-categories could be 'Civil Case', 'Criminal Case', 'Family Law Case', etc.  In English."
+                     "description":"Categorize the document into a sub-category of the top category. For example, if the top category is 'Contract', the sub-categories could be 'Employment Contract', 'Sales Contract', 'Lease Agreement', etc. If the top category is 'Court Case', the sub-categories could be 'Civil Case', 'Criminal Case', 'Family Law Case', etc.  In English.  Try the sub-category to be 30 characters or less."
                   },
                   "document_expires":{
                      "type":"string",
