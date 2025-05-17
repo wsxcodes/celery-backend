@@ -84,6 +84,26 @@ async def add_new_document(
     )
     db.commit()
 
+    # Record document version
+    db.execute(
+        """
+        INSERT INTO document_versions (
+            document_uuid,
+            version_path,
+            comment,
+            uploaded_at
+        )
+        VALUES (?, ?, ?, ?)
+        """,
+        (
+            file_uuid,
+            file_path,
+            "Initial upload",
+            datetime.utcnow().isoformat()
+        )
+    )
+    db.commit()
+
     logger.info(f"Uploaded file for customer {customer_id}: {file.filename} ({file_size} bytes)")
     return {
         "status": "success",
