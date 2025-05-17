@@ -131,6 +131,10 @@ def main():
             usage = data.get("usage")
             tokens_spent += usage["total_tokens"]
 
+            document_expires_str = data["document_expires"]
+            document_expires = datetime.datetime.fromisoformat(document_expires_str)
+
+
             logger.info("Saving smart summary to database")
             safe_request(
                 request_type="PATCH",
@@ -139,7 +143,9 @@ def main():
                     "ai_category": data["top_category"],
                     "ai_sub_category": data["sub_category"],
                     "ai_summary_short": data["summary_short"],
-                    "ai_summary_long": data["summary_long"]
+                    "ai_summary_long": data["summary_long"],
+                    "ai_expires": document_expires,
+                    "ai_is_expired": data["is_expired"],
                 }
             )
 
