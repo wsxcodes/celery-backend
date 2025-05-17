@@ -285,6 +285,7 @@ async def update_document_version(
     db.commit()
 
     # XXX TODO Reset document to trigger re-analysis
+    # XXX TODO remember to update file path in the document
 
     logger.info(f"Updated document for customer {customer_id}, UUID {uuid}, new file {file.filename}")
     return {"status": "success", "document_uuid": uuid, "version_path": backup_path}
