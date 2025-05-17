@@ -157,6 +157,8 @@ async def read_document(request: Request, uuid: str, db=Depends(get_db)):
     document_dict["uploaded_at"] = document.uploaded_at.strftime("%b %d, %Y")
     document_dict["filename"] = document_dict["filename"].replace(" ", "_")
 
+    # XXX TODO shorten filename with ... if too long to fit in the UI
+
     if document.ai_expires:
         document_dict["ai_expires"] = document.ai_expires.strftime("%b %d, %Y")
 
