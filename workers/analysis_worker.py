@@ -144,7 +144,7 @@ def main():
                     "ai_sub_category": data["sub_category"],
                     "ai_summary_short": data["summary_short"],
                     "ai_summary_long": data["summary_long"],
-                    "ai_expires": document_expires,
+                    "ai_expires": document_expires.isoformat(),
                     "ai_is_expired": data["is_expired"],
                 }
             )
