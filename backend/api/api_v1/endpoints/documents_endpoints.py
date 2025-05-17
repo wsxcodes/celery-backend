@@ -9,7 +9,8 @@ from typing import Dict, List
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 
 from backend import config
-from backend.db.schemas.documents_schemas import Document, DocumentUpdate
+from backend.db.schemas.documents_schemas import (Document, DocumentUpdate,
+                                                  DocumentVersion)
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
 
@@ -187,6 +188,7 @@ async def check_that_the_document_exists(
 @log_endpoint
 async def update_document_version(customer_id: str, filename: str, file: UploadFile = File(...)) -> Dict[str, str]:
     # XXX TODO document versioning
+    # XXX DocumentVersion schema should be used to store version history
     return {"status": "XXX TODO"}
 
 
