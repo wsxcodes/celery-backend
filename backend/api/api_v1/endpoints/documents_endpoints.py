@@ -91,15 +91,19 @@ async def add_new_document(
             document_uuid,
             customer_id,
             version_path,
+            file_size,
+            file_hash,
             comment,
             uploaded_at
         )
-        VALUES (?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
         (
             file_uuid,
             customer_id,
             file_path,
+            file_size,
+            file_hash,
             "Initial upload",
             datetime.utcnow().isoformat()
         )
@@ -217,7 +221,7 @@ async def update_document_version(
 ) -> dict:
     # Verify document exists and belongs to the customer
     row = db.execute(
-        "SELECT filename, customer_id FROM files WHERE uuid = ?",
+        "SELECT filename, customer_id, file_hash, file_size FROM files WHERE uuid = ?",
         (uuid,)
     ).fetchone()
     if not row:
@@ -225,6 +229,9 @@ async def update_document_version(
         raise HTTPException(status_code=404, detail="Document not found")
     if row["customer_id"] != customer_id:
         raise HTTPException(status_code=403, detail="Document does not belong to this customer")
+
+    original_hash = row["file_hash"]
+    original_size = row["file_size"]
 
     original_filename = row["filename"]
     customer_dir = os.path.join(BASE_UPLOAD_DIR, customer_id)
@@ -243,13 +250,15 @@ async def update_document_version(
     db.execute(
         """
         INSERT INTO document_versions
-          (document_uuid, customer_id, version_path, comment, uploaded_at)
-        VALUES (?, ?, ?, ?, ?)
+          (document_uuid, customer_id, version_path, file_size, file_hash, comment, uploaded_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
         (
             uuid,
             customer_id,
             backup_path,
+            original_size,
+            original_hash,
             comment,
             datetime.utcnow().isoformat()
         )
@@ -288,7 +297,7 @@ async def get_document_versions(
 ) -> List[DocumentVersion]:
     rows = db.execute(
         """
-        SELECT document_uuid, customer_id, version_path, comment, uploaded_at
+        SELECT document_uuid, customer_id, version_path, file_size, file_hash, comment, uploaded_at
         FROM document_versions
         WHERE document_uuid = ? AND customer_id = ?
         ORDER BY uploaded_at DESC
@@ -313,7 +322,7 @@ async def list_customer_document_versions(customer_id: str, db=Depends(get_db)) 
     """
     rows = db.execute(
         """
-        SELECT document_uuid, customer_id, version_path, comment, uploaded_at
+        SELECT document_uuid, customer_id, version_path, file_size, file_hash, comment, uploaded_at
         FROM document_versions
         WHERE customer_id = ?
         ORDER BY uploaded_at DESC
