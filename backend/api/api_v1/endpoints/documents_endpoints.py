@@ -246,9 +246,6 @@ async def update_document_version(
     backup_path = os.path.join(customer_dir, backup_name)
     os.rename(current_path, backup_path)
 
-
-
-
     # Record the old version
     db.execute(
         """
@@ -297,7 +294,7 @@ async def update_document_version(
 
     # XXX TODO Reset document to trigger re-analysis
     # XXX TODO remember to update file path in the document
-    logger.info(f"Resetting document to trigger re-analysis")
+    logger.info("Resetting document to trigger re-analysis")
     # await update_document_metadata(...)
 
     logger.info(f"Updated document for customer {customer_id}, UUID {uuid}, new file {file.filename}")
