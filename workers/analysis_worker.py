@@ -134,7 +134,7 @@ def main():
             ai_is_expired = False
             ai_expires = None
             document_expires_str = data["document_expires"]
-            if document_expires:
+            if document_expires_str:
                 document_expires = datetime.datetime.fromisoformat(document_expires_str)
                 ai_expires = document_expires.isoformat()
                 ai_is_expired = data["is_expired"]
