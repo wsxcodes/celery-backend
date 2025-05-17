@@ -228,32 +228,29 @@ async def update_document_version(
     return {"status": "XXX TODO", "x": current_document_path}
 
 
-@router.get("/versions")
+@router.get("/{customer_id}/versions/{uuid}", response_model=List[DocumentVersion])
 @log_endpoint
 async def get_document_versions(
     customer_id: str,
     uuid: str,
     db=Depends(get_db)
 ) -> List[DocumentVersion]:
-    # XXX TODO get this to work
-    # XXX TODO assure document ownership
     rows = db.execute(
         """
-        SELECT dv.document_uuid, dv.version_path, dv.comment, dv.uploaded_at
-        FROM document_versions dv
-        JOIN files f ON dv.document_uuid = f.uuid
-        WHERE dv.document_uuid = ? AND f.customer_id = ?
-        ORDER BY dv.uploaded_at DESC
+        SELECT document_uuid, version_path, comment, uploaded_at
+        FROM document_versions
+        WHERE document_uuid = ?
+        ORDER BY uploaded_at DESC
         """,
-        (uuid, customer_id)
+        (uuid,)
     ).fetchall()
 
     if not rows:
-        logger.info(f"No versions found for document UUID {uuid} and customer {customer_id}")
+        logger.info(f"No versions found for document UUID {uuid}")
         raise HTTPException(status_code=404, detail="No document versions found")
 
     versions = [DocumentVersion(**dict(row)) for row in rows]
-    logger.info(f"Retrieved {len(versions)} versions for document UUID {uuid} and customer {customer_id}")
+    logger.info(f"Retrieved {len(versions)} versions for document UUID {uuid}")
     return versions
 
 
