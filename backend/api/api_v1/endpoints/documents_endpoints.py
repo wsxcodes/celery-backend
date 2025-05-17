@@ -239,12 +239,13 @@ async def get_document_versions(
     # XXX TODO assure document ownership
     rows = db.execute(
         """
-        SELECT document_uuid, version_path, comment, uploaded_at
-        FROM document_versions
-        WHERE document_uuid = ?
-        ORDER BY uploaded_at DESC
+        SELECT dv.document_uuid, dv.version_path, dv.comment, dv.uploaded_at
+        FROM document_versions dv
+        JOIN files f ON dv.document_uuid = f.uuid
+        WHERE dv.document_uuid = ? AND f.customer_id = ?
+        ORDER BY dv.uploaded_at DESC
         """,
-        uuid
+        (uuid, customer_id)
     ).fetchall()
 
     if not rows:
