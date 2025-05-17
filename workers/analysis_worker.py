@@ -19,11 +19,6 @@ prompts = prompt_generators.load_prompts()
 # XXX TODO update "ai_expires" and is_expired field in the database when applicable
 # XXX TODO differentiate between "expires" and "expired" status
 
-# XXX TODO ai heath score analysis (utilise the prompt document_health_approximation)
-# XXX TODO if the document is epxired, significantly degrade document health score
-# XXX TODO if the document is missing signatures, significantly degrade document health score
-# XXX TODO if the document ma zavazne pochybenia, significantly degrade document health score
-
 # XXX TODO retry policy on 3rd party API calls
 
 # XXX TODO celery workers with backoff strategy
@@ -290,6 +285,13 @@ def main():
                 data=payload
             )
             logger.info("Analysis completed successfully")
+
+            # -----------------------------------------------------------------------------------------------------------------------------
+            # Calculate the health score
+            # XXX TODO ai heath score analysis (utilise the prompt document_health_approximation)
+            # XXX TODO if the document is epxired, significantly degrade document health score
+            # XXX TODO if the document is missing signatures, significantly degrade document health score
+            # XXX TODO if the document ma zavazne pochybenia, significantly degrade document health score
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Record the tokens spent
