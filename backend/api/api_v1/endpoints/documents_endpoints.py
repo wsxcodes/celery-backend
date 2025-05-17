@@ -106,7 +106,7 @@ async def get_document(
         (uuid,)
     ).fetchone()
 
-    # XXX TODO Assure document ownership
+    # XXX TODO assure document ownership
     # if document.customer_id != customer_id:
     #     raise HTTPException(status_code=403, detail="Document does not belong to this customer")
 
@@ -129,7 +129,7 @@ async def update_document_metadata(uuid: str, update: DocumentUpdate, db=Depends
     if not data:
         raise HTTPException(status_code=400, detail="No valid fields to update")
 
-    # XXX TODO Assure document ownership
+    # XXX TODO assure document ownership
     # if document.customer_id != customer_id:
     #     raise HTTPException(status_code=403, detail="Document does not belong to this customer")
 
@@ -159,14 +159,14 @@ async def update_document_metadata(uuid: str, update: DocumentUpdate, db=Depends
 @router.put("/version/{customer_id}/{filename}")
 @log_endpoint
 async def update_document_version(customer_id: str, filename: str, file: UploadFile = File(...)) -> Dict[str, str]:
-    # XXX TODO
+    # XXX TODO document versioning
     return {"status": "XXX TODO"}
 
 
 @router.delete("/delete/{customer_id}/{filename}")
 @log_endpoint
 async def delete_document(customer_id: str, filename: str, db=Depends(get_db)):
-    # XXX TODO Assure document ownership
+    # XXX TODO assure document ownership
     # if document.customer_id != customer_id:
     #     raise HTTPException(status_code=403, detail="Document does not belong to this customer")
 
