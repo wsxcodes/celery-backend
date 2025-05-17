@@ -132,9 +132,11 @@ def main():
             tokens_spent += usage["total_tokens"]
 
             ai_is_expired = False
+            ai_expires = None
             document_expires_str = data["document_expires"]
             if document_expires:
                 document_expires = datetime.datetime.fromisoformat(document_expires_str)
+                ai_expires = document_expires.isoformat()
                 ai_is_expired = data["is_expired"]
 
             logger.info("Saving smart summary to database")
@@ -146,7 +148,7 @@ def main():
                     "ai_sub_category": data["sub_category"],
                     "ai_summary_short": data["summary_short"],
                     "ai_summary_long": data["summary_long"],
-                    "ai_expires": document_expires.isoformat(),
+                    "ai_expires": ai_expires,
                     "ai_is_expired": ai_is_expired
                 }
             )
