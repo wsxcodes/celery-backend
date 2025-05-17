@@ -96,7 +96,7 @@ async def add_new_document(
     }
 
 
-@router.get("/{uuid}", response_model=Document)
+@router.get("/{uuid}", response_model=Document, response_model_exclude_none=False)
 @log_endpoint
 async def get_document(
     uuid: str,
@@ -108,6 +108,10 @@ async def get_document(
         (uuid,)
     ).fetchone()
 
+    if hasattr(row, "keys"):
+        logger.debug("get_document row keys: %s", row.keys())
+        logger.debug("get_document row data: %r", dict(row))
+
     # XXX TODO assure document ownership
     # if document.customer_id != customer_id:
     #     raise HTTPException(status_code=403, detail="Document does not belong to this customer")
@@ -118,15 +122,17 @@ async def get_document(
 
     # Convert database row to Document schema
     document = Document(**dict(row))
+    logger.info(f"get_document returning data for UUID {uuid}: %s", document.dict())
 
     logger.info(f"Retrieved document for UUID: {uuid}")
     return document
 
 
-@router.patch("/metadata/{uuid}", response_model=Document)
+@router.patch("/metadata/{uuid}", response_model=Document, response_model_exclude_none=False)
 @log_endpoint
 async def update_document_metadata(uuid: str, update: DocumentUpdate, db=Depends(get_db)):
     data = update.dict(exclude_unset=True)
+    logger.info(f"update_document_metadata called for UUID {uuid} with data: %s", data)
 
     if not data:
         raise HTTPException(status_code=400, detail="No valid fields to update")
@@ -148,14 +154,19 @@ async def update_document_metadata(uuid: str, update: DocumentUpdate, db=Depends
 
     values.append(uuid)
     query = f"UPDATE files SET {', '.join(fields)} WHERE uuid = ?"
+    logger.debug("update_document_metadata SQL: %s", query)
+    logger.debug("update_document_metadata params: %s", values)
     db.execute(query, values)
     db.commit()
 
     row = db.execute("SELECT * FROM files WHERE uuid = ?", (uuid,)).fetchone()
+    logger.info(f"update_document_metadata updated row for UUID {uuid}: %s", dict(row))
     if not row:
         raise HTTPException(status_code=404, detail="Document not found")
 
-    return Document(**dict(row))
+    updated_doc = Document(**dict(row))
+    logger.info(f"update_document_metadata returning updated document for UUID {uuid}: %s", updated_doc.dict())
+    return updated_doc
 
 
 @router.put("/version/{customer_id}/{filename}")
