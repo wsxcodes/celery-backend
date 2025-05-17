@@ -293,6 +293,7 @@ async def list_pending_documents(limit: int = 10, db=Depends(get_db)):
 @router.get("/versions/all", response_model=List[DocumentVersion])
 @log_endpoint
 async def list_all_document_versions(db=Depends(get_db)) -> List[DocumentVersion]:
+    # XXX TODO delete this endpoint
     """
     Temporary debug endpoint: list every entry in document_versions table.
     """
