@@ -72,5 +72,7 @@ class DocumentVersion(BaseModel):
     customer_id: str
     document_uuid: str
     version_path: str
+    file_size: int
+    file_hash: str
     comment: str
     uploaded_at: datetime
