@@ -147,7 +147,9 @@ async def read_document(request: Request, uuid: str, db=Depends(get_db)):
 
     logger.info("Document retrieved: %s", document)
 
-    # XXX TODO if the document is in any other than processed state, redirect to the home page
+    if document_dict["analysis_status"] != "processed":
+        logger.info("Document status is not 'processed', redirecting to home page")
+        return RedirectResponse(url="/", status_code=302)
 
     # Visual Conversions for the template
     document_dict["analysis_started_at"] = document.analysis_started_at.strftime('%Y-%m-%d %H:%M:%S')
