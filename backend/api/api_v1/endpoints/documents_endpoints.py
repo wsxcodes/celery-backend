@@ -232,6 +232,8 @@ async def update_document_version(
     if row["customer_id"] != customer_id:
         raise HTTPException(status_code=403, detail="Document does not belong to this customer")
 
+    # XXX TODO I want to roll the previous current version file into file with the backup timestamp and have the original filename for the current document
+
     original_hash = row["file_hash"]
     original_size = row["file_size"]
 
@@ -242,8 +244,6 @@ async def update_document_version(
         raise HTTPException(status_code=404, detail="Original file not found on disk")
 
     timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
-
-    # XXX TODO I want to roll the previous current version file into file with the backup timestamp and have the original filename for the current document
 
     # Save the new file with timestamp in filename to prevent overwriting original
     contents = await file.read()
