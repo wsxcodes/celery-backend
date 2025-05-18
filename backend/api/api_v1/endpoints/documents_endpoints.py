@@ -241,14 +241,15 @@ async def update_document_version(
     if not os.path.exists(current_path):
         raise HTTPException(status_code=404, detail="Original file not found on disk")
 
-    # XXX BUG zle referencujem rolled out document..
-
-    # Backup existing file
     timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
-    name_root, ext = os.path.splitext(original_filename)
-    backup_name = f"{name_root}_{timestamp}{ext}"
-    backup_path = os.path.join(customer_dir, backup_name)
-    os.rename(current_path, backup_path)
+
+    # Save the new file with timestamp in filename to prevent overwriting original
+    contents = await file.read()
+    name_root, ext = os.path.splitext(file.filename)
+    new_filename = f"{name_root}_{timestamp}{ext}"
+    new_path = os.path.join(customer_dir, new_filename)
+    with open(new_path, "wb") as buffer:
+        buffer.write(contents)
 
     # Record the old version
     db.execute(
@@ -260,7 +261,7 @@ async def update_document_version(
         (
             uuid,
             customer_id,
-            backup_path,
+            new_path,
             original_size,
             original_hash,
             comment,
@@ -268,13 +269,6 @@ async def update_document_version(
         )
     )
     db.commit()
-
-    # Save the new file
-    contents = await file.read()
-    new_filename = file.filename
-    new_path = os.path.join(customer_dir, new_filename)
-    with open(new_path, "wb") as buffer:
-        buffer.write(contents)
 
     # Compute new file metadata
     file_size = len(contents)
@@ -308,7 +302,7 @@ async def update_document_version(
     db.commit()
 
     logger.info(f"Updated document for customer {customer_id}, UUID {uuid}, new file {file.filename}")
-    return {"status": "success", "document_uuid": uuid, "version_path": backup_path}
+    return {"status": "success", "document_uuid": uuid, "version_path": new_path}
 
 
 @router.get("/{customer_id}/versions/{uuid}", response_model=List[DocumentVersion])
