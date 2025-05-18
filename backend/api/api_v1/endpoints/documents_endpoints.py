@@ -129,6 +129,10 @@ async def get_document(
     uuid: str,
     db=Depends(get_db)
 ) -> Document:
+    # XXX TODO assure document ownership
+    # if document.customer_id != customer_id:
+    #     raise HTTPException(status_code=403, detail="Document does not belong to this customer")
+
     # Query document metadata from database
     row = db.execute(
         "SELECT * FROM files WHERE uuid = ?",
@@ -138,10 +142,6 @@ async def get_document(
     if hasattr(row, "keys"):
         logger.debug("get_document row keys: %s", row.keys())
         logger.debug("get_document row data: %r", dict(row))
-
-    # XXX TODO assure document ownership
-    # if document.customer_id != customer_id:
-    #     raise HTTPException(status_code=403, detail="Document does not belong to this customer")
 
     if not row:
         logger.info(f"Document not found for UUID: {uuid}")
