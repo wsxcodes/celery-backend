@@ -147,8 +147,7 @@ async def read_document(request: Request, uuid: str, db=Depends(get_db)):
 
     logger.info("Document retrieved: %s", document)
 
-    # XXX TODO if you refresh on the document page while is being processed, force redirection to the home page
-    # XXX TODO this specifically applies when you upload a newer version of the same document and simply refresh the page
+    # XXX TODO if the document is in any other than processed state, redirect to the home page
 
     # Visual Conversions for the template
     document_dict["analysis_started_at"] = document.analysis_started_at.strftime('%Y-%m-%d %H:%M:%S')
