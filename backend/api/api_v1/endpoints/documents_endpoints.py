@@ -241,6 +241,8 @@ async def update_document_version(
     if not os.path.exists(current_path):
         raise HTTPException(status_code=404, detail="Original file not found on disk")
 
+    # XXX BUG zle referencujem rolled out document..
+
     # Backup existing file
     timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
     name_root, ext = os.path.splitext(original_filename)
