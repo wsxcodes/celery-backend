@@ -20,9 +20,6 @@ logger.setLevel(logging.INFO)
 router = APIRouter()
 
 
-# XXX TODO provide token spending report for each customer
-
-
 @router.get("/", response_model=List[Customer])
 @log_endpoint
 async def list_customers(db=Depends(get_db)):
