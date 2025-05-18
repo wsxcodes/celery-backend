@@ -818,7 +818,7 @@
     const list = document.getElementById('change-history-list');
     const customerId = '{{document.customer_id}}';
     const documentUuid = '{{document.uuid}}';
-    const url = `http://localhost:8880/api/v1/document/${customerId}/versions/${documentUuid}`;
+    const url = `/api/v1/document/${customerId}/versions/${documentUuid}`;
     fetch(url)
       .then(response => response.json())
       .then(data => {
@@ -900,7 +900,7 @@
     const formData = new FormData();
     formData.append('comment', comment);
     formData.append('file', fileInput.files[0], fileInput.files[0].name);
-    const url = `http://localhost:8880/api/v1/document/{{document.customer_id}}/versions/{{document.uuid}}`;
+    const url = `/api/v1/document/{{document.customer_id}}/versions/{{document.uuid}}`;
     fetch(url, {
       method: 'PUT',
       body: formData
@@ -990,7 +990,7 @@
     const encodedUUID = encodeURIComponent("{{document.uuid}}");
     const encodedCustomer = encodeURIComponent("{{document.customer_id}}");
 
-    const url = `http://localhost:8880/api/v1/rag/ask?customer_id=${encodedCustomer}&document_uuid=${encodedUUID}&question=${encodedQuestion}`;
+    const url = `/api/v1/rag/ask?customer_id=${encodedCustomer}&document_uuid=${encodedUUID}&question=${encodedQuestion}`;
     const evt = new EventSource(url);
 
     evt.onmessage = e => {
@@ -1063,7 +1063,7 @@
 
   // Load previous messages on dialog open
   async function loadPreviousMessages() {
-    const response = await fetch('http://localhost:8880/api/v1/rag/messages/{{document.uuid}}?order=desc');
+    const response = await fetch('/api/v1/rag/messages/{{document.uuid}}?order=desc');
     if (!response.ok) {
       console.error('Failed to fetch chat history');
       return;
@@ -1210,7 +1210,7 @@
     const encodedCustomer = encodeURIComponent("{{document.customer_id}}");
     const question = encodeURIComponent("greeting");
 
-    const url = `http://localhost:8880/api/v1/rag/ask?customer_id=${encodedCustomer}&document_uuid=${encodedUUID}&question=${question}`;
+    const url = `/api/v1/rag/ask?customer_id=${encodedCustomer}&document_uuid=${encodedUUID}&question=${question}`;
     const evt = new EventSource(url);
 
     // Always create and show the spinner icon before any API response, persistently
