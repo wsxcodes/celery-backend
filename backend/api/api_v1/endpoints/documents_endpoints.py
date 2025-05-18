@@ -243,6 +243,8 @@ async def update_document_version(
 
     timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
 
+    # XXX TODO I want to roll the previous current version file into file with the backup timestamp and have the original filename for the current document
+
     # Save the new file with timestamp in filename to prevent overwriting original
     contents = await file.read()
     name_root, ext = os.path.splitext(file.filename)
