@@ -84,11 +84,6 @@ async def ask_question_about_document(
                 ],
                 stream=True,
             )
-            print("*" * 150)
-            print(system_message)
-            print("-" * 150)
-            print(user_message)
-            print("*" * 150)
 
         except Exception as e:
             logger.error("AI streaming error: %s", e, exc_info=True)
