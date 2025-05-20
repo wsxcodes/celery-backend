@@ -38,6 +38,9 @@ async def add_new_document(
     webhook_url: str = Form(...),
     db=Depends(get_db),
 ) -> dict:
+    
+    # XXX TODO adding new document must assure that if there is an artifact already it's deleted first
+
     # Validate that either a file is uploaded or GCS bucket and document_path are provided
     if file is None:
         if not bucket or not document_path:
