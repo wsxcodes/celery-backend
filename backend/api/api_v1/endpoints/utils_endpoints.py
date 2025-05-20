@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-@router.get("/extract-text-from-file")
+@router.get("/extract_text_from_file")
 @log_endpoint
 async def extract_text_from_file(uuid: str, db=Depends(get_db)) -> str:
     """This endpoint will indetify type of file and extract text from it."""
@@ -65,7 +65,7 @@ async def extract_text_from_file(uuid: str, db=Depends(get_db)) -> str:
         )
 
 
-@router.get("/document-to-text")
+@router.get("/document_to_text")
 @log_endpoint
 async def extract_text_from_document(uuid: str, db=Depends(get_db)) -> str:
     """Convert PDF, DOC, DOCX, TXT, ODT to plaintext."""
@@ -120,7 +120,7 @@ async def extract_text_from_document(uuid: str, db=Depends(get_db)) -> str:
         raise HTTPException(status_code=500, detail=f"Error processing document: {str(e)}")
 
 
-@router.get("/image-to-text")
+@router.get("/image_to_text")
 @log_endpoint
 async def extract_text_from_image(uuid: str, db=Depends(get_db)) -> str:
     """Convert image to plaintext utilising LLM."""
