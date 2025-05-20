@@ -6,29 +6,27 @@ import requests
 logger = logging.getLogger(__name__)
 
 
-def perform_request(request_type: str, url: str, data: dict) -> requests.Response:
+
+def perform_request(request_type: str, url: str, data: dict, headers: dict = None) -> requests.Response:
     try:
-        logger.info(f"Performing {request_type} request to {url} with data {data}")
-        parsed_url = requests.utils.urlparse(url)
-        logger.info(f"Parsed URL: {parsed_url.geturl()}")
-        if parsed_url.port is None:
-            logger.warning("No port specified in URL, defaulting to port 80 or 443 depending on scheme")
+        logger.info(f"Performing {request_type} request to {url} with data {data} and headers {headers}")
 
         if request_type.upper() == "GET":
-            response = requests.get(url, params=data)
+            response = requests.get(url, params=data, headers=headers)
         elif request_type.upper() == "POST":
-            response = requests.post(url, json=data)
+            response = requests.post(url, json=data, headers=headers)
         elif request_type.upper() == "PUT":
-            response = requests.put(url, json=data)
+            response = requests.put(url, json=data, headers=headers)
         elif request_type.upper() == "DELETE":
-            response = requests.delete(url, json=data)
+            response = requests.delete(url, json=data, headers=headers)
         elif request_type.upper() == "PATCH":
-            response = requests.patch(url, json=data)
+            response = requests.patch(url, json=data, headers=headers)
         else:
-            raise ValueError(f"Invalid request_type: {request_type}")
+            raise ValueError(f"Unsupported request type: {request_type}")
 
         response.raise_for_status()
         return response
+
     except requests.HTTPError as e:
         logger.error(f"HTTP error occurred: {str(e)}")
         raise
