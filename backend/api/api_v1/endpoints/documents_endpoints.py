@@ -78,7 +78,7 @@ async def add_new_document(
     db.execute(
         """
         INSERT INTO files (
-            uuid, customer_id, filename, uploaded_at, updated_at,
+            uuid, customer_id, filename, uploaded_at,
             analysis_status, analysis_started_at, analysis_completed_at, analysis_cost,
             file_size
         )
