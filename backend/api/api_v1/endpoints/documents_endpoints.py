@@ -67,7 +67,7 @@ async def add_new_document(
 
     # Compute metadata
     file_size = len(contents)
-    file_uuid = str(uuid.uuid4())
+    file_uuid = customer_id + "_" + str(filename)
 
     # Write file to disk
     with open(file_path, "wb") as buffer:
@@ -79,7 +79,7 @@ async def add_new_document(
         """
         INSERT INTO files (
             uuid, customer_id, filename, uploaded_at,
-            analysis_status, analysis_started_at, analysis_completed_at, analysis_cost,
+            analysis_status, analysis_started_at, analysis_completed_at,
             file_size
         )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
