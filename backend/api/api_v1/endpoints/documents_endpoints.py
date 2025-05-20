@@ -204,57 +204,6 @@ async def check_that_the_document_exists(
     return exists
 
 
-@router.get("/{customer_id}/versions/{uuid}", response_model=List[DocumentVersion])
-@log_endpoint
-async def get_document_versions(
-    customer_id: str,
-    uuid: str,
-    db=Depends(get_db)
-) -> List[DocumentVersion]:
-    rows = db.execute(
-        """
-        SELECT document_uuid, customer_id, version_path, file_size, file_hash, comment, uploaded_at
-        FROM document_versions
-        WHERE document_uuid = ? AND customer_id = ?
-        ORDER BY uploaded_at DESC
-        """,
-        (uuid, customer_id)
-    ).fetchall()
-
-    if not rows:
-        logger.info(f"No versions found for document UUID {uuid}")
-        raise HTTPException(status_code=404, detail="No document versions found")
-
-    versions = [DocumentVersion(**dict(row)) for row in rows]
-    logger.info(f"Retrieved {len(versions)} versions for document UUID {uuid}")
-    return versions
-
-
-@router.get("/{customer_id}/versions", response_model=List[DocumentVersion])
-@log_endpoint
-async def list_customer_document_versions(customer_id: str, db=Depends(get_db)) -> List[DocumentVersion]:
-    """
-    List all document versions for a given customer across all files.
-    """
-    rows = db.execute(
-        """
-        SELECT document_uuid, customer_id, version_path, file_size, file_hash, comment, uploaded_at
-        FROM document_versions
-        WHERE customer_id = ?
-        ORDER BY uploaded_at DESC
-        """,
-        (customer_id,)
-    ).fetchall()
-
-    if not rows:
-        logger.info(f"No document versions found for customer {customer_id}")
-        raise HTTPException(status_code=404, detail="No document versions found for this customer")
-
-    versions = [DocumentVersion(**dict(row)) for row in rows]
-    logger.info(f"Retrieved {len(versions)} versions for customer {customer_id}")
-    return versions
-
-
 @router.delete("/delete/{document_uuid}")
 @log_endpoint
 async def delete_document(customer_id: str, db=Depends(get_db)):
