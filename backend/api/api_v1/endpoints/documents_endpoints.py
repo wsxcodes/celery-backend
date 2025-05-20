@@ -188,22 +188,6 @@ async def update_document_metadata(uuid: str, update: DocumentUpdate, db=Depends
     return updated_doc
 
 
-@router.get("/check_exists/{uuid}", response_model=bool)
-@log_endpoint
-async def check_that_the_document_exists(
-    uuid: str,
-    db=Depends(get_db)
-) -> bool:
-    row = db.execute(
-        "SELECT 1 FROM files WHERE uuid = ?",
-        (uuid,)
-    ).fetchone()
-
-    exists = row is not None
-    logger.info(f"Document exists check for UUID {uuid}: {exists}")
-    return exists
-
-
 @router.delete("/delete/{document_uuid}")
 @log_endpoint
 async def delete_document(customer_id: str, db=Depends(get_db)):
