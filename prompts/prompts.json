@@ -264,19 +264,5 @@
          "content": ""
        }
      ]
-   },
-   "document_health_approximation": {
-     "model": "gpt-4.1",
-     "temperature": 0.5,
-     "messages": [
-       {
-         "role": "system",
-         "content": "XXX TODO"
-       },
-       {
-         "role": "user",
-         "content": "XXX TODO"
-       }
-     ]
    }
 }
