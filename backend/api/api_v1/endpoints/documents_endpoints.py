@@ -30,8 +30,8 @@ async def add_new_document(
         ...,
         description='Customer data JSON string. Example: {"customer_name": "Jan Filips"}'
     ),
-    bucket: Optional[str] = Form(None),
-    document_path: Optional[str] = Form(None),
+    gcs_bucket: Optional[str] = Form(None),
+    gcs_file_path: Optional[str] = Form(None),
     file: Optional[UploadFile] = File(None),
     ai_analysis_mode: AImode = Form(...),
     ai_output_language: str = Form('Czech'),
