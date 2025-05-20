@@ -50,6 +50,7 @@ def init_db():
             ai_alerts_and_actions TEXT,
             ai_enterny_legacy_schema TEXT,
             file_size INTEGER,
+            hash_sha256 TEXT,
             document_raw_text TEXT,
             webhook_url TEXT
         )
