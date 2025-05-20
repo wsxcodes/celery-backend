@@ -11,7 +11,7 @@ api_router = APIRouter()
 api_router.include_router(
     documents_endpoints.router,
     prefix="/document",
-    tags=["Documents"]
+    tags=["Add Document For Analysis"]
 )
 
 # RAG Endpoints
@@ -39,7 +39,7 @@ api_router.include_router(
 api_router.include_router(
     artefacts_endpoints.router,
     prefix="/artefact",
-    tags=["Artefacts"]
+    tags=["Artefacts (internal)"]
 )
 
 # Generic Endpoints
