@@ -33,6 +33,8 @@ async def extract_text_from_file(uuid: str, db=Depends(get_db)) -> str:
         raise HTTPException(status_code=404, detail="Document not found")
 
     file_path = Path(config.BASE_UPLOAD_DIR) / document.customer_id / document.filename
+    logger.info(f"Looking for file at: {file_path}")
+    logger.info(f"Customer ID: {document.customer_id}, Filename: {document.filename}")
     if not file_path.exists():
         raise HTTPException(status_code=404, detail="File not found")
 
