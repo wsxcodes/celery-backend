@@ -53,9 +53,9 @@ async def get_artefact(
 
 @router.patch("/metadata/{uuid}", response_model=Artefact, response_model_exclude_none=False)
 @log_endpoint
-async def update_document_metadata(uuid: str, update: ArtefactUpdate, db=Depends(get_db)):
+async def update_artefact_metadata(uuid: str, update: ArtefactUpdate, db=Depends(get_db)):
     data = update.dict(exclude_unset=True)
-    logger.info(f"update_document_metadata called for UUID {uuid} with data: %s", data)
+    logger.info(f"update_artefact_metadata called for UUID {uuid} with data: %s", data)
 
     if not data:
         raise HTTPException(status_code=400, detail="No valid fields to update")
@@ -73,18 +73,18 @@ async def update_document_metadata(uuid: str, update: ArtefactUpdate, db=Depends
 
     values.append(uuid)
     query = f"UPDATE files SET {', '.join(fields)} WHERE uuid = ?"
-    logger.debug("update_document_metadata SQL: %s", query)
-    logger.debug("update_document_metadata params: %s", values)
+    logger.debug("update_artefact_metadata SQL: %s", query)
+    logger.debug("update_artefact_metadata params: %s", values)
     db.execute(query, values)
     db.commit()
 
     row = db.execute("SELECT * FROM files WHERE uuid = ?", (uuid,)).fetchone()
-    logger.info(f"update_document_metadata updated row for UUID {uuid}: %s", dict(row))
+    logger.info(f"update_artefact_metadata updated row for UUID {uuid}: %s", dict(row))
     if not row:
-        raise HTTPException(status_code=404, detail="Document not found")
+        raise HTTPException(status_code=404, detail="Artefact not found")
 
     updated_doc = Artefact(**dict(row))
-    logger.info(f"update_document_metadata returning updated document for UUID {uuid}: %s", updated_doc.dict())
+    logger.info(f"update_artefact_metadata returning updated artefact for UUID {uuid}: %s", updated_doc.dict())
     return updated_doc
 
 
