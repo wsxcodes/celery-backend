@@ -60,7 +60,7 @@ def main():
             logger.info("Extracting text from document")
             document_raw_text = safe_request(
                 request_type="GET",
-                url=config.API_URL + f"/api/v1/utils/extract-text-from-file?uuid={document_uuid}",
+                url=config.API_URL + f"/api/v1/utils/extract_text_from_file?uuid={document_uuid}",
                 data={},
             )
             document_raw_text = document_raw_text.json()
