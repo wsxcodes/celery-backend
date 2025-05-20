@@ -96,9 +96,10 @@ async def add_new_document(
         INSERT INTO files (
             uuid, customer_id, filename, uploaded_at,
             ai_output_language, ai_analysis_mode, analysis_status, analysis_started_at, analysis_completed_at,
+            webhook_url,
             file_size
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             file_uuid,
@@ -110,6 +111,7 @@ async def add_new_document(
             'pending',
             None,
             None,
+            eterny_api_webhook_url,
             file_size,
         )
     )
