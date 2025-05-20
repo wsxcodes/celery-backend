@@ -26,7 +26,6 @@ prompts = prompt_generators.load_prompts()
 # XXX Record the tokens spent
 
 
-
 def main():
     while True:
         logger.info("Querying pending documents for analysis")
