@@ -56,34 +56,6 @@ def main():
             )
 
             # -----------------------------------------------------------------------------------------------------------------------------
-            # Request document preview
-            logger.info("Requesting document preview")
-            preview_response = safe_request(
-                request_type="GET",
-                url=config.API_URL + f"/api/v1/utils/generate-file-preview?uuid={document_uuid}",
-                data={},
-            )
-
-            if preview_response is None:
-                logger.info("Preview generation request failed; skipping metadata update")
-                continue
-
-            if preview_response.status_code == 400:
-                logger.info("Preview generation returned 400; skipping metadata update")
-                continue
-
-            if preview_response.status_code == 200:
-                preview_path = preview_response.json()
-                logger.info(f"Preview path: {preview_path}")
-
-                logger.info("Updating document data")
-                safe_request(
-                    request_type="PATCH",
-                    url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
-                    data={"file_preview": preview_path},
-                )
-
-            # -----------------------------------------------------------------------------------------------------------------------------
             # Extract text from the document
             logger.info("Extracting text from document")
             document_raw_text = safe_request(
