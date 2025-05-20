@@ -46,7 +46,8 @@ def main():
 
             document_uuid = pending_documents[0]["uuid"]
             output_language = pending_documents[0]["ai_output_language"]
-            ai_analysis_mode = pending_documents[0]["ai_analysis_mode"]            
+            ai_analysis_mode = pending_documents[0]["ai_analysis_mode"]
+            
             logger.info(f"Document to analyze: {document_uuid}")
 
             logger.info("Starting analysis")
