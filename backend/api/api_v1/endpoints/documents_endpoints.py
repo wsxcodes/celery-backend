@@ -3,6 +3,7 @@ import logging
 import os
 from datetime import datetime
 from typing import Optional
+import hashlib
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from google.cloud import storage
@@ -62,8 +63,10 @@ async def add_new_document(
         blob.download_to_filename(file_path)
         with open(file_path, "rb") as f:
             contents = f.read()
+        hash_sha256 = hashlib.sha256(contents).hexdigest()
     else:
         contents = await file.read()
+        hash_sha256 = hashlib.sha256(contents).hexdigest()
         filename = file.filename
         customer_dir = os.path.join(BASE_UPLOAD_DIR, customer_id)
         os.makedirs(customer_dir, exist_ok=True)
@@ -97,7 +100,8 @@ async def add_new_document(
             uuid, customer_id, filename, uploaded_at,
             ai_output_language, ai_analysis_mode, analysis_status, analysis_started_at, analysis_completed_at,
             webhook_url,
-            file_size
+            file_size,
+            hash_sha256
         )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
@@ -113,6 +117,7 @@ async def add_new_document(
             None,
             eterny_api_webhook_url,
             file_size,
+            hash_sha256
         )
     )
     db.commit()
@@ -122,5 +127,6 @@ async def add_new_document(
         "status": "success",
         "customer_id": customer_id,
         "filename": filename,
+        "sha256": hash_sha256,
         "file_size": file_size
     }
