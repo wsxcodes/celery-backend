@@ -40,9 +40,9 @@ def perform_request(request_type: str, url: str, data: dict) -> requests.Respons
         raise
 
 
-def safe_request(*, request_type, url, data):
+def safe_request(*, request_type, url, data, headers=None):
     try:
-        response = perform_request(request_type=request_type, url=url, data=data)
+        response = perform_request(request_type=request_type, url=url, data=data, headers=headers)
         response.raise_for_status()
         return response
     except Exception as e:
