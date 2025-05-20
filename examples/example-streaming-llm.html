@@ -41,7 +41,7 @@
       const model = encodeURIComponent(document.getElementById('model').value);
       const temp = encodeURIComponent(document.getElementById('temp').value);
       const doc = encodeURIComponent(document.getElementById('document_uuid').value);
-      const url = `http://localhost:8880/api/v1/llm/chat_completition_streaming`
+      const url = `http://localhost:8880/api/v1/llm/chat_completition/streaming`
                 + `?system_message=${sys}`
                 + `&user_message=${usr}`
                 + `&model=${model}`
