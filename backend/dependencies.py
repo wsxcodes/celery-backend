@@ -34,7 +34,6 @@ def init_db():
             analysis_status TEXT NOT NULL DEFAULT 'pending',
             analysis_started_at TEXT,
             analysis_completed_at TEXT,
-            analysis_cost INTEGER NOT NULL DEFAULT 0,
             ai_alert TEXT,
             ai_expires TEXT,
             ai_is_expired INTEGER,
