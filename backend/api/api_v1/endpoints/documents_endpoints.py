@@ -3,15 +3,13 @@ import logging
 import os
 import uuid
 from datetime import datetime
-from enum import Enum
-from typing import List, Optional
+from typing import Optional
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from google.cloud import storage
 
 from backend import config
-from backend.db.schemas.artefacts_schemas import (AImode, Artefact,
-                                                  ArtefactUpdate)
+from backend.db.schemas.artefacts_schemas import AImode
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
 
