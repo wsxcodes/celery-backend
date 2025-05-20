@@ -67,5 +67,6 @@ class ArtefactUpdate(BaseModel):
     ai_analysis_criteria: Optional[str] = ""
     ai_features_and_insights: Optional[str] = ""
     ai_alerts_and_actions: Optional[str] = ""
-    document_raw_text: Optional[str] = ""
     ai_enterny_legacy_schema: Optional[str] = ""
+    document_raw_text: Optional[str] = ""
+    webhook_url: Optional[str] = ""
