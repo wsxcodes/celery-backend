@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 from backend.api.api_v1.endpoints import (documents_endpoints,
                                           generic_endpoints, llm_endpoints,
-                                          rag_endpoints, utils_endpoints)
+                                          rag_endpoints, utils_endpoints, artifacts_endpoints)
 
 api_router = APIRouter()
 
@@ -31,6 +31,13 @@ api_router.include_router(
     documents_endpoints.router,
     prefix="/document",
     tags=["Documents"]
+)
+
+# Artifacts Endpoints
+api_router.include_router(
+    artifacts_endpoints.router,
+    prefix="/artifacts",
+    tags=["Artifacts"]
 )
 
 # Customer Endpoints
