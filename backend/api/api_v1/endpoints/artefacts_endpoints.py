@@ -6,7 +6,7 @@ from datetime import datetime
 from enum import Enum
 from typing import List
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException
 
 from backend import config
 from backend.db.schemas.artefacts_schemas import (Artefact, DocumentUpdate,
