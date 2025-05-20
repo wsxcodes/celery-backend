@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
-from backend.api.api_v1.endpoints import (artefacts_endpoints, documents_endpoints,
+from backend.api.api_v1.endpoints import (artefacts_endpoints,
+                                          documents_endpoints,
                                           generic_endpoints, llm_endpoints,
                                           rag_endpoints, utils_endpoints)
 
