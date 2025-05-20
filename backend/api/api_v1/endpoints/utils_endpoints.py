@@ -133,8 +133,7 @@ async def extract_text_from_image(uuid: str, db=Depends(get_db)) -> str:
     """Convert image to plaintext utilising LLM."""
 
     # XXX TODO utilise LLM to extract text from image
-
-    # XXX TODO LLM should extract metadata as well such as document type and any descriptive info it can produce really
+    # XXX TODO LLM should extract metadata as well such as document type and any descriptive info it can produce really and store this as raw_text
 
     image = await get_document(uuid=uuid, db=db)
     if not image:
