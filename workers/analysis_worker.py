@@ -45,8 +45,8 @@ def main():
             tokens_spent = 0
 
             document_uuid = pending_documents[0]["uuid"]
-            customer_id = pending_documents[0]["customer_id"]
             output_language = pending_documents[0]["ai_output_language"]
+            ai_analysis_mode = pending_documents[0]["ai_analysis_mode"]            
             logger.info(f"Document to analyze: {document_uuid}")
 
             logger.info("Starting analysis")
@@ -160,16 +160,8 @@ def main():
                         data={},
                     )
 
-            customer = safe_request(
-                        request_type="GET",
-                        url=config.API_URL + f"/api/v1/customer/{customer_id}",
-                        data={},
-                    )
-            customer = customer.json()
-            logger.info(f"Customer AI mode: {customer['ai_mode']}")
-
             document_extra2 = ""
-            if customer["ai_mode"] == "detailed":
+            if ai_analysis_mode == "detailed":
                 document_extra2 = "analysis_criteria = \"{ai_analysis_criteria}\"\nfeatures_and_insights = \"{ai_features_and_insights}\"\n\n"
 
             features_and_insights = prompts["alerts_and_actions"]
@@ -243,6 +235,25 @@ def main():
                 data=payload
             )
             logger.info("Analysis completed successfully")
+
+            # -----------------------------------------------------------------------------------------------------------------------------
+            # Execute the webhook
+            logger.info("Executing the webhook")
+
+            document = safe_request(
+                request_type="GET",
+                url=config.API_URL + f"/api/v1/artefact/{document_uuid}",
+                data={},
+            )
+
+            webhook_url = pending_documents[0]["webhook_url"]
+            logger.info(f"Webhook URL: {webhook_url}")
+            safe_request(
+                request_type="POST",
+                url=webhook_url,
+                data=json.dumps(document.json()),
+                headers={"Content-Type": "application/json"},
+            )
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Mark document as processed, update the cost
