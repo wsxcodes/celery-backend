@@ -23,7 +23,7 @@ logger.setLevel(logging.INFO)
 router = APIRouter()
 
 
-@router.get("/chat-completition")
+@router.get("/chat_completition")
 @log_endpoint
 async def chat_completion(
     document_uuid: str,
@@ -71,7 +71,7 @@ async def chat_completion(
     }
 
 
-@router.get("/chat-completition-streaming")
+@router.get("/chat_completition-streaming")
 @log_endpoint
 async def chat_completion_streaming(
     document_uuid: str,
