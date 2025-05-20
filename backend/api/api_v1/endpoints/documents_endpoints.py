@@ -66,8 +66,15 @@ async def add_new_document(
     file_uuid = customer_id + "_" + str(filename)
 
     # Write file to disk
-    with open(file_path, "wb") as buffer:
-        buffer.write(contents)
+    if file is None:
+        # Download directly to file_path from Google Cloud Storage
+        blob.download_to_filename(file_path)
+        # Read contents back if needed
+        with open(file_path, "rb") as f:
+            contents = f.read()
+    else:
+        with open(file_path, "wb") as buffer:
+            buffer.write(contents)
 
     # Delete existing document record and file for this UUID
     existing = db.execute(
