@@ -48,7 +48,7 @@ def init_db():
             ai_analysis_criteria TEXT,
             ai_features_and_insights TEXT,
             ai_alerts_and_actions TEXT,
-            ai_enterny_legacy_schema TEXT,
+            ai_eterny_legacy_schema TEXT,
             file_size INTEGER,
             hash_sha256 TEXT,
             document_raw_text TEXT,
