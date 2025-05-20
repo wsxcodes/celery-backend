@@ -31,7 +31,6 @@ def init_db():
             filename TEXT NOT NULL,
             file_preview TEXT,
             uploaded_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL,
             analysis_status TEXT NOT NULL DEFAULT 'pending',
             analysis_started_at TEXT,
             analysis_completed_at TEXT,
