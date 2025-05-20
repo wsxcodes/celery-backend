@@ -9,6 +9,7 @@ class AImode(str, Enum):
     standard = "standard"
     detailed = "detailed"
 
+
 class AIAlert(str, Enum):
     alert = "alert"
     action_required = "action_required"
