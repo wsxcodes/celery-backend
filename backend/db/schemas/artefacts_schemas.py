@@ -38,7 +38,7 @@ class Artefact(BaseModel):
     analysis_completed_at: Optional[datetime] = None
     ai_output_language: Optional[str] = "English"
     ai_analysis_mode: Optional[AImode] = AImode.standard
-    ai_alert: Optional[AIAlert] = AIAlert.none
+    ai_alert_status: Optional[AIAlert] = AIAlert.none
     ai_expires: Optional[datetime] = None
     ai_is_expired: Optional[bool] = None
     ai_category: Optional[str] = ""
@@ -59,7 +59,7 @@ class ArtefactUpdate(BaseModel):
     analysis_completed_at: Optional[datetime] = None
     ai_output_language: Optional[str] = "English"
     ai_analysis_mode: Optional[AImode] = AImode.standard
-    ai_alert: Optional[AIAlert] = AIAlert.none
+    ai_alert_status: Optional[AIAlert] = AIAlert.none
     ai_expires: Optional[datetime] = None
     ai_is_expired: Optional[bool] = None
     ai_category: Optional[str] = ""
