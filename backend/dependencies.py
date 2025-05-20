@@ -50,8 +50,7 @@ def init_db():
             ai_alerts_and_actions TEXT,
             ai_enterny_legacy_schema TEXT,
             file_size INTEGER,
-            document_raw_text TEXT,
-            health_score INTEGER DEFAULT 0
+            document_raw_text TEXT
         )
     """)
     cursor.execute("PRAGMA foreign_keys = ON;")
