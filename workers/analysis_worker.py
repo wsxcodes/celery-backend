@@ -208,7 +208,7 @@ def main():
             safe_request(
                 request_type="PATCH",
                 url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
-                data={"ai_enterny_legacy_schema": json.dumps(legacy_schema_dict)},
+                data={"ai_eterny_legacy_schema": json.dumps(legacy_schema_dict)},
             )
 
             # -----------------------------------------------------------------------------------------------------------------------------
