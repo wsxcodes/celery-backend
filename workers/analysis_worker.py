@@ -23,6 +23,9 @@ prompts = prompt_generators.load_prompts()
 
 # XXX TODO record the tokens spent in the database and provide reporting endpoint
 
+# XXX Record the tokens spent
+
+
 
 def main():
     while True:
@@ -278,13 +281,6 @@ def main():
                 data=payload
             )
             logger.info("Analysis completed successfully")
-
-            # -----------------------------------------------------------------------------------------------------------------------------
-            # Record the tokens spent
-            update_tokens_spent(
-                document_uuid=document_uuid,
-                add_tokens_spent=tokens_spent
-            )
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Mark document as processed, update the cost
