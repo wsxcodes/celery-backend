@@ -99,7 +99,7 @@ async def ask_question_about_document(
             completion_chunks.append(content)
             yield f"data: {json.dumps({'content': content})}\n\n"
 
-        # Compute and record token usage
+        # Compute token usage
         completion_tokens = sum(len(enc.encode(c)) for c in completion_chunks)
         total_tokens = prompt_tokens + completion_tokens  # NoQA
 
