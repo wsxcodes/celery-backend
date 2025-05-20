@@ -227,7 +227,7 @@ def main():
                 "ai_alerts_and_actions": json.dumps(ai_alerts_and_actions)
             }
             if document_ai_alert:
-                payload["ai_alert"] = document_ai_alert
+                payload["ai_alert_status"] = document_ai_alert
 
             logger.info("Marking document as processed")
             safe_request(
