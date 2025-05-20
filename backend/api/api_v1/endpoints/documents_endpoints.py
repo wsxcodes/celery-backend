@@ -59,11 +59,6 @@ async def add_new_document(
     os.makedirs(customer_dir, exist_ok=True)
     file_path = os.path.join(customer_dir, filename)
 
-    # Check if file already exists for customer
-    if os.path.exists(file_path):
-        logger.info(f"File already exists for customer {customer_id}: {filename}")
-        raise HTTPException(status_code=409, detail="File already exists!")
-
     # Compute metadata
     file_size = len(contents)
     file_hash = hashlib.sha256(contents).hexdigest()
@@ -96,39 +91,6 @@ async def add_new_document(
             None,
             0,
             file_size
-        )
-    )
-    db.commit()
-
-    # Update file_count for customer
-    db.execute(
-        "UPDATE customers SET file_count = file_count + 1 WHERE customer_id = ?",
-        (customer_id,)
-    )
-    db.commit()
-
-    # Record document version
-    db.execute(
-        """
-        INSERT INTO document_versions (
-            document_uuid,
-            customer_id,
-            version_path,
-            file_size,
-            file_hash,
-            comment,
-            uploaded_at
-        )
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-        """,
-        (
-            file_uuid,
-            customer_id,
-            file_path,
-            file_size,
-            file_hash,
-            "Initial upload",
-            datetime.utcnow().isoformat()
         )
     )
     db.commit()
