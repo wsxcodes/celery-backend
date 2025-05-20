@@ -9,7 +9,7 @@ from typing import List
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 
 from backend import config
-from backend.db.schemas.documents_schemas import (Document, DocumentUpdate,
+from backend.db.schemas.artefacts_schemas import (Artefact, DocumentUpdate,
                                                   DocumentVersion)
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
@@ -24,12 +24,12 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger.setLevel(logging.INFO)
 
 
-@router.get("/{uuid}", response_model=Document, response_model_exclude_none=False)
+@router.get("/{uuid}", response_model=Artefact, response_model_exclude_none=False)
 @log_endpoint
 async def get_document(
     uuid: str,
     db=Depends(get_db)
-) -> Document:
+) -> Artefact:
     # Query document metadata from database
     row = db.execute(
         "SELECT * FROM files WHERE uuid = ?",
@@ -45,14 +45,14 @@ async def get_document(
         raise HTTPException(status_code=404, detail="Document not found")
 
     # Convert database row to Document schema
-    document = Document(**dict(row))
+    document = Artefact(**dict(row))
     logger.info(f"get_document returning data for UUID {uuid}: %s", document.dict())
 
     logger.info(f"Retrieved document for UUID: {uuid}")
     return document
 
 
-@router.patch("/metadata/{uuid}", response_model=Document, response_model_exclude_none=False)
+@router.patch("/metadata/{uuid}", response_model=Artefact, response_model_exclude_none=False)
 @log_endpoint
 async def update_document_metadata(uuid: str, update: DocumentUpdate, db=Depends(get_db)):
     data = update.dict(exclude_unset=True)
@@ -84,7 +84,7 @@ async def update_document_metadata(uuid: str, update: DocumentUpdate, db=Depends
     if not row:
         raise HTTPException(status_code=404, detail="Document not found")
 
-    updated_doc = Document(**dict(row))
+    updated_doc = Artefact(**dict(row))
     logger.info(f"update_document_metadata returning updated document for UUID {uuid}: %s", updated_doc.dict())
     return updated_doc
 
@@ -96,7 +96,7 @@ async def delete_document(customer_id: str, db=Depends(get_db)):
     return False
 
 
-@router.get("/list/pending", response_model=List[Document])
+@router.get("/list/pending", response_model=List[Artefact])
 @log_endpoint
 async def list_pending_documents(limit: int = 10, db=Depends(get_db)):
     rows = db.execute(
@@ -104,6 +104,6 @@ async def list_pending_documents(limit: int = 10, db=Depends(get_db)):
         (limit,)
     ).fetchall()
 
-    documents = [Document(**dict(row)) for row in rows]
+    documents = [Artefact(**dict(row)) for row in rows]
     logger.info(f"Retrieved {len(documents)} pending documents (limit: {limit})")
     return documents
