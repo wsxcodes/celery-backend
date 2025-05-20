@@ -9,8 +9,7 @@ from typing import List
 from fastapi import APIRouter, Depends, File, Form, HTTPException
 
 from backend import config
-from backend.db.schemas.artefacts_schemas import (Artefact, DocumentUpdate,
-                                                  DocumentVersion)
+from backend.db.schemas.artefacts_schemas import (Artefact, ArtefactUpdate)
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
 
@@ -26,35 +25,35 @@ logger.setLevel(logging.INFO)
 
 @router.get("/{uuid}", response_model=Artefact, response_model_exclude_none=False)
 @log_endpoint
-async def get_document(
+async def get_artefact(
     uuid: str,
     db=Depends(get_db)
 ) -> Artefact:
-    # Query document metadata from database
+    # Query artefact metadata from database
     row = db.execute(
         "SELECT * FROM files WHERE uuid = ?",
         (uuid,)
     ).fetchone()
 
     if hasattr(row, "keys"):
-        logger.debug("get_document row keys: %s", row.keys())
-        logger.debug("get_document row data: %r", dict(row))
+        logger.debug("get_artefact row keys: %s", row.keys())
+        logger.debug("get_artefact row data: %r", dict(row))
 
     if not row:
-        logger.info(f"Document not found for UUID: {uuid}")
-        raise HTTPException(status_code=404, detail="Document not found")
+        logger.info(f"Artefact not found for UUID: {uuid}")
+        raise HTTPException(status_code=404, detail="Artefact not found")
 
-    # Convert database row to Document schema
-    document = Artefact(**dict(row))
-    logger.info(f"get_document returning data for UUID {uuid}: %s", document.dict())
+    # Convert database row to Artefact schema
+    artefact = Artefact(**dict(row))
+    logger.info(f"get_artefact returning data for UUID {uuid}: %s", artefact.dict())
 
-    logger.info(f"Retrieved document for UUID: {uuid}")
-    return document
+    logger.info(f"Retrieved artefact for UUID: {uuid}")
+    return artefact
 
 
 @router.patch("/metadata/{uuid}", response_model=Artefact, response_model_exclude_none=False)
 @log_endpoint
-async def update_document_metadata(uuid: str, update: DocumentUpdate, db=Depends(get_db)):
+async def update_document_metadata(uuid: str, update: ArtefactUpdate, db=Depends(get_db)):
     data = update.dict(exclude_unset=True)
     logger.info(f"update_document_metadata called for UUID {uuid} with data: %s", data)
 
