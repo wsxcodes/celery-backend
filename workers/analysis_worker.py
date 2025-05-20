@@ -31,7 +31,7 @@ def main():
         logger.info("Querying pending documents for analysis")
         pending_document = safe_request(
             request_type="GET",
-            url=config.API_URL + "/api/v1/document/list/pending?limit=1",
+            url=config.API_URL + "/api/v1/artefact/list/pending?limit=1",
             data={},
         )
         if not pending_document:
@@ -51,7 +51,7 @@ def main():
             logger.info("Starting analysis")
             safe_request(
                 request_type="PATCH",
-                url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+                url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
                 data={"analysis_status": "processing", "analysis_started_at": datetime.datetime.now().isoformat()},
             )
 
@@ -79,7 +79,7 @@ def main():
                 logger.info("Updating document data")
                 safe_request(
                     request_type="PATCH",
-                    url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+                    url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
                     data={"file_preview": preview_path},
                 )
 
@@ -98,7 +98,7 @@ def main():
             logger.info("Saving extracted text to database")
             safe_request(
                 request_type="PATCH",
-                url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+                url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
                 data={"document_raw_text": document_raw_text},
             )
 
@@ -133,7 +133,7 @@ def main():
             logger.info("Saving smart summary to database")
             safe_request(
                 request_type="PATCH",
-                url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+                url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
                 data={
                     "ai_category": data["top_category"],
                     "ai_sub_category": data["sub_category"],
@@ -156,7 +156,7 @@ def main():
             logger.info("Saving analysis criteria to database")
             safe_request(
                 request_type="PATCH",
-                url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+                url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
                 data={
                     "ai_analysis_criteria": data["message"]
                 }
@@ -167,7 +167,7 @@ def main():
             logger.info("Running AI analysis features & insights")
             document = safe_request(
                         request_type="GET",
-                        url=config.API_URL + f"/api/v1/document/{document_uuid}",
+                        url=config.API_URL + f"/api/v1/artefact/{document_uuid}",
                         data={},
                     )
             ai_analysis_criteria = document.json()["ai_analysis_criteria"]
@@ -182,7 +182,7 @@ def main():
             logger.info("Saving Analysis Features & Insights to database")
             safe_request(
                 request_type="PATCH",
-                url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+                url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
                 data={
                     "ai_features_and_insights": json.dumps(features_and_insights_dict)
                 }
@@ -193,7 +193,7 @@ def main():
             logger.info("Running alerts and actions prompt")
             document = safe_request(
                         request_type="GET",
-                        url=config.API_URL + f"/api/v1/document/{document_uuid}",
+                        url=config.API_URL + f"/api/v1/artefact/{document_uuid}",
                         data={},
                     )
 
@@ -227,7 +227,7 @@ def main():
             logger.info("Saving Analysis Features & Insights to database")
             safe_request(
                 request_type="PATCH",
-                url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+                url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
                 data={
                     "ai_alerts_and_actions": json.dumps(ai_alerts_and_actions)
                 }
@@ -251,7 +251,7 @@ def main():
             logger.info("Update Eterny.io legacy schema to database")
             safe_request(
                 request_type="PATCH",
-                url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+                url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
                 data={"ai_enterny_legacy_schema": json.dumps(legacy_schema_dict)},
             )
 
@@ -276,7 +276,7 @@ def main():
             logger.info("Marking document as processed")
             safe_request(
                 request_type="PATCH",
-                url=f"{config.API_URL}/api/v1/document/metadata/{document_uuid}",
+                url=f"{config.API_URL}/api/v1/artefact/metadata/{document_uuid}",
                 data=payload
             )
             logger.info("Analysis completed successfully")
@@ -286,7 +286,7 @@ def main():
             logger.info("Marking document as processed")
             safe_request(
                 request_type="PATCH",
-                url=config.API_URL + f"/api/v1/document/metadata/{document_uuid}",
+                url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
                 data={
                     "analysis_status": "processed",
                     "analysis_completed_at": datetime.datetime.now().isoformat(),
