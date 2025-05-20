@@ -10,6 +10,8 @@ ai_client = AzureOpenAI(
     api_version=config.OPENAI_API_VERSION
 )
 
+# XXX TODO migrate to SQLAlchemy
+# XXX TODO migrate away from SQLite
 
 def get_db():
     conn = sqlite3.connect(DB_PATH, check_same_thread=False)
