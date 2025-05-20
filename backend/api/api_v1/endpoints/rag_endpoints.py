@@ -12,7 +12,7 @@ from backend.db.schemas.rag_schemas import MessagePayload, RAGMessage
 from backend.decorators import log_endpoint
 from backend.dependencies import ai_client, get_db
 from backend.utils.helpers import (construct_docu_info_in_text,
-                                   update_tokens_spent_async)
+                                   )
 from backend.utils.prompt_generators import load_prompts
 
 logger = logging.getLogger(__name__)
@@ -105,11 +105,6 @@ async def ask_question_about_document(
         total_tokens = prompt_tokens + completion_tokens
 
         # XXX Record token usage asynchronously
-        # await update_tokens_spent_async(
-        #     document_uuid=document_uuid,
-        #     add_tokens_spent=total_tokens,
-        # )
-        # logger.info("Tokens spent updated for document %s", document_uuid)
 
         # Record the full answer on a separate DB connection to avoid closed DB issue
         full_answer = "".join(completion_chunks)
