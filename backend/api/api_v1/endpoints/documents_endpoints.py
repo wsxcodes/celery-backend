@@ -129,10 +129,6 @@ async def get_document(
     uuid: str,
     db=Depends(get_db)
 ) -> Document:
-    # XXX TODO assure document ownership
-    # if document.customer_id != customer_id:
-    #     raise HTTPException(status_code=403, detail="Document does not belong to this customer")
-
     # Query document metadata from database
     row = db.execute(
         "SELECT * FROM files WHERE uuid = ?",
@@ -163,10 +159,6 @@ async def update_document_metadata(uuid: str, update: DocumentUpdate, db=Depends
 
     if not data:
         raise HTTPException(status_code=400, detail="No valid fields to update")
-
-    # XXX TODO assure document ownership
-    # if document.customer_id != customer_id:
-    #     raise HTTPException(status_code=403, detail="Document does not belong to this customer")
 
     fields = []
     values = []
@@ -358,27 +350,11 @@ async def list_customer_document_versions(customer_id: str, db=Depends(get_db)) 
     return versions
 
 
-@router.delete("/delete/{customer_id}/{filename}")
+@router.delete("/delete/{document_uuid}")
 @log_endpoint
-async def delete_document(customer_id: str, filename: str, db=Depends(get_db)):
-    # XXX TODO assure document ownership
-    # if document.customer_id != customer_id:
-    #     raise HTTPException(status_code=403, detail="Document does not belong to this customer")
-
-    file_path = os.path.join(BASE_UPLOAD_DIR, customer_id, filename)
-    if not os.path.exists(file_path):
-        raise HTTPException(status_code=404, detail="File not found")
-    os.remove(file_path)
-
-    # Update file_count for customer
-    db.execute(
-        "UPDATE customers SET file_count = file_count - 1 WHERE customer_id = ? AND file_count > 0",
-        (customer_id,)
-    )
-    db.commit()
-
-    logger.info(f"Deleted file for customer {customer_id}: {filename}")
-    return {"status": "deleted", "customer_id": customer_id, "filename": filename}
+async def delete_document(customer_id: str, db=Depends(get_db)):
+    # XXX TODO
+    return False
 
 
 @router.get("/list/pending", response_model=List[Document])
