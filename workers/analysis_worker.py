@@ -7,7 +7,7 @@ import time
 from backend import config
 from backend.dependencies import ai_client
 from backend.utils import prompt_generators
-from backend.utils.helpers import safe_request, update_tokens_spent
+from backend.utils.helpers import safe_request
 from backend.utils.prompt_generators import run_ai_completition
 
 logging.basicConfig(level=logging.INFO)
