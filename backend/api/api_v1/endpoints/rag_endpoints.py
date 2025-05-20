@@ -31,20 +31,14 @@ logger.setLevel(logging.INFO)
 @router.get("/ask-document")
 @log_endpoint
 async def ask_question_about_document(
-    customer_id: str,
     document_uuid: str,
+    output_language: str,
     question: str = Query(...),
     db=Depends(get_db)
 ) -> EventSourceResponse:
     """RAG ask endpoint with streaming."""
     # Get customer output language
-    customer = await get_customer(customer_id, db)
-    output_language = customer["output_language"]
-    document = await get_document(document_uuid, db)
-
-    # Assure document ownership
-    if document.customer_id != customer_id:
-        raise HTTPException(status_code=403, detail="Document does not belong to this customer")
+    document = await get_artefact(document_uuid, db)
 
     conversation_history = await get_messages(document_uuid, order="asc", db=db)
 
