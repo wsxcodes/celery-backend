@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-@router.get("/ask-document")
+@router.get("/ask_document")
 @log_endpoint
 async def ask_question_about_document(
     document_uuid: str,
