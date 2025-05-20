@@ -30,7 +30,6 @@ class Artefact(BaseModel):
     uuid: str
     filename: str
     file_size: Optional[int] = None
-    file_hash: str
     file_preview: Optional[str] = ""
     uploaded_at: datetime
     updated_at: Optional[datetime] = None
