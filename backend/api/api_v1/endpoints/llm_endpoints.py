@@ -8,7 +8,6 @@ from sse_starlette.sse import EventSourceResponse
 
 from backend.decorators import log_endpoint
 from backend.dependencies import ai_client
-from backend.utils.helpers import update_tokens_spent_async
 
 logger = logging.getLogger(__name__)
 
@@ -64,11 +63,6 @@ async def chat_completion(
     )
 
     # XXX Record token usage asynchronously
-    # await update_tokens_spent_async(
-    #     document_uuid=document_uuid,
-    #     add_tokens_spent=usage["total_tokens"],
-    # )
-    # logger.info("Tokens spent updated for document %s", document_uuid)
 
     return {
         "status": "success",
@@ -129,14 +123,6 @@ async def chat_completion_streaming(
         logger.info("Token usage - prompt: %d, completion: %d, total: %d", prompt_tokens, completion_tokens, total_tokens)
 
         # XXX Record token usage asynchronously after streaming completes
-        # try:
-        #     await update_tokens_spent_async(
-        #         document_uuid=document_uuid,
-        #         add_tokens_spent=total_tokens,
-        #     )
-        #     logger.info("Tokens spent updated for document %s, total tokens: %d", document_uuid, total_tokens)
-        # except Exception as e:
-        #     logger.error("Failed to update tokens for document %s: %s", document_uuid, e)
 
         yield "data: [DONE]\n\n"
 
