@@ -11,8 +11,7 @@ from backend.api.api_v1.endpoints.artefacts_endpoints import get_artefact
 from backend.db.schemas.rag_schemas import MessagePayload, RAGMessage
 from backend.decorators import log_endpoint
 from backend.dependencies import ai_client, get_db
-from backend.utils.helpers import (construct_docu_info_in_text,
-                                   )
+from backend.utils.helpers import construct_docu_info_in_text
 from backend.utils.prompt_generators import load_prompts
 
 logger = logging.getLogger(__name__)
@@ -102,7 +101,7 @@ async def ask_question_about_document(
 
         # Compute and record token usage
         completion_tokens = sum(len(enc.encode(c)) for c in completion_chunks)
-        total_tokens = prompt_tokens + completion_tokens
+        total_tokens = prompt_tokens + completion_tokens  # NoQA
 
         # XXX Record token usage asynchronously
 
