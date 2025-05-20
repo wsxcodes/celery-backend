@@ -119,6 +119,5 @@ async def add_new_document(
         "status": "success",
         "customer_id": customer_id,
         "filename": filename,
-        "uuid": file_uuid,
         "file_size": file_size
     }

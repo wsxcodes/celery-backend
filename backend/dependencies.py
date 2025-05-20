@@ -32,7 +32,6 @@ def init_db():
             uuid TEXT NOT NULL UNIQUE,
             customer_id TEXT NOT NULL,
             filename TEXT NOT NULL,
-            file_preview TEXT,
             uploaded_at TEXT NOT NULL,
             analysis_status TEXT NOT NULL DEFAULT 'pending',
             analysis_started_at TEXT,
