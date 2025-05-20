@@ -71,7 +71,7 @@ async def chat_completion(
     }
 
 
-@router.get("/chat_completition-streaming")
+@router.get("/chat_completition/streaming")
 @log_endpoint
 async def chat_completion_streaming(
     document_uuid: str,
