@@ -86,13 +86,6 @@ async def update_artefact_metadata(uuid: str, update: ArtefactUpdate, db=Depends
     return updated_doc
 
 
-@router.delete("/delete/{artefact_uuid}")
-@log_endpoint
-async def delete_artefact(customer_id: str, db=Depends(get_db)):
-    # XXX TODO delete artefact from DB and filesystem
-    return False
-
-
 @router.get("/list/pending", response_model=List[Artefact])
 @log_endpoint
 async def list_pending_artefacts(limit: int = 10, db=Depends(get_db)):
@@ -103,4 +96,17 @@ async def list_pending_artefacts(limit: int = 10, db=Depends(get_db)):
 
     artefacts = [Artefact(**dict(row)) for row in rows]
     logger.info(f"Retrieved {len(artefacts)} pending artefacts (limit: {limit})")
+    return artefacts
+
+
+@router.get("/list/all", response_model=List[Artefact])
+@log_endpoint
+async def list_all_artefacts(limit: int = 10, offset: int = 0, db=Depends(get_db)):
+    rows = db.execute(
+        "SELECT * FROM files LIMIT ? OFFSET ?",
+        (limit, offset)
+    ).fetchall()
+
+    artefacts = [Artefact(**dict(row)) for row in rows]
+    logger.info(f"Retrieved {len(artefacts)} artefacts (limit: {limit}, offset: {offset})")
     return artefacts
