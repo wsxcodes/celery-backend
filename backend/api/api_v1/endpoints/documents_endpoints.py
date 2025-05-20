@@ -44,41 +44,36 @@ async def add_new_document(
         raise HTTPException(status_code=422, detail="customer_data must be valid JSON")
 
     # Ensure mutually exclusive inputs: either file or GCS info
-    if file and (bucket or document_path):
+    if file and (gcs_bucket or gcs_file_path):
         raise HTTPException(status_code=400, detail="Provide either a file or bucket+document_path, not both")
 
     # Validate that either a file is uploaded or GCS bucket and document_path are provided
     if file is None:
-        if not bucket or not document_path:
-            raise HTTPException(status_code=400, detail="Either upload a file or provide bucket and document_path")
+        if not gcs_bucket or not gcs_file_path:
+            raise HTTPException(status_code=400, detail="Either upload a file or provide gcs_bucket and gcs_file_path")
         # Download file from Google Cloud Storage
         gcs_client = storage.Client()
-        gcs_bucket = gcs_client.bucket(bucket)
-        blob = gcs_bucket.blob(document_path)
-        contents = blob.download_as_bytes()
-        filename = os.path.basename(document_path)
+        bucket = gcs_client.bucket(gcs_bucket)
+        blob = bucket.blob(gcs_file_path)
+        filename = os.path.basename(gcs_file_path)
+        customer_dir = os.path.join(BASE_UPLOAD_DIR, customer_id)
+        os.makedirs(customer_dir, exist_ok=True)
+        file_path = os.path.join(customer_dir, filename)
+        blob.download_to_filename(file_path)
+        with open(file_path, "rb") as f:
+            contents = f.read()
     else:
         contents = await file.read()
         filename = file.filename
-
-    customer_dir = os.path.join(BASE_UPLOAD_DIR, customer_id)
-    os.makedirs(customer_dir, exist_ok=True)
-    file_path = os.path.join(customer_dir, filename)
+        customer_dir = os.path.join(BASE_UPLOAD_DIR, customer_id)
+        os.makedirs(customer_dir, exist_ok=True)
+        file_path = os.path.join(customer_dir, filename)
+        with open(file_path, "wb") as buffer:
+            buffer.write(contents)
 
     # Compute metadata
     file_size = len(contents)
     file_uuid = customer_id + "_" + str(filename)
-
-    # Write file to disk
-    if file is None:
-        # Download directly to file_path from Google Cloud Storage
-        blob.download_to_filename(file_path)
-        # Read contents back if needed
-        with open(file_path, "rb") as f:
-            contents = f.read()
-    else:
-        with open(file_path, "wb") as buffer:
-            buffer.write(contents)
 
     # Delete existing document record and file for this UUID
     existing = db.execute(
