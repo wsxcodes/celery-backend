@@ -19,7 +19,7 @@ class AnalysisStatus(str, Enum):
     processed = "processed"
 
 
-class Document(BaseModel):
+class Artefact(BaseModel):
     id: int
     customer_id: str
     uuid: str
