@@ -92,19 +92,17 @@ async def add_new_document(
             analysis_status, analysis_started_at, analysis_completed_at,
             file_size
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             file_uuid,
             customer_id,
             filename,
             now_iso,
-            now_iso,
             'pending',
             None,
             None,
-            0,
-            file_size
+            file_size,
         )
     )
     db.commit()
