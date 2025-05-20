@@ -6,7 +6,7 @@ from pathlib import Path
 from fastapi import APIRouter, Depends, HTTPException
 
 from backend import config
-from backend.api.api_v1.endpoints.documents_endpoints import get_document
+from backend.api.api_v1.endpoints.artefacts_endpoints import get_artefact
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
 from backend.utils.extract_text import (extract_docx_text, extract_md_text,
@@ -28,7 +28,7 @@ logger.setLevel(logging.INFO)
 @log_endpoint
 async def extract_text_from_file(uuid: str, db=Depends(get_db)) -> str:
     """This endpoint will indetify type of file and extract text from it."""
-    document = await get_document(uuid=uuid, db=db)
+    document = await get_artefact(uuid=uuid, db=db)
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
 
@@ -70,7 +70,7 @@ async def extract_text_from_file(uuid: str, db=Depends(get_db)) -> str:
 async def extract_text_from_document(uuid: str, db=Depends(get_db)) -> str:
     """Convert PDF, DOC, DOCX, TXT, ODT to plaintext."""
 
-    document = await get_document(uuid=uuid, db=db)
+    document = await get_artefact(uuid=uuid, db=db)
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
 
@@ -128,7 +128,7 @@ async def extract_text_from_image(uuid: str, db=Depends(get_db)) -> str:
     # XXX TODO utilise LLM to extract text from image
     # XXX TODO LLM should extract metadata as well such as document type and any descriptive info it can produce really and store this as raw_text
 
-    image = await get_document(uuid=uuid, db=db)
+    image = await get_artefact(uuid=uuid, db=db)
     if not image:
         raise HTTPException(status_code=404, detail="Document not found")
 
