@@ -73,7 +73,7 @@ async def chat_completion(
 
 @router.get("/chat_completition/streaming")
 @log_endpoint
-async def chat_completion_streaming(
+async def streaming_chat_completion(
     document_uuid: str,
     system_message: str = Query(..., description="The system prompt"),
     user_message: str = Query(..., description="The user prompt"),
