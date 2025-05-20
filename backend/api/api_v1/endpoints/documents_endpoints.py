@@ -9,8 +9,7 @@ from typing import List
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 
 from backend import config
-from backend.db.schemas.documents_schemas import (Document, DocumentUpdate,
-                                                  DocumentVersion)
+from backend.db.schemas.artefacts_schemas import (Artefact, ArtefactUpdate)
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
 
