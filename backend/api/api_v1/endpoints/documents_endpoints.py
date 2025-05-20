@@ -67,7 +67,6 @@ async def add_new_document(
 
     # Compute metadata
     file_size = len(contents)
-    file_hash = hashlib.sha256(contents).hexdigest()
     file_uuid = str(uuid.uuid4())
 
     # Write file to disk
@@ -79,7 +78,7 @@ async def add_new_document(
     db.execute(
         """
         INSERT INTO files (
-            uuid, customer_id, filename, file_hash, uploaded_at, updated_at,
+            uuid, customer_id, filename, uploaded_at, updated_at,
             analysis_status, analysis_started_at, analysis_completed_at, analysis_cost,
             file_size
         )
@@ -89,7 +88,6 @@ async def add_new_document(
             file_uuid,
             customer_id,
             filename,
-            file_hash,
             now_iso,
             now_iso,
             'pending',
@@ -107,6 +105,5 @@ async def add_new_document(
         "customer_id": customer_id,
         "filename": filename,
         "uuid": file_uuid,
-        "file_hash": file_hash,
         "file_size": file_size
     }
