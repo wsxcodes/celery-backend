@@ -43,8 +43,6 @@ async def add_new_document(
     except json.JSONDecodeError:
         raise HTTPException(status_code=422, detail="customer_data must be valid JSON")
 
-    # XXX TODO adding new document must assure that if there is an artifact already it's deleted first
-
     # Validate that either a file is uploaded or GCS bucket and document_path are provided
     if file is None:
         if not bucket or not document_path:
@@ -70,6 +68,21 @@ async def add_new_document(
     # Write file to disk
     with open(file_path, "wb") as buffer:
         buffer.write(contents)
+
+
+    # Delete existing document record and file for this UUID
+    existing = db.execute(
+        "SELECT filename FROM files WHERE uuid = ?",
+        (file_uuid,),
+    ).fetchone()
+    if existing:
+        old_file_path = os.path.join(customer_dir, existing[0])
+        if os.path.exists(old_file_path):
+            os.remove(old_file_path)
+        db.execute(
+            "DELETE FROM files WHERE uuid = ?",
+            (file_uuid,),
+        )
 
     # Save metadata to DB
     now_iso = datetime.utcnow().isoformat()
