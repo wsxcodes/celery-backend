@@ -32,7 +32,6 @@ class Artefact(BaseModel):
     file_size: Optional[int] = None
     file_preview: Optional[str] = ""
     uploaded_at: datetime
-    updated_at: Optional[datetime] = None
     analysis_status: AnalysisStatus = AnalysisStatus.pending
     analysis_started_at: Optional[datetime] = None
     analysis_completed_at: Optional[datetime] = None
@@ -53,7 +52,6 @@ class Artefact(BaseModel):
 
 
 class ArtefactUpdate(BaseModel):
-    updated_at: Optional[datetime] = None
     file_preview: Optional[str] = ""
     analysis_status: AnalysisStatus = AnalysisStatus.pending
     analysis_started_at: Optional[datetime] = None
