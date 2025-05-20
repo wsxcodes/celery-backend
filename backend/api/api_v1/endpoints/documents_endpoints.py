@@ -35,7 +35,7 @@ async def add_new_document(
     file: Optional[UploadFile] = File(None),
     ai_analysis_mode: AImode = Form(...),
     ai_output_language: str = Form('Czech'),
-    webhook_url: str = Form(...),
+    eterny_api_webhook_url: str = Form(...),
     db=Depends(get_db),
 ) -> dict:
     try:
