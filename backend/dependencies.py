@@ -50,7 +50,8 @@ def init_db():
             ai_alerts_and_actions TEXT,
             ai_enterny_legacy_schema TEXT,
             file_size INTEGER,
-            document_raw_text TEXT
+            document_raw_text TEXT,
+            webhook_url TEXT
         )
     """)
     cursor.execute("PRAGMA foreign_keys = ON;")
