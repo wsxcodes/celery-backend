@@ -103,7 +103,7 @@ async def add_new_document(
             file_size,
             hash_sha256
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             file_uuid,
