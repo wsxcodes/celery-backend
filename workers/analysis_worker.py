@@ -46,6 +46,7 @@ def main():
 
             document_uuid = pending_documents[0]["uuid"]
             customer_id = pending_documents[0]["customer_id"]
+            output_language = pending_documents[0]["ai_output_language"]
             logger.info(f"Document to analyze: {document_uuid}")
 
             logger.info("Starting analysis")
@@ -73,16 +74,6 @@ def main():
                 url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
                 data={"document_raw_text": document_raw_text},
             )
-
-            # -----------------------------------------------------------------------------------------------------------------------------
-            # Get customer info
-            customer = safe_request(
-                request_type="GET",
-                url=config.API_URL + f"/api/v1/customer/{customer_id}",
-                data={}
-            )
-            output_language = customer.json().get("output_language", "English")
-            logger.info(f"Customer output language: {output_language}")
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Run the smart summary prompt
