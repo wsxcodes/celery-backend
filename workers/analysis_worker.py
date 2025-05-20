@@ -238,8 +238,25 @@ def main():
             logger.info("Analysis completed successfully")
 
             # -----------------------------------------------------------------------------------------------------------------------------
+            # Mark document as processed, update the cost
+            logger.info("Marking document as processed")
+            safe_request(
+                request_type="PATCH",
+                url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
+                data={
+                    "analysis_status": "processed",
+                    "analysis_completed_at": datetime.datetime.now().isoformat()
+                }
+            )
+            logger.info("Analysis completed successfully")
+
+            # -----------------------------------------------------------------------------------------------------------------------------
             # Execute the webhook
             logger.info("Executing the webhook")
+
+            # XXX TODO check if the webhook URL is responding
+            # XXX TODO apply loooong retry policy here
+            # XXX TODO question what to do if the webhook ultimately fails
 
             document = safe_request(
                 request_type="GET",
@@ -256,18 +273,6 @@ def main():
                 headers={"Content-Type": "application/json"},
             )
 
-            # -----------------------------------------------------------------------------------------------------------------------------
-            # Mark document as processed, update the cost
-            logger.info("Marking document as processed")
-            safe_request(
-                request_type="PATCH",
-                url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
-                data={
-                    "analysis_status": "processed",
-                    "analysis_completed_at": datetime.datetime.now().isoformat()
-                }
-            )
-            logger.info("Analysis completed successfully")
 
         else:
             logger.info("No pending documents found")
