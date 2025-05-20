@@ -7,7 +7,6 @@ import tiktoken
 from fastapi import APIRouter, Body, Depends, HTTPException, Query
 from sse_starlette.sse import EventSourceResponse
 
-from backend.api.api_v1.endpoints.customer_endpoints import get_customer
 from backend.api.api_v1.endpoints.documents_endpoints import get_document
 from backend.db.schemas.rag_schemas import MessagePayload, RAGMessage
 from backend.decorators import log_endpoint
