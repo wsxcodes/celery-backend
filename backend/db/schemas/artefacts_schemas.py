@@ -1,6 +1,7 @@
 from datetime import datetime
 from enum import Enum
 from typing import Optional
+from typing import Dict, Any, Optional
 
 from pydantic import BaseModel
 
@@ -45,9 +46,9 @@ class Artefact(BaseModel):
     ai_summary_short: Optional[str] = ""
     ai_summary_long: Optional[str] = ""
     ai_analysis_criteria: Optional[str] = ""
-    ai_features_and_insights: Optional[str] = ""
-    ai_alerts_and_actions: Optional[str] = ""
-    ai_enterny_legacy_schema: Optional[str] = ""
+    ai_features_and_insights: Optional[Any] = ""
+    ai_alerts_and_actions: Optional[Any] = ""
+    ai_eterny_legacy_schema: Optional[Any] = ""
     document_raw_text: Optional[str] = ""
     webhook_url: Optional[str] = ""
 
@@ -66,8 +67,8 @@ class ArtefactUpdate(BaseModel):
     ai_summary_short: Optional[str] = ""
     ai_summary_long: Optional[str] = ""
     ai_analysis_criteria: Optional[str] = ""
-    ai_features_and_insights: Optional[str] = ""
-    ai_alerts_and_actions: Optional[str] = ""
-    ai_enterny_legacy_schema: Optional[str] = ""
+    ai_features_and_insights: Optional[Any] = ""
+    ai_alerts_and_actions: Optional[Any] = ""
+    ai_eterny_legacy_schema: Optional[Any] = ""
     document_raw_text: Optional[str] = ""
     webhook_url: Optional[str] = ""
