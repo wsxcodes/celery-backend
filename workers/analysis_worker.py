@@ -261,8 +261,7 @@ def main():
                 url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
                 data={
                     "analysis_status": "processed",
-                    "analysis_completed_at": datetime.datetime.now().isoformat(),
-                    "health_score": random.randint(85, 95),  # XXX TODO calculate the health score
+                    "analysis_completed_at": datetime.datetime.now().isoformat()
                 }
             )
             logger.info("Analysis completed successfully")
