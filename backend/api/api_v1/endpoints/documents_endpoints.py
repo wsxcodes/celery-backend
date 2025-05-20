@@ -25,7 +25,7 @@ logger.setLevel(logging.INFO)
 
 @router.post("/{customer_id}")
 @log_endpoint
-async def add_new_document(
+async def add_document_for_analysis(
     customer_id: str,
     customer_data: str = Form(
         ...,
