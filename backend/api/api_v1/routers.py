@@ -7,10 +7,11 @@ from backend.api.api_v1.endpoints import (artefacts_endpoints,
 
 api_router = APIRouter()
 
-# Generic Endpoints
+# Documents Endpoints
 api_router.include_router(
-    generic_endpoints.router,
-    tags=["Generic"]
+    documents_endpoints.router,
+    prefix="/document",
+    tags=["Documents"]
 )
 
 # RAG Endpoints
@@ -27,11 +28,11 @@ api_router.include_router(
     tags=["LLM"]
 )
 
-# Documents Endpoints
+# Utils Endpoints
 api_router.include_router(
-    documents_endpoints.router,
-    prefix="/document",
-    tags=["Documents"]
+    utils_endpoints.router,
+    prefix="/utils",
+    tags=["Utils"]
 )
 
 # Artefacts Endpoints
@@ -41,9 +42,8 @@ api_router.include_router(
     tags=["Artefacts"]
 )
 
-# Customer Endpoints
+# Generic Endpoints
 api_router.include_router(
-    utils_endpoints.router,
-    prefix="/utils",
-    tags=["Utils"]
+    generic_endpoints.router,
+    tags=["Generic"]
 )
