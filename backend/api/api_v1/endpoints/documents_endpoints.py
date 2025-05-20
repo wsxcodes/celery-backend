@@ -2,6 +2,7 @@ import hashlib
 import logging
 import os
 import uuid
+import json
 from datetime import datetime
 from typing import Optional
 
@@ -27,15 +28,22 @@ logger.setLevel(logging.INFO)
 @log_endpoint
 async def add_new_document(
     customer_id: str,
-    customer_data: dict,
+    customer_data: str = Form(
+        ...,
+        description='Customer data JSON string. Example: {"customer_name": "Jan Filips"}'
+    ),
     bucket: Optional[str] = Form(None),
     document_path: Optional[str] = Form(None),
     file: Optional[UploadFile] = File(None),
-    output_language: str = Form(...),
     ai_analysis_mode: AImode = Form(...),
+    output_language: str = Form('Czech'),
     webhook_url: str = Form(...),
     db=Depends(get_db),
 ) -> dict:
+    try:
+        customer_data = json.loads(customer_data)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=422, detail="customer_data must be valid JSON")
 
     # XXX TODO adding new document must assure that if there is an artifact already it's deleted first
 
