@@ -5,12 +5,13 @@ import uuid
 from datetime import datetime
 from enum import Enum
 from typing import List, Optional
-from google.cloud import storage
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
+from google.cloud import storage
 
 from backend import config
-from backend.db.schemas.artefacts_schemas import (AImode, Artefact, ArtefactUpdate)
+from backend.db.schemas.artefacts_schemas import (AImode, Artefact,
+                                                  ArtefactUpdate)
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
 
