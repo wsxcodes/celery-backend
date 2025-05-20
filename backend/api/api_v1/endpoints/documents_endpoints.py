@@ -191,7 +191,7 @@ async def update_document_metadata(uuid: str, update: DocumentUpdate, db=Depends
 @router.delete("/delete/{document_uuid}")
 @log_endpoint
 async def delete_document(customer_id: str, db=Depends(get_db)):
-    # XXX TODO
+    # XXX TODO delete document from DB and filesystem
     return False
 
 
