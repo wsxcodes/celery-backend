@@ -4,12 +4,13 @@ import os
 import uuid
 from datetime import datetime
 from enum import Enum
-from typing import List
+from typing import List, Optional
+from google.cloud import storage
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 
 from backend import config
-from backend.db.schemas.artefacts_schemas import (Artefact, ArtefactUpdate)
+from backend.db.schemas.artefacts_schemas import (AImode, Artefact, ArtefactUpdate)
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
 
@@ -27,20 +28,37 @@ logger.setLevel(logging.INFO)
 @log_endpoint
 async def add_new_document(
     customer_id: str,
-    file: UploadFile = File(...),
-    db=Depends(get_db)
+    customer_data: dict,
+    bucket: Optional[str] = Form(None),
+    document_path: Optional[str] = Form(None),
+    file: Optional[UploadFile] = File(None),
+    output_language: str = Form(...),
+    ai_analysis_mode: AImode = Form(...),
+    webhook_url: str = Form(...),
+    db=Depends(get_db),
 ) -> dict:
+    # Validate that either a file is uploaded or GCS bucket and document_path are provided
+    if file is None:
+        if not bucket or not document_path:
+            raise HTTPException(status_code=400, detail="Either upload a file or provide bucket and document_path")
+        # Download file from Google Cloud Storage
+        gcs_client = storage.Client()
+        gcs_bucket = gcs_client.bucket(bucket)
+        blob = gcs_bucket.blob(document_path)
+        contents = blob.download_as_bytes()
+        filename = os.path.basename(document_path)
+    else:
+        contents = await file.read()
+        filename = file.filename
+
     customer_dir = os.path.join(BASE_UPLOAD_DIR, customer_id)
     os.makedirs(customer_dir, exist_ok=True)
-    file_path = os.path.join(customer_dir, file.filename)
+    file_path = os.path.join(customer_dir, filename)
 
     # Check if file already exists for customer
     if os.path.exists(file_path):
-        logger.info(f"File already exists for customer {customer_id}: {file.filename}")
+        logger.info(f"File already exists for customer {customer_id}: {filename}")
         raise HTTPException(status_code=409, detail="File already exists!")
-
-    # Read entire file content into memory
-    contents = await file.read()
 
     # Compute metadata
     file_size = len(contents)
@@ -65,7 +83,7 @@ async def add_new_document(
         (
             file_uuid,
             customer_id,
-            file.filename,
+            filename,
             file_hash,
             now_iso,
             now_iso,
@@ -111,11 +129,11 @@ async def add_new_document(
     )
     db.commit()
 
-    logger.info(f"Uploaded file for customer {customer_id}: {file.filename} ({file_size} bytes)")
+    logger.info(f"Uploaded file for customer {customer_id}: {filename} ({file_size} bytes)")
     return {
         "status": "success",
         "customer_id": customer_id,
-        "filename": file.filename,
+        "filename": filename,
         "uuid": file_uuid,
         "file_hash": file_hash,
         "file_size": file_size
