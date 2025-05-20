@@ -3,6 +3,8 @@ import os
 from datetime import datetime
 from enum import Enum
 from typing import List
+from backend.db.schemas.artefacts_schemas import Artefact
+import json
 
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -41,8 +43,17 @@ async def get_artefact(
         logger.info(f"Artefact not found for UUID: {uuid}")
         raise HTTPException(status_code=404, detail="Artefact not found")
 
-    # Convert database row to Artefact schema
-    artefact = Artefact(**dict(row))
+    # Convert these rows to JSON since we're currently storing it as a string due to SQLite limitations
+    artefact_dict = dict(row)
+    for key in ["ai_features_and_insights", "ai_alerts_and_actions", "ai_eterny_legacy_schema"]:
+        if key in artefact_dict and artefact_dict[key]:
+            try:
+                artefact_dict[key] = json.loads(artefact_dict[key])
+            except json.JSONDecodeError:
+                logger.warning(f"Field {key} could not be JSON decoded, setting to None")
+                artefact_dict[key] = None
+
+    artefact = Artefact(**artefact_dict)
     logger.info(f"get_artefact returning data for UUID {uuid}: %s", artefact.dict())
 
     logger.info(f"Retrieved artefact for UUID: {uuid}")
