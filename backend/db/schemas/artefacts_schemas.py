@@ -48,7 +48,7 @@ class Artefact(BaseModel):
     health_score: Optional[int] = 0
 
 
-class DocumentUpdate(BaseModel):
+class ArtefactUpdate(BaseModel):
     updated_at: Optional[datetime] = None
     file_preview: Optional[str] = ""
     analysis_status: AnalysisStatus = AnalysisStatus.pending
@@ -68,13 +68,3 @@ class DocumentUpdate(BaseModel):
     document_raw_text: Optional[str] = ""
     health_score: Optional[int] = 0
     ai_enterny_legacy_schema: Optional[str] = ""
-
-
-class DocumentVersion(BaseModel):
-    customer_id: str
-    document_uuid: str
-    version_path: str
-    file_size: int
-    file_hash: str
-    comment: str
-    uploaded_at: datetime
