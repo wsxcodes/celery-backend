@@ -43,6 +43,10 @@ async def add_new_document(
     except json.JSONDecodeError:
         raise HTTPException(status_code=422, detail="customer_data must be valid JSON")
 
+    # Ensure mutually exclusive inputs: either file or GCS info
+    if file and (bucket or document_path):
+        raise HTTPException(status_code=400, detail="Provide either a file or bucket+document_path, not both")
+
     # Validate that either a file is uploaded or GCS bucket and document_path are provided
     if file is None:
         if not bucket or not document_path:
