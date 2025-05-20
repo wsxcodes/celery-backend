@@ -53,15 +53,6 @@ def init_db():
             health_score INTEGER DEFAULT 0
         )
     """)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS customers (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            customer_id TEXT NOT NULL UNIQUE,
-            output_language TEXT DEFAULT 'Czech',
-            ai_mode TEXT DEFAULT 'standard' CHECK(ai_mode IN ('standard', 'detailed')),
-            file_count INTEGER NOT NULL
-        )
-    """)
     cursor.execute("PRAGMA foreign_keys = ON;")
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS messages (
@@ -73,18 +64,4 @@ def init_db():
             FOREIGN KEY (document_uuid) REFERENCES files(uuid) ON DELETE CASCADE
         )
     """)
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS document_versions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            customer_id TEXT NOT NULL,
-            document_uuid TEXT NOT NULL,
-            version_path TEXT NOT NULL,
-            file_hash TEXT NOT NULL,
-            file_size INTEGER,
-            comment TEXT NOT NULL,
-            uploaded_at TEXT NOT NULL,
-            FOREIGN KEY (document_uuid) REFERENCES files(uuid) ON DELETE CASCADE
-        )
-    """)
-    conn.commit()
     conn.close()
