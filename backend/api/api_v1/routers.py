@@ -37,7 +37,7 @@ api_router.include_router(
 # Artefacts Endpoints
 api_router.include_router(
     artefacts_endpoints.router,
-    prefix="/artefacts",
+    prefix="/artefact",
     tags=["Artefacts"]
 )
 
