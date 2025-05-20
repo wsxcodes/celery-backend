@@ -21,12 +21,7 @@ prompts = prompt_generators.load_prompts()
 
 # XXX TODO celery workers with backoff strategy
 
-# XXX TODO encrypt files
-
-
-# XXX ISSUE TODO azure hosted gpt-4.1 limits.....
-# INFO:httpx:HTTP Request: POST https://pavel-mak6dt2h-eastus2.cognitiveservices.azure.com/openai/deployments/gpt-4.1/chat/completions?api-version=2025-01-01-preview
-# "HTTP/1.1 429 Too Many Requests"
+# XXX TODO record the tokens spent in the database and provide reporting endpoint
 
 
 def main():
@@ -283,13 +278,6 @@ def main():
                 data=payload
             )
             logger.info("Analysis completed successfully")
-
-            # -----------------------------------------------------------------------------------------------------------------------------
-            # Calculate the health score
-            # XXX TODO ai heath score analysis (utilise the prompt document_health_approximation)
-            # XXX TODO if the document is epxired, significantly degrade document health score
-            # XXX TODO if the document is missing signatures, significantly degrade document health score
-            # XXX TODO if the document ma zavazne pochybenia, significantly degrade document health score
 
             # -----------------------------------------------------------------------------------------------------------------------------
             # Record the tokens spent
