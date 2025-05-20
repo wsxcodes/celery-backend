@@ -38,7 +38,7 @@ def init_db():
             analysis_completed_at TEXT,
             ai_output_language TEXT,
             ai_analysis_mode TEXT DEFAULT 'standard',
-            ai_alert TEXT,
+            ai_alert_status TEXT,
             ai_expires TEXT,
             ai_is_expired INTEGER,
             ai_category TEXT,
