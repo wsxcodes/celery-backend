@@ -1,12 +1,10 @@
-import hashlib
 import logging
 import os
-import uuid
 from datetime import datetime
 from enum import Enum
 from typing import List
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from backend import config
 from backend.db.schemas.artefacts_schemas import Artefact, ArtefactUpdate
