@@ -34,7 +34,7 @@ async def add_new_document(
     document_path: Optional[str] = Form(None),
     file: Optional[UploadFile] = File(None),
     ai_analysis_mode: AImode = Form(...),
-    output_language: str = Form('Czech'),
+    ai_output_language: str = Form('Czech'),
     webhook_url: str = Form(...),
     db=Depends(get_db),
 ) -> dict:
@@ -96,7 +96,7 @@ async def add_new_document(
         """
         INSERT INTO files (
             uuid, customer_id, filename, uploaded_at,
-            analysis_status, analysis_started_at, analysis_completed_at,
+            ai_output_language, ai_analysis_mode, analysis_status, analysis_started_at, analysis_completed_at,
             file_size
         )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -106,6 +106,8 @@ async def add_new_document(
             customer_id,
             filename,
             now_iso,
+            ai_output_language,
+            ai_analysis_mode,
             'pending',
             None,
             None,
