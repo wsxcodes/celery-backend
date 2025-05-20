@@ -209,7 +209,7 @@ def main():
             logger.info(f"Customer AI mode: {customer['ai_mode']}")
 
             document_extra2 = ""
-            if customer["ai_mode"] == "pedantic":
+            if customer["ai_mode"] == "detailed":
                 document_extra2 = "analysis_criteria = \"{ai_analysis_criteria}\"\nfeatures_and_insights = \"{ai_features_and_insights}\"\n\n"
 
             features_and_insights = prompts["alerts_and_actions"]
