@@ -69,7 +69,6 @@ async def add_new_document(
     with open(file_path, "wb") as buffer:
         buffer.write(contents)
 
-
     # Delete existing document record and file for this UUID
     existing = db.execute(
         "SELECT filename FROM files WHERE uuid = ?",
