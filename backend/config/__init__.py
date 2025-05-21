@@ -27,3 +27,10 @@ OPENAI_API_VERSION = os.getenv("OPENAI_API_VERSION", "2025-01-01-preview")
 DB_PATH = os.getenv("DB_PATH", os.path.join(ROOT_DIR, "data", "file_records.db"))
 
 BASE_UPLOAD_DIR = os.getenv("BASE_UPLOAD_DIR", "MISSING-BASE_UPLOAD_DIR")
+
+RABBITMQ_USER = os.getenv("RABBITMQ_USER", "eternyiq")
+RABBITMQ_PASS = os.getenv("RABBITMQ_PASS", "eternyiq")
+RABBITMQ_HOST = os.getenv("RABBITMQ_HOST", "eternyiq-rabbitmq")
+RABBITMQ_VHOST = os.getenv("RABBITMQ_VHOST", "eternyiq")
+RABBITMQ_PORT = os.getenv("RABBITMQ_PORT", 5672)
+RABBITMQ_URL = os.getenv("RABBITMQ_URL", f"amqp://{RABBITMQ_USER}:{RABBITMQ_PASS}@{RABBITMQ_HOST}:{RABBITMQ_PORT}/{RABBITMQ_VHOST}")
