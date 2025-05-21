@@ -31,6 +31,62 @@ services:
       timeout: 5s
       retries: 5
 
+  eternyiq-rabbitmq:
+    image: rabbitmq:latest
+    container_name: eternyiq-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+      - RABBITMQ_VHOST=${RABBITMQ_VHOST}
+      - RABBITMQ_NODENAME=rabbit@eternyiq-rabbitmq
+      - RABBITMQ_MNESIA_DIR=/var/lib/rabbitmq/mnesia
+      - RABBITMQ_LOG_DIR=/var/lib/rabbitmq/log
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - ./data/rabbitmq_data:/var/lib/rabbitmq
+      - ./config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./scripts/init_rabbitmq.sh:/docker-entrypoint-initdb.d/init_rabbitmq.sh
+      - ./scripts/enable_stable_flags.sh:/docker-entrypoint-initdb.d/enable_stable_flags.sh
+    user: "0:0"
+    command: >
+      sh -c "/docker-entrypoint-initdb.d/init_rabbitmq.sh &&
+            /docker-entrypoint-initdb.d/enable_stable_flags.sh &&
+            rabbitmq-server"
+
+  eternyiq-redis:
+    image: redis:latest
+    container_name: eternyiq-redis
+    environment:
+      - TZ=Europe/Prague
+      - REDIS_PASSWORD
+    ports:
+      - "6379:6379"
+    command: /bin/bash /usr/local/etc/redis/start_redis.sh
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a ${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    volumes:
+      - ./data/redis_data:/data
+      - ./config/redis.conf.template:/usr/local/etc/redis/redis.conf.template
+      - ./scripts/start_redis.sh:/usr/local/etc/redis/start_redis.sh
+    user: "0:0"
+
   eternyiq-flower:
     build: .
     container_name: eternyiq-flower
