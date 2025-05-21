@@ -14,7 +14,7 @@ services:
         max-size: "10m"
         max-file: "10"
     environment:
-      - TZ=Europe/Bratislava
+      - TZ=Europe/Prague
     volumes:
       - ./data:/code/data
     command:
@@ -96,7 +96,7 @@ services:
     env_file:
       - .env
     environment:
-      - TZ=Europe/Frankfurt
+      - TZ=Europe/Prague
       - FLOWER_BASIC_AUTH=${RABBITMQ_USER}:${RABBITMQ_PASS}
       - CELERY_BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@${RABBITMQ_HOST}:5672/${RABBITMQ_VHOST}
       - PYTHONPATH=/code
