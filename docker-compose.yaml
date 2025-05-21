@@ -1,7 +1,7 @@
 services:
-  eterny-iq:
+  eternyiq-api:
     build: .
-    container_name: eterny-iq
+    container_name: eternyiq-api
     ports:
       - 8880:8880
     env_file:
@@ -30,6 +30,25 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  eternyiq-flower:
+    build: .
+    container_name: eternyiq-flower
+    command: /usr/local/bin/celery -A backend.core.celery flower --broker=amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@${RABBITMQ_HOST}:5672/${RABBITMQ_VHOST} --broker_api=http://${RABBITMQ_USER}:${RABBITMQ_PASS}@${RABBITMQ_HOST}:15672/api/ --basic_auth=${RABBITMQ_USER}:${RABBITMQ_PASS}
+    ports:
+      - "5555:5555"
+    env_file:
+      - .env
+    environment:
+      - TZ=Europe/Frankfurt
+      - FLOWER_BASIC_AUTH=${RABBITMQ_USER}:${RABBITMQ_PASS}
+      - CELERY_BROKER_URL=amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@${RABBITMQ_HOST}:5672/${RABBITMQ_VHOST}
+      - PYTHONPATH=/code
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "3"
 
 volumes:
   data_volume: {}
