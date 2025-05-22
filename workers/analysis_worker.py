@@ -65,6 +65,36 @@ def ping_analysis_worker(word: str) -> str:
     max_retries=10,
     priority=5
 )
+def generate_analysis_criteria(document_uuid: str, output_language: str, tokens_spent: int) -> None:
+    logger.info("Running AI analysis criteria")
+    analysis_criteria = prompts["analysis_criteria"]
+    document = get_document(document_uuid=document_uuid)
+    document_raw_text = document["document_raw_text"]
+    data = run_ai_completition(ai_client=ai_client, prompt=analysis_criteria, document_text=document_raw_text, output_language=output_language)
+
+    usage = data.get("usage")
+    tokens_spent += usage["total_tokens"]
+
+    logger.info("Saving analysis criteria to database")
+    safe_request(
+        request_type="PATCH",
+        url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
+        data={
+            "ai_analysis_criteria": data["message"]
+        }
+    )
+    logger.info("Handing over to XXX")
+    # XXX
+
+@celery_app.task(
+    acks_late=True,
+    queue='ai-analysis-queue',
+    autoretry_for=(Exception,),
+    retry_backoff=1,
+    retry_jitter=True,
+    max_retries=10,
+    priority=5
+)
 def generate_smart_summary(document_uuid: str, output_language: str, tokens_spent: int) -> None:
     logger.info("Running AI smart summary")
 
@@ -98,8 +128,12 @@ def generate_smart_summary(document_uuid: str, output_language: str, tokens_spen
             "ai_is_expired": ai_is_expired
         }
     )
-    logger.info("Hading over to XXX")
-    # XXX
+    logger.info("Hading over to generate_analysis_criteria")
+    generate_analysis_criteria.delay(
+        document_uuid=document_uuid,
+        output_language=output_language,
+        tokens_spent=tokens_spent
+    )
 
 
 @celery_app.task(
