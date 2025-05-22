@@ -76,7 +76,7 @@ def house_clean(document_uuid: str) -> None:
     autoretry_for=(Exception,),
     retry_backoff=1,
     retry_jitter=True,
-    max_retries=100,
+    max_retries=1000,
     priority=5
 )
 def execute_webhook(document_uuid: str) -> None:
