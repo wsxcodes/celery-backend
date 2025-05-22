@@ -34,3 +34,7 @@ RABBITMQ_HOST = os.getenv("RABBITMQ_HOST", "eternyiq-rabbitmq")
 RABBITMQ_VHOST = os.getenv("RABBITMQ_VHOST", "eternyiq")
 RABBITMQ_PORT = os.getenv("RABBITMQ_PORT", 5672)
 RABBITMQ_BROKER = f"amqp://{RABBITMQ_USER}:{RABBITMQ_PASS}@{RABBITMQ_HOST}/{RABBITMQ_VHOST}"
+
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
+REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "eternyiq")
