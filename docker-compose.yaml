@@ -127,7 +127,7 @@ services:
 
   eternyiq-ai-analysis-worker:
     build: .
-    container_name: fugu-ai-analysis-worker
+    container_name: ai-analysis-worker
     depends_on:
       - eternyiq-rabbitmq
     command: >
