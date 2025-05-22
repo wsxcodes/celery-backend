@@ -3,25 +3,18 @@ import logging
 import os
 from datetime import datetime
 from enum import Enum
-from typing import List
-
-from fastapi import APIRouter, HTTPException
-
-from backend import config
-from backend.db.schemas.artefacts_schemas import Artefact, ArtefactUpdate
-from backend.decorators import log_endpoint
-
-import logging
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from celery.result import AsyncResult
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from fastapi.exceptions import HTTPException
-from backend.decorators import log_endpoint
 
+from backend import config
 from backend.core.celery import celery_app
+from backend.db.schemas.artefacts_schemas import Artefact, ArtefactUpdate
 from backend.db.schemas.rabbitmq_schemas import Msg
-
+from backend.decorators import log_endpoint
+from workers.analysis_worker import test_retry
 
 logger = logging.getLogger(__name__)
 
@@ -54,25 +47,7 @@ async def ping_ai_analysis_celery(word: str) -> Dict[str, Any]:
     logger.debug("ping_ai_analysis_celery route")
     try:
         task = celery_app.send_task(
-            "backend.workers.ai_analysis.ping_ai_analysis_celery",
-            args=[word],
-        )
-    except Exception as e:
-        logger.error(f"Failed to start Celery worker: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to start Celery worker")
-
-    return {"id": task.id}
-
-
-
-@router.post("/ping-ai-inbox-invader-celery", response_model=Dict[str, Any], status_code=201)
-@log_endpoint
-async def ping_ai_inbox_invader_celery(word: str) -> Dict[str, Any]:
-    """Test Celery worker."""
-    logger.debug("ping_inbox_invader_celery route")
-    try:
-        task = celery_app.send_task(
-            "backend.workers.ai_inbox_invader.ping_inbox_invader_celery",
+            "backend.workers.ai_analysis.ping_analysis_worker",
             args=[word],
         )
     except Exception as e:
