@@ -66,8 +66,28 @@ def ping_analysis_worker(word: str) -> str:
     priority=5
 )
 def map_eterny_legacy_schemas(document_uuid: str, output_language: str, tokens_spent: int) -> None:
-    # XXX TODO
-    ...
+    logger.info("Mapping existing Eterny.io Document Schemas")
+    document = get_document(document_uuid=document_uuid)
+    document_raw_text = document["document_raw_text"]
+    simple_prompt = prompts["map_existing_eterny.io_schemas"]
+
+    with open("prompts/prompts.json", "r") as f:
+        eterny_legacy_schema = f.read()
+
+    document_raw_text += "\n\n schema:\n" + eterny_legacy_schema
+    data = run_ai_completition(ai_client=ai_client, prompt=simple_prompt, document_text=document_raw_text, output_language="English")
+    legacy_schema_dict = json.loads(data["message"])
+
+    usage = data.get("usage")
+    tokens_spent += usage["total_tokens"]
+
+    logger.info("Update Eterny.io legacy schema to database")
+    safe_request(
+        request_type="PATCH",
+        url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
+        data={"ai_eterny_legacy_schema": json.dumps(legacy_schema_dict)},
+    )
+    # XXX handover
 
 
 @celery_app.task(
