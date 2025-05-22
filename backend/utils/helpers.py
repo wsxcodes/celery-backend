@@ -1,8 +1,9 @@
 import logging
 import re
-from backend import config
 
 import requests
+
+from backend import config
 
 logger = logging.getLogger(__name__)
 
