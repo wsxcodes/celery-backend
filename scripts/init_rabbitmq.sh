@@ -1,4 +1,3 @@
-
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ENV_FILE="$SCRIPT_DIR/../.env"
 if [ -f "$ENV_FILE" ]; then
@@ -69,6 +68,8 @@ sleep 10
 
 # Check if RabbitMQ is ready
 rabbitmqctl await_startup
+echo "Enabling all stable feature flags..."
+rabbitmqctl enable_feature_flag all
 
 # Check if user exists
 if rabbitmqctl list_users | grep -q "^${RABBITMQ_USER}\b"; then
