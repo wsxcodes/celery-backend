@@ -116,6 +116,23 @@ services:
         max-size: "1m"
         max-file: "3"
 
+  eternyiq-ai-analysis-worker:
+    build: .
+    container_name: fugu-ai-analysis-worker
+    command: sh -c 'celery -A backend.core.celery worker -Q ai-analysis-queue -c ${AI_ANALYSIS_WORKERS:-4} -l info -P prefork -n ai_analysis@%h'
+    env_file:
+      - .env
+    environment:
+      - TZ=Europe/Prague
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        max-file: "3"
+    volumes:
+      - ./data:/code/data
+
+
 volumes:
   data_volume: {}
   cert_volume: {}
