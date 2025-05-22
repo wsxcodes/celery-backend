@@ -38,3 +38,5 @@ RABBITMQ_BROKER = f"amqp://{RABBITMQ_USER}:{RABBITMQ_PASS}@{RABBITMQ_HOST}/{RABB
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
 REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "eternyiq")
+
+AI_ANALYSIS_WORKERS = int(os.getenv("AI_ANALYSIS_WORKERS", 4))
