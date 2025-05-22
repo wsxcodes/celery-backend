@@ -18,7 +18,21 @@ def handle_task_failure(**kwargs):
         logger.error(f"MaxRetriesExceededError: Maximum retry attempts exceeded for task {kwargs['task_id']}")
 
 
-@celery_app.task(acks_late=True, queue='ai-notifications-queue', priority=10)
+@celery_app.task(
+    bind=True,
+    acks_late=True,
+    queue='ai-analysis-queue',
+    autoretry_for=(Exception,),
+    retry_backoff=1,  # 1-second backoff
+    retry_jitter=True,  # Apply jitter for randomness
+    max_retries=900,  # Roughly 15 minutes of retries
+    priority=10
+)
+def test_retry(self):
+    raise Exception('Test exception')
+
+
+@celery_app.task(acks_late=True, queue='ai-analysis-queue', priority=10)
 def ping_analysis_worker(word: str) -> str:
     logger.info("Processing word: %s", word)
     result = f"Processed word: {word}"
