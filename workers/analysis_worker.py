@@ -65,6 +65,20 @@ def ping_analysis_worker(word: str) -> str:
     max_retries=10,
     priority=5
 )
+def generate_alerts_and_actions(document_uuid: str, output_language: str, tokens_spent: int) -> None:
+    # XXX TODO
+    ...
+
+
+@celery_app.task(
+    acks_late=True,
+    queue='ai-analysis-queue',
+    autoretry_for=(Exception,),
+    retry_backoff=1,
+    retry_jitter=True,
+    max_retries=10,
+    priority=5
+)
 def generrate_features_and_insights(document_uuid: str, output_language: str, tokens_spent: int) -> None:
     logger.info("Running AI analysis features & insights")
     document = get_document(document_uuid=document_uuid)
@@ -86,7 +100,12 @@ def generrate_features_and_insights(document_uuid: str, output_language: str, to
             "ai_features_and_insights": json.dumps(features_and_insights_dict)
         }
     )
-    # XXX TODO handover to XXX
+    logger.info("Handing over to generate_alerts_and_actions")
+    generate_alerts_and_actions.delay(
+        document_uuid=document_uuid,
+        output_language=output_language,
+        tokens_spent=tokens_spent
+    )
 
 
 @celery_app.task(
