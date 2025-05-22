@@ -1,7 +1,6 @@
 import datetime
 import json
 import logging
-import time
 
 from celery.exceptions import MaxRetriesExceededError
 from celery.signals import task_failure
@@ -102,7 +101,6 @@ def mark_off_document_record_cost(document_uuid: str, output_language: str, toke
     )
 
 
-
 @celery_app.task(
     acks_late=True,
     queue='ai-analysis-queue',
@@ -145,7 +143,6 @@ def mark_off_ai_alert(document_uuid: str, output_language: str, tokens_spent: in
         output_language=output_language,
         tokens_spent=tokens_spent
     )
-
 
 
 @celery_app.task(
