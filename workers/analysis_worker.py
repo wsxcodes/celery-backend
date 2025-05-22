@@ -57,14 +57,29 @@ def ping_analysis_worker(word: str) -> str:
 
 
 @celery_app.task(
+    name='backend.workers.ai_analysis.extract_text_from_document',
+    acks_late=True,
+    queue='ai-analysis-queue',
+    autoretry_for=(Exception,),
+    retry_backoff=1,
+    retry_jitter=True,
+    max_retries=10,
+    priority=5
+)
+def extract_text_from_document(document_uuid: str, tokens_spent: int) -> None:
+    # XXX TODO
+    ...
+
+
+@celery_app.task(
     name='backend.workers.ai_analysis.analyse_document',
     acks_late=True,
     queue='ai-analysis-queue',
     autoretry_for=(Exception,),
     retry_backoff=1,
     retry_jitter=True,
-    max_retries=900,
-    priority=10
+    max_retries=10,
+    priority=5
 )
 def analyse_document(document_uuid: str) -> None:
     logger.info(f"Document to analyze: {document_uuid}")
