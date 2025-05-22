@@ -39,7 +39,7 @@ services:
       - "15672:15672"
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
-      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
       - RABBITMQ_VHOST=${RABBITMQ_VHOST}
       - RABBITMQ_NODENAME=rabbit@eternyiq-rabbitmq
       - RABBITMQ_MNESIA_DIR=/var/lib/rabbitmq/mnesia
