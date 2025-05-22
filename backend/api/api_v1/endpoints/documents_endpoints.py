@@ -78,6 +78,7 @@ async def add_document_for_analysis(
     # Compute metadata
     file_size = len(contents)
     file_uuid = customer_id + "_" + str(filename)
+    file_uuid = file_uuid.replace(" ", "_").replace("-", "_")
 
     # Delete existing document record and file for this UUID
     existing = db.execute(
