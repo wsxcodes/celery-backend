@@ -65,6 +65,7 @@ def ping_analysis_worker(word: str) -> str:
     priority=5
 )
 def house_clean(document_uuid: str) -> None:
+    document = get_document(document_uuid=document_uuid)
     # XXX TODO delete document from the filesystem
     ...
 
