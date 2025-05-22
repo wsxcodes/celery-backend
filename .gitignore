@@ -155,3 +155,5 @@ xxx.py
 # Database
 data/file_records.db
 data/uploads/*
+data/mapping/*
+data/rabbitmq_data/*
