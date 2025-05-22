@@ -65,6 +65,39 @@ def ping_analysis_worker(word: str) -> str:
     max_retries=10,
     priority=5
 )
+def generrate_features_and_insights(document_uuid: str, output_language: str, tokens_spent: int) -> None:
+    logger.info("Running AI analysis features & insights")
+    document = get_document(document_uuid=document_uuid)
+            
+    ai_analysis_criteria = document["ai_analysis_criteria"]
+
+    features_and_insights = prompts["features_and_insights"]
+    data = run_ai_completition(ai_client=ai_client, prompt=features_and_insights, document_extra1=ai_analysis_criteria, output_language=output_language, inject_date=True)
+    features_and_insights_dict = data["features_and_insights"]
+
+    usage = data.get("usage")
+    tokens_spent += usage["total_tokens"]
+
+    logger.info("Saving Analysis Features & Insights to database")
+    safe_request(
+        request_type="PATCH",
+        url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
+        data={
+            "ai_features_and_insights": json.dumps(features_and_insights_dict)
+        }
+    )
+    # XXX TODO handover to XXX
+
+
+@celery_app.task(
+    acks_late=True,
+    queue='ai-analysis-queue',
+    autoretry_for=(Exception,),
+    retry_backoff=1,
+    retry_jitter=True,
+    max_retries=10,
+    priority=5
+)
 def generate_analysis_criteria(document_uuid: str, output_language: str, tokens_spent: int) -> None:
     logger.info("Running AI analysis criteria")
     analysis_criteria = prompts["analysis_criteria"]
@@ -83,8 +116,13 @@ def generate_analysis_criteria(document_uuid: str, output_language: str, tokens_
             "ai_analysis_criteria": data["message"]
         }
     )
-    logger.info("Handing over to XXX")
-    # XXX
+    logger.info("Handing over to generrate_features_and_insights")
+    generrate_features_and_insights.delay(
+        document_uuid=document_uuid,
+        output_language=output_language,
+        tokens_spent=tokens_spent
+    )
+
 
 @celery_app.task(
     acks_late=True,
