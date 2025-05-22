@@ -65,6 +65,20 @@ def ping_analysis_worker(word: str) -> str:
     max_retries=10,
     priority=5
 )
+def mark_off_ai_alert(document_uuid: str, output_language: str, tokens_spent: int) -> None:
+    # XXX TODO
+    ...
+
+
+@celery_app.task(
+    acks_late=True,
+    queue='ai-analysis-queue',
+    autoretry_for=(Exception,),
+    retry_backoff=1,
+    retry_jitter=True,
+    max_retries=10,
+    priority=5
+)
 def map_eterny_legacy_schemas(document_uuid: str, output_language: str, tokens_spent: int) -> None:
     logger.info("Mapping existing Eterny.io Document Schemas")
     document = get_document(document_uuid=document_uuid)
@@ -87,7 +101,12 @@ def map_eterny_legacy_schemas(document_uuid: str, output_language: str, tokens_s
         url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
         data={"ai_eterny_legacy_schema": json.dumps(legacy_schema_dict)},
     )
-    # XXX handover
+    logger.info("Handing over to mark_off_ai_alert")
+    mark_off_ai_alert.delay(
+        document_uuid=document_uuid,
+        output_language=output_language,
+        tokens_spent=tokens_spent
+    )
 
 
 @celery_app.task(
