@@ -2,7 +2,7 @@ import datetime
 import json
 import logging
 import time
-
+from backend.utils.helpers import get_document
 from celery.exceptions import MaxRetriesExceededError
 from celery.signals import task_failure
 from celery.utils.log import get_task_logger
@@ -65,9 +65,41 @@ def ping_analysis_worker(word: str) -> str:
     max_retries=10,
     priority=5
 )
-def generate_smart_summary(document_uuid: str, tokens_spent: int) -> None:
-    # XXX TODO
-    ...
+def generate_smart_summary(document_uuid: str, output_language: str, tokens_spent: int) -> None:
+    logger.info("Running AI smart summary")
+
+    document = get_document(document_uuid=document_uuid)
+    document_raw_text = document["document_raw_text"]
+    smart_summary = prompts["smart_summary"]
+
+    data = run_ai_completition(ai_client=ai_client, prompt=smart_summary, document_text=document_raw_text, output_language=output_language, inject_date=True)
+
+    usage = data.get("usage")
+    tokens_spent += usage["total_tokens"]
+
+    ai_is_expired = False
+    ai_expires = None
+    document_expires_str = data["document_expires"]
+    if document_expires_str:
+        document_expires = datetime.datetime.fromisoformat(document_expires_str)
+        ai_expires = document_expires.isoformat()
+        ai_is_expired = data["is_expired"]
+
+    logger.info("Saving smart summary to database")
+    safe_request(
+        request_type="PATCH",
+        url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
+        data={
+            "ai_category": data["top_category"],
+            "ai_sub_category": data["sub_category"],
+            "ai_summary_short": data["summary_short"],
+            "ai_summary_long": data["summary_long"],
+            "ai_expires": ai_expires,
+            "ai_is_expired": ai_is_expired
+        }
+    )
+    logger.info("Hading over to XXX")
+    # XXX
 
 
 @celery_app.task(
@@ -79,7 +111,7 @@ def generate_smart_summary(document_uuid: str, tokens_spent: int) -> None:
     max_retries=10,
     priority=5
 )
-def extract_text_from_document(document_uuid: str, tokens_spent: int) -> None:
+def extract_text_from_document(document_uuid: str, output_language: str, tokens_spent: int) -> None:
     logger.info("Extracting text from document")
     document_raw_text = safe_request(
         request_type="GET",
@@ -98,6 +130,7 @@ def extract_text_from_document(document_uuid: str, tokens_spent: int) -> None:
     logger.info("Handing over to generate_smart_summary")
     generate_smart_summary.delay(
         document_uuid=document_uuid,
+        output_language=output_language,
         tokens_spent=tokens_spent,
     )
 
@@ -113,6 +146,8 @@ def extract_text_from_document(document_uuid: str, tokens_spent: int) -> None:
 )
 def analyse_document(document_uuid: str) -> None:
     logger.info(f"Document to analyze: {document_uuid}")
+    document = get_document(document_uuid=document_uuid)
+    output_language = document["ai_output_language"]
 
     tokens_spent = 0
     logger.info("Starting analysis")
@@ -124,5 +159,6 @@ def analyse_document(document_uuid: str) -> None:
     logger.info("Handing over to extract_text_from_document")
     extract_text_from_document.delay(
         document_uuid=document_uuid,
+        output_language=output_language,
         tokens_spent=tokens_spent,
     )
