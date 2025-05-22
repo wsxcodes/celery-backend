@@ -68,7 +68,7 @@ def ping_analysis_worker(word: str) -> str:
 def generrate_features_and_insights(document_uuid: str, output_language: str, tokens_spent: int) -> None:
     logger.info("Running AI analysis features & insights")
     document = get_document(document_uuid=document_uuid)
-            
+
     ai_analysis_criteria = document["ai_analysis_criteria"]
 
     features_and_insights = prompts["features_and_insights"]
