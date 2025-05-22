@@ -1,7 +1,6 @@
 import datetime
 import json
 import logging
-import random
 import time
 
 from backend import config
@@ -47,7 +46,7 @@ def main():
             document_uuid = pending_documents[0]["uuid"]
             output_language = pending_documents[0]["ai_output_language"]
             ai_analysis_mode = pending_documents[0]["ai_analysis_mode"]
-            
+
             logger.info(f"Document to analyze: {document_uuid}")
 
             logger.info("Starting analysis")
@@ -272,7 +271,6 @@ def main():
                 data=json.dumps(document.json()),
                 headers={"Content-Type": "application/json"},
             )
-
 
         else:
             logger.info("No pending documents found")
