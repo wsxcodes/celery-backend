@@ -1,7 +1,6 @@
 import os
 
 from celery import Celery
-from celery.schedules import crontab
 from kombu import Exchange, Queue
 
 from backend import config
@@ -39,14 +38,6 @@ celery_app.conf.update(
 # Task Routing
 celery_app.conf.task_routes = {
     "backend.workers.ai_analysis.*": {"queue": "ai-analysis-queue"}
-}
-
-# Celery Beat Schedule
-celery_app.conf.beat_schedule = {
-    'ai-analyse-document-every-1-second': {
-        'task': 'backend.workers.analysis_worker.analyse_document',
-        'schedule': crontab(second='*/1'),
-    }
 }
 
 # Autodiscover Tasks
