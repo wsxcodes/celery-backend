@@ -43,17 +43,9 @@ celery_app.conf.task_routes = {
 
 # Celery Beat Schedule
 celery_app.conf.beat_schedule = {
-    'delete-expired-jobs-every-30-minutes': {
-        'task': 'backend.workers.ai_deja_vu_dispatcher.delete_expired_jobs_in_qdrant',
-        'schedule': crontab(minute='*/30'),
-    },
-    'deactivate-expired-promoted-jobs-every-10-minutes': {
-        'task': 'backend.workers.ai_deja_vu_dispatcher.deactivate_expired_promoted_jobs_in_pgsql',
-        'schedule': crontab(minute='*/10'),
-    },
-    'ai-match-candidates-every-1-minute': {
-        'task': 'backend.workers.ai_candidates_hunter.job_candidate_sync',
-        'schedule': crontab(minute='*/1'),
+    'ai-analyse-document-every-1-second': {
+        'task': 'backend.workers.analysis_worker.analyse_document',
+        'schedule': crontab(second='*/1'),
     }
 }
 
