@@ -1,4 +1,14 @@
-#!/bin/sh
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ENV_FILE="$SCRIPT_DIR/../.env"
+if [ -f "$ENV_FILE" ]; then
+  set -o allexport
+  source "$ENV_FILE"
+  set +o allexport
+  echo "Loaded environment variables from $ENV_FILE"
+fi
+
+export RABBITMQ_NODE_PORT="$RABBITMQ_PORT"
 
 # Function to wait for RabbitMQ to be ready
 wait_for_rabbitmq() {
@@ -19,10 +29,15 @@ echo "Ensuring RabbitMQ storage directory permissions as root..."
 chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
 chmod -R 700 /var/lib/rabbitmq
 
+#
 # Fix permissions on .erlang.cookie explicitly
 if [ ! -f /var/lib/rabbitmq/.erlang.cookie ]; then
   echo "Creating .erlang.cookie file..."
-  echo "SOME_SECRET_COOKIE" > /var/lib/rabbitmq/.erlang.cookie
+  if [ -n "$RABBITMQ_SECRET_COOKIE" ]; then
+    echo "$RABBITMQ_SECRET_COOKIE" > /var/lib/rabbitmq/.erlang.cookie
+  else
+    echo "SOME_SECRET_COOKIE" > /var/lib/rabbitmq/.erlang.cookie
+  fi
 fi
 chmod 400 /var/lib/rabbitmq/.erlang.cookie
 chown rabbitmq:rabbitmq /var/lib/rabbitmq/.erlang.cookie
@@ -56,13 +71,13 @@ sleep 10
 rabbitmqctl await_startup
 
 # Check if user exists
-if rabbitmqctl list_users | grep -q "fugu"; then
-  echo "User 'fugu' already exists."
+if rabbitmqctl list_users | grep -q "^${RABBITMQ_USER}\b"; then
+  echo "User '$RABBITMQ_USER' already exists."
 else
   echo "Creating RabbitMQ admin user as rabbitmq user..."
-  rabbitmqctl add_user fugu fugu
+  rabbitmqctl add_user "$RABBITMQ_USER" "$RABBITMQ_PASS"
   echo "Setting user tags as rabbitmq user..."
-  rabbitmqctl set_user_tags fugu administrator
+  rabbitmqctl set_user_tags "$RABBITMQ_USER" administrator
 fi
 
 # Create the vhost if it doesn't exist
@@ -74,7 +89,7 @@ else
 fi
 
 echo "Setting permissions as rabbitmq user..."
-rabbitmqctl set_permissions -p ${RABBITMQ_VHOST} fugu ".*" ".*" ".*"
+rabbitmqctl set_permissions -p "$RABBITMQ_VHOST" "$RABBITMQ_USER" ".*" ".*" ".*"
 
 echo "Deleting default guest user as rabbitmq user..."
 rabbitmqctl delete_user guest
