@@ -2,7 +2,7 @@ import datetime
 import json
 import logging
 import time
-from backend.utils.helpers import get_document
+
 from celery.exceptions import MaxRetriesExceededError
 from celery.signals import task_failure
 from celery.utils.log import get_task_logger
@@ -11,7 +11,7 @@ from backend import config
 from backend.core.celery import celery_app
 from backend.dependencies import ai_client
 from backend.utils import prompt_generators
-from backend.utils.helpers import safe_request
+from backend.utils.helpers import get_document, safe_request
 from backend.utils.prompt_generators import run_ai_completition
 
 logger = get_task_logger(__name__)
