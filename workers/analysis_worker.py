@@ -26,7 +26,7 @@ def handle_task_failure(**kwargs):
     autoretry_for=(Exception,),
     retry_backoff=1,
     retry_jitter=True,
-    max_retries=900,
+    max_retries=10,
     priority=10
 )
 def test_retry(self):
