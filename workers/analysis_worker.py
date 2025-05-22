@@ -87,7 +87,7 @@ def execute_webhook(document_uuid: str) -> None:
 )
 def mark_off_document_record_cost(document_uuid: str, output_language: str, tokens_spent: int) -> None:
     logger.info("Marking document as processed")
-    safe_request(
+    response = safe_request(
         request_type="PATCH",
         url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
         data={
@@ -95,6 +95,8 @@ def mark_off_document_record_cost(document_uuid: str, output_language: str, toke
             "analysis_completed_at": datetime.datetime.now().isoformat()
         }
     )
+    if response is None:
+        raise Exception(f"API call failed for marking document {document_uuid}")
     logger.info("Handing over to execute_webhook")
     execute_webhook.delay(
         document_uuid=document_uuid
@@ -132,11 +134,14 @@ def mark_off_ai_alert(document_uuid: str, output_language: str, tokens_spent: in
         payload["ai_alert_status"] = document_ai_alert
 
     logger.info("Marking document as processed")
-    safe_request(
+    response = safe_request(
         request_type="PATCH",
         url=f"{config.API_URL}/api/v1/artefact/metadata/{document_uuid}",
         data=payload
     )
+    if response is None:
+        raise Exception(f"API call failed for marking document {document_uuid}")
+
     logger.info("Handing over to mark_off_document_record_cost")
     mark_off_document_record_cost.delay(
         document_uuid=document_uuid,
@@ -171,11 +176,14 @@ def map_eterny_legacy_schemas(document_uuid: str, output_language: str, tokens_s
     tokens_spent += usage["total_tokens"]
 
     logger.info("Update Eterny.io legacy schema to database")
-    safe_request(
+    response = safe_request(
         request_type="PATCH",
         url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
         data={"ai_eterny_legacy_schema": json.dumps(legacy_schema_dict)},
     )
+    if response is None:
+        raise Exception(f"API call failed for marking document {document_uuid}")
+
     logger.info("Handing over to mark_off_ai_alert")
     mark_off_ai_alert.delay(
         document_uuid=document_uuid,
@@ -219,13 +227,16 @@ def generate_alerts_and_actions(document_uuid: str, output_language: str, tokens
     ai_alerts_and_actions = data["alerts_and_actions"]
 
     logger.info("Saving Analysis Features & Insights to database")
-    safe_request(
+    response = safe_request(
         request_type="PATCH",
         url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
         data={
             "ai_alerts_and_actions": json.dumps(ai_alerts_and_actions)
         }
     )
+    if response is None:
+        raise Exception(f"API call failed for marking document {document_uuid}")
+
     logger.info("Handing over to generate_eterny_legacy_schemas")
     map_eterny_legacy_schemas.delay(
         document_uuid=document_uuid,
@@ -257,13 +268,16 @@ def generrate_features_and_insights(document_uuid: str, output_language: str, to
     tokens_spent += usage["total_tokens"]
 
     logger.info("Saving Analysis Features & Insights to database")
-    safe_request(
+    response = safe_request(
         request_type="PATCH",
         url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
         data={
             "ai_features_and_insights": json.dumps(features_and_insights_dict)
         }
     )
+    if response is None:
+        raise Exception(f"API call failed for marking document {document_uuid}")
+
     logger.info("Handing over to generate_alerts_and_actions")
     generate_alerts_and_actions.delay(
         document_uuid=document_uuid,
@@ -292,13 +306,16 @@ def generate_analysis_criteria(document_uuid: str, output_language: str, tokens_
     tokens_spent += usage["total_tokens"]
 
     logger.info("Saving analysis criteria to database")
-    safe_request(
+    response = safe_request(
         request_type="PATCH",
         url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
         data={
             "ai_analysis_criteria": data["message"]
         }
     )
+    if response is None:
+        raise Exception(f"API call failed for marking document {document_uuid}")
+
     logger.info("Handing over to generrate_features_and_insights")
     generrate_features_and_insights.delay(
         document_uuid=document_uuid,
@@ -337,7 +354,7 @@ def generate_smart_summary(document_uuid: str, output_language: str, tokens_spen
         ai_is_expired = data["is_expired"]
 
     logger.info("Saving smart summary to database")
-    safe_request(
+    response = safe_request(
         request_type="PATCH",
         url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
         data={
@@ -349,6 +366,9 @@ def generate_smart_summary(document_uuid: str, output_language: str, tokens_spen
             "ai_is_expired": ai_is_expired
         }
     )
+    if response is None:
+        raise Exception(f"API call failed for marking document {document_uuid}")
+
     logger.info("Hading over to generate_analysis_criteria")
     generate_analysis_criteria.delay(
         document_uuid=document_uuid,
@@ -376,11 +396,13 @@ def extract_text_from_document(document_uuid: str, output_language: str, tokens_
     document_raw_text = document_raw_text.json()
 
     logger.info("Saving extracted text to database")
-    safe_request(
+    response = safe_request(
         request_type="PATCH",
         url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
         data={"document_raw_text": document_raw_text},
     )
+    if response is None:
+        raise Exception(f"API call failed for marking document {document_uuid}")
 
     logger.info("Handing over to generate_smart_summary")
     generate_smart_summary.delay(
@@ -406,11 +428,14 @@ def analyse_document(document_uuid: str) -> None:
 
     tokens_spent = 0
     logger.info("Starting analysis")
-    safe_request(
+    response = safe_request(
         request_type="PATCH",
         url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
         data={"analysis_status": "processing", "analysis_started_at": datetime.datetime.now().isoformat()},
     )
+    if response is None:
+        raise Exception(f"API call failed for marking document {document_uuid}")
+
     logger.info("Handing over to extract_text_from_document")
     extract_text_from_document.delay(
         document_uuid=document_uuid,
