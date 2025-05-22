@@ -50,6 +50,9 @@ services:
       - RABBITMQ_NODENAME=rabbit@eternyiq-rabbitmq
       - RABBITMQ_MNESIA_DIR=/var/lib/rabbitmq/mnesia
       - RABBITMQ_LOG_DIR=/var/lib/rabbitmq/log
+      - RABBITMQ_ERLANG_COOKIE=${RABBITMQ_ERLANG_COOKIE}
+      - RABBITMQ_DEPRECATED_FEATURES_PERMIT_MANAGEMENT_METRICS_COLLECTION=true
+      - RABBITMQ_DEPRECATED_FEATURES_PERMIT_CLASSIC_QUEUE_MIRRORING=true
     logging:
       driver: "json-file"
       options:
