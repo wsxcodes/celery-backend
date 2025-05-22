@@ -97,7 +97,11 @@ def extract_text_from_document(document_uuid: str, tokens_spent: int) -> None:
         data={"document_raw_text": document_raw_text},
     )
 
-    # XXX hand over to generate_smart_summary
+    logger.info("Handing over to generate_smart_summary")
+    generate_smart_summary.delay(
+        document_uuid=document_uuid,
+        tokens_spent=tokens_spent,
+    )
 
 
 @celery_app.task(
@@ -120,4 +124,8 @@ def analyse_document(document_uuid: str) -> None:
         url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
         data={"analysis_status": "processing", "analysis_started_at": datetime.datetime.now().isoformat()},
     )
-    # XXX TODO hand over to extract_text_from_document
+    logger.info("Handing over to extract_text_from_document")
+    extract_text_from_document.delay(
+        document_uuid=document_uuid,
+        tokens_spent=tokens_spent,
+    )
