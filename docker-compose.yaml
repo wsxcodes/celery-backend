@@ -56,7 +56,7 @@ services:
       - ./scripts/enable_stable_flags.sh:/docker-entrypoint-init.d/enable_stable_flags.sh
     user: "0:0"
     command: >
-      sh -c "chmod +x /docker-entrypoint-init.d/init_rabbitmq.sh /docker-entrypoint-init.d/enable_stable_flags.sh &&
+      bash -c "chmod +x /docker-entrypoint-init.d/init_rabbitmq.sh /docker-entrypoint-init.d/enable_stable_flags.sh &&
             /docker-entrypoint-init.d/init_rabbitmq.sh &&
             /docker-entrypoint-init.d/enable_stable_flags.sh &&
             rabbitmq-server"
