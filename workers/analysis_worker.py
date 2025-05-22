@@ -19,20 +19,26 @@ def handle_task_failure(**kwargs):
 
 
 @celery_app.task(
+    name='backend.workers.ai_analysis.test_retry',
     bind=True,
     acks_late=True,
     queue='ai-analysis-queue',
     autoretry_for=(Exception,),
-    retry_backoff=1,  # 1-second backoff
-    retry_jitter=True,  # Apply jitter for randomness
-    max_retries=900,  # Roughly 15 minutes of retries
+    retry_backoff=1,
+    retry_jitter=True,
+    max_retries=900,
     priority=10
 )
 def test_retry(self):
     raise Exception('Test exception')
 
 
-@celery_app.task(acks_late=True, queue='ai-analysis-queue', priority=10)
+@celery_app.task(
+    name='backend.workers.ai_analysis.ping_analysis_worker',
+    acks_late=True,
+    queue='ai-analysis-queue',
+    priority=10
+)
 def ping_analysis_worker(word: str) -> str:
     logger.info("Processing word: %s", word)
     result = f"Processed word: {word}"
@@ -41,12 +47,13 @@ def ping_analysis_worker(word: str) -> str:
 
 
 @celery_app.task(
+    name='backend.workers.ai_analysis.analyse_document',
     acks_late=True,
     queue='ai-analysis-queue',
     autoretry_for=(Exception,),
-    retry_backoff=1,  # 1-second backoff
-    retry_jitter=True,  # Apply jitter for randomness
-    max_retries=900,  # Roughly 15 minutes of retries
+    retry_backoff=1,
+    retry_jitter=True,
+    max_retries=900,
     priority=10
 )
 def analyse_document(uuid: str) -> None:
