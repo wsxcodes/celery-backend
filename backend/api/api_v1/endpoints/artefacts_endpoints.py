@@ -1,10 +1,9 @@
+import json
 import logging
 import os
 from datetime import datetime
 from enum import Enum
 from typing import List
-from backend.db.schemas.artefacts_schemas import Artefact
-import json
 
 from fastapi import APIRouter, Depends, HTTPException
 
