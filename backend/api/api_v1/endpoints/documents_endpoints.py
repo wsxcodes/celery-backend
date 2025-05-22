@@ -72,6 +72,24 @@ async def add_document_for_analysis(
         customer_dir = os.path.join(BASE_UPLOAD_DIR, customer_id)
         os.makedirs(customer_dir, exist_ok=True)
         file_path = os.path.join(customer_dir, filename)
+
+        # Delete existing document record and file for this UUID to prevent removing the new file later
+        file_uuid = customer_id + "_" + filename
+        file_uuid = file_uuid.replace(" ", "_").replace("-", "_")
+        existing = db.execute(
+            "SELECT filename FROM files WHERE uuid = ?",
+            (file_uuid,),
+        ).fetchone()
+        if existing:
+            old_file_path = os.path.join(customer_dir, existing[0])
+            if os.path.exists(old_file_path):
+                os.remove(old_file_path)
+            db.execute(
+                "DELETE FROM files WHERE uuid = ?",
+                (file_uuid,),
+            )
+
+        logger.info(f"Saving file to {file_path}")
         with open(file_path, "wb") as buffer:
             buffer.write(contents)
 
@@ -79,20 +97,6 @@ async def add_document_for_analysis(
     file_size = len(contents)
     file_uuid = customer_id + "_" + str(filename)
     file_uuid = file_uuid.replace(" ", "_").replace("-", "_")
-
-    # Delete existing document record and file for this UUID
-    existing = db.execute(
-        "SELECT filename FROM files WHERE uuid = ?",
-        (file_uuid,),
-    ).fetchone()
-    if existing:
-        old_file_path = os.path.join(customer_dir, existing[0])
-        if os.path.exists(old_file_path):
-            os.remove(old_file_path)
-        db.execute(
-            "DELETE FROM files WHERE uuid = ?",
-            (file_uuid,),
-        )
 
     # Save metadata to DB
     now_iso = datetime.utcnow().isoformat()
