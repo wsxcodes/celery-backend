@@ -66,6 +66,21 @@ def ping_analysis_worker(word: str) -> str:
     max_retries=10,
     priority=5
 )
+def generate_smart_summary(document_uuid: str, tokens_spent: int) -> None:
+    # XXX TODO
+    ...
+
+
+@celery_app.task(
+    name='backend.workers.ai_analysis.extract_text_from_document',
+    acks_late=True,
+    queue='ai-analysis-queue',
+    autoretry_for=(Exception,),
+    retry_backoff=1,
+    retry_jitter=True,
+    max_retries=10,
+    priority=5
+)
 def extract_text_from_document(document_uuid: str, tokens_spent: int) -> None:
     logger.info("Extracting text from document")
     document_raw_text = safe_request(
@@ -105,3 +120,4 @@ def analyse_document(document_uuid: str) -> None:
         url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
         data={"analysis_status": "processing", "analysis_started_at": datetime.datetime.now().isoformat()},
     )
+    # XXX TODO hand over to extract_text_from_document
