@@ -98,8 +98,8 @@ services:
       - -A
       - backend.core.celery
       - --broker=amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@${RABBITMQ_HOST}:5672/${RABBITMQ_VHOST}
-      - --broker_api=http://${RABBITMQ_USER}:${RABBITMQ_PASS}@${RABBITMQ_HOST}:15672/api/
       - flower
+      - --broker_api=http://${RABBITMQ_USER}:${RABBITMQ_PASS}@${RABBITMQ_HOST}:15672/api/
       - --basic_auth=${RABBITMQ_USER}:${RABBITMQ_PASS}
     ports:
       - "5555:5555"
