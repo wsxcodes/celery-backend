@@ -65,6 +65,20 @@ def ping_analysis_worker(word: str) -> str:
     max_retries=10,
     priority=5
 )
+def map_eterny_legacy_schemas(document_uuid: str, output_language: str, tokens_spent: int) -> None:
+    # XXX TODO
+    ...
+
+
+@celery_app.task(
+    acks_late=True,
+    queue='ai-analysis-queue',
+    autoretry_for=(Exception,),
+    retry_backoff=1,
+    retry_jitter=True,
+    max_retries=10,
+    priority=5
+)
 def generate_alerts_and_actions(document_uuid: str, output_language: str, tokens_spent: int) -> None:
     logger.info("Running alerts and actions prompt")
     document = get_document(document_uuid=document_uuid)
@@ -98,7 +112,12 @@ def generate_alerts_and_actions(document_uuid: str, output_language: str, tokens
             "ai_alerts_and_actions": json.dumps(ai_alerts_and_actions)
         }
     )
-    # XXX handover..
+    logger.info("Handing over to generate_eterny_legacy_schemas")
+    map_eterny_legacy_schemas.delay(
+        document_uuid=document_uuid,
+        output_language=output_language,
+        tokens_spent=tokens_spent
+    )
 
 
 @celery_app.task(
