@@ -126,7 +126,7 @@ async def add_document_for_analysis(
 
     logger.info("Triggering Celery task for document analysis")
     try:
-        task = celery_app.send_task(
+        task = celery_app.send_task(  # NoQA
             "workers.analysis_worker.analyse_document",
             args=[file_uuid],
         )
