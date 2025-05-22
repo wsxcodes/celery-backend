@@ -1,3 +1,4 @@
+version: '3.8'
 services:
   eternyiq-api:
     build: .
@@ -34,6 +35,11 @@ services:
   eternyiq-rabbitmq:
     image: rabbitmq:latest
     container_name: eternyiq-rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -93,14 +99,14 @@ services:
   eternyiq-flower:
     build: .
     container_name: eternyiq-flower
-    command:
-      - /usr/local/bin/celery
-      - -A
-      - backend.core.celery
-      - --broker=amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@${RABBITMQ_HOST}:5672/${RABBITMQ_VHOST}
-      - flower
-      - --broker_api=http://${RABBITMQ_USER}:${RABBITMQ_PASS}@${RABBITMQ_HOST}:15672/api/
-      - --basic_auth=${RABBITMQ_USER}:${RABBITMQ_PASS}
+    depends_on:
+      - eternyiq-rabbitmq
+    command: >
+      sh -c "while ! nc -z eternyiq-rabbitmq 5672; do echo 'waiting for rabbitmq'; sleep 2; done &&
+             /usr/local/bin/celery -A backend.core.celery flower \
+               --broker=amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@${RABBITMQ_HOST}:5672/${RABBITMQ_VHOST} \
+               --broker_api=http://${RABBITMQ_USER}:${RABBITMQ_PASS}@${RABBITMQ_HOST}:15672/api/ \
+               --basic_auth=${RABBITMQ_USER}:${RABBITMQ_PASS}"
     ports:
       - "5555:5555"
     env_file:
@@ -119,7 +125,11 @@ services:
   eternyiq-ai-analysis-worker:
     build: .
     container_name: fugu-ai-analysis-worker
-    command: sh -c 'celery -A backend.core.celery worker -Q ai-analysis-queue -c ${AI_ANALYSIS_WORKERS:-4} -l info -P prefork -n ai_analysis@%h'
+    depends_on:
+      - eternyiq-rabbitmq
+    command: >
+      sh -c "while ! nc -z eternyiq-rabbitmq 5672; do echo 'waiting for rabbitmq'; sleep 2; done &&
+             celery -A backend.core.celery worker -Q ai-analysis-queue -c ${AI_ANALYSIS_WORKERS:-4} -l info -P prefork -n ai_analysis@%h"
     env_file:
       - .env
     environment:
@@ -136,3 +146,7 @@ services:
 volumes:
   data_volume: {}
   cert_volume: {}
+
+networks:
+  default:
+    driver: bridge
