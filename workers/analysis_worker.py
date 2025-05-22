@@ -64,6 +64,20 @@ def ping_analysis_worker(word: str) -> str:
     max_retries=100,
     priority=5
 )
+def house_clean(document_uuid: str) -> None:
+    # XXX TODO delete document from the filesystem
+    ...
+
+
+@celery_app.task(
+    acks_late=True,
+    queue='ai-analysis-queue',
+    autoretry_for=(Exception,),
+    retry_backoff=1,
+    retry_jitter=True,
+    max_retries=100,
+    priority=5
+)
 def execute_webhook(document_uuid: str) -> None:
     document = get_document(document_uuid=document_uuid)
     webhook_url = document["webhook_url"]
@@ -76,6 +90,9 @@ def execute_webhook(document_uuid: str) -> None:
     )
     if response is None:
         raise Exception(f"API call failed for marking document {document_uuid}")
+    
+    logger.info("Handing over to house_clean")
+
 
 
 @celery_app.task(
