@@ -56,8 +56,6 @@ def ping_analysis_worker(word: str) -> str:
     max_retries=900,
     priority=10
 )
-def analyse_document(uuid: str) -> None:
-    """
-    XXX TODO
-    """
+def analyse_document(document_uuid: str) -> None:
+    tokens_spent = 0
     ...
