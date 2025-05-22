@@ -66,8 +66,39 @@ def ping_analysis_worker(word: str) -> str:
     priority=5
 )
 def generate_alerts_and_actions(document_uuid: str, output_language: str, tokens_spent: int) -> None:
-    # XXX TODO
-    ...
+    logger.info("Running alerts and actions prompt")
+    document = get_document(document_uuid=document_uuid)
+    ai_analysis_mode = document["ai_analysis_mode"]
+    document_raw_text = document["document_raw_text"]
+
+    document_extra2 = ""
+    if ai_analysis_mode == "detailed":
+        document_extra2 = "analysis_criteria = \"{ai_analysis_criteria}\"\nfeatures_and_insights = \"{ai_features_and_insights}\"\n\n"
+
+    features_and_insights = prompts["alerts_and_actions"]
+    data = run_ai_completition(
+        ai_client=ai_client,
+        prompt=features_and_insights,
+        document_text=document_raw_text,
+        document_extra1=str(datetime.datetime.now().date()),
+        document_extra2=document_extra2,
+        output_language=output_language
+        )
+
+    usage = data.get("usage")
+    tokens_spent += usage["total_tokens"]
+
+    ai_alerts_and_actions = data["alerts_and_actions"]
+
+    logger.info("Saving Analysis Features & Insights to database")
+    safe_request(
+        request_type="PATCH",
+        url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
+        data={
+            "ai_alerts_and_actions": json.dumps(ai_alerts_and_actions)
+        }
+    )
+    # XXX handover..
 
 
 @celery_app.task(
