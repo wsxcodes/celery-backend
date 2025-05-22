@@ -9,10 +9,10 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from google.cloud import storage
 
 from backend import config
+from backend.core.celery import celery_app
 from backend.db.schemas.artefacts_schemas import AImode
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
-from backend.core.celery import celery_app
 
 router = APIRouter()
 
