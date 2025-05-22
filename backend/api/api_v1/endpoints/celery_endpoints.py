@@ -25,13 +25,6 @@ async def get_task_result(task_id: str) -> Msg:
         return Msg(id=task_id, result=task.result if task.result else "No result", state=task.state)
 
 
-@router.post("/test-celery-retry")
-@log_endpoint
-async def test_retry_worker():
-    task = test_retry.delay()
-    return {"status": "Task queued", "task_id": task.id}
-
-
 @router.post("/ping-ai-analysis-celery", response_model=Dict[str, Any], status_code=201)
 @log_endpoint
 async def ping_ai_analysis_celery(word: str) -> Dict[str, Any]:
@@ -47,3 +40,10 @@ async def ping_ai_analysis_celery(word: str) -> Dict[str, Any]:
         raise HTTPException(status_code=500, detail="Failed to start Celery worker")
 
     return {"id": task.id}
+
+
+@router.post("/test-celery-retry")
+@log_endpoint
+async def test_retry_worker():
+    task = test_retry.delay()
+    return {"status": "Task queued", "task_id": task.id}
