@@ -6,7 +6,6 @@ import requests
 logger = logging.getLogger(__name__)
 
 
-
 def perform_request(request_type: str, url: str, data: dict, headers: dict = None) -> requests.Response:
     try:
         logger.info(f"Performing {request_type} request to {url} with data {data} and headers {headers}")
