@@ -1,7 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import Optional
-from typing import Dict, Any, Optional
+from typing import Any, Optional
 
 from pydantic import BaseModel
 
