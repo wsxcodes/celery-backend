@@ -157,3 +157,4 @@ data/file_records.db
 data/uploads/*
 data/mapping/*
 data/rabbitmq_data/*
+data/redis_data/*
