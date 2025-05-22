@@ -57,7 +57,6 @@ def ping_analysis_worker(word: str) -> str:
 
 
 @celery_app.task(
-    name='backend.workers.ai_analysis.extract_text_from_document',
     acks_late=True,
     queue='ai-analysis-queue',
     autoretry_for=(Exception,),
@@ -72,7 +71,6 @@ def generate_smart_summary(document_uuid: str, tokens_spent: int) -> None:
 
 
 @celery_app.task(
-    name='backend.workers.ai_analysis.extract_text_from_document',
     acks_late=True,
     queue='ai-analysis-queue',
     autoretry_for=(Exception,),
@@ -105,7 +103,6 @@ def extract_text_from_document(document_uuid: str, tokens_spent: int) -> None:
 
 
 @celery_app.task(
-    name='backend.workers.ai_analysis.analyse_document',
     acks_late=True,
     queue='ai-analysis-queue',
     autoretry_for=(Exception,),
