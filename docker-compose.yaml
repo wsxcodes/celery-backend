@@ -52,13 +52,13 @@ services:
     volumes:
       - ./data/rabbitmq_data:/var/lib/rabbitmq
       - ./config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
-      - ./scripts/init_rabbitmq.sh:/docker-entrypoint-initdb.d/init_rabbitmq.sh
-      - ./scripts/enable_stable_flags.sh:/docker-entrypoint-initdb.d/enable_stable_flags.sh
+      - ./scripts/init_rabbitmq.sh:/docker-entrypoint-init.d/init_rabbitmq.sh
+      - ./scripts/enable_stable_flags.sh:/docker-entrypoint-init.d/enable_stable_flags.sh
     user: "0:0"
     command: >
-      sh -c "chmod +x /docker-entrypoint-initdb.d/init_rabbitmq.sh /docker-entrypoint-initdb.d/enable_stable_flags.sh &&
-            /docker-entrypoint-initdb.d/init_rabbitmq.sh &&
-            /docker-entrypoint-initdb.d/enable_stable_flags.sh &&
+      sh -c "chmod +x /docker-entrypoint-init.d/init_rabbitmq.sh /docker-entrypoint-init.d/enable_stable_flags.sh &&
+            /docker-entrypoint-init.d/init_rabbitmq.sh &&
+            /docker-entrypoint-init.d/enable_stable_flags.sh &&
             rabbitmq-server"
 
   eternyiq-redis:
