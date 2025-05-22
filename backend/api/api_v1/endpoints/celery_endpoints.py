@@ -1,17 +1,10 @@
-import json
 import logging
-import os
-from datetime import datetime
-from enum import Enum
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 from celery.result import AsyncResult
 from fastapi import APIRouter, HTTPException
-from fastapi.exceptions import HTTPException
 
-from backend import config
 from backend.core.celery import celery_app
-from backend.db.schemas.artefacts_schemas import Artefact, ArtefactUpdate
 from backend.db.schemas.rabbitmq_schemas import Msg
 from backend.decorators import log_endpoint
 from workers.analysis_worker import test_retry
@@ -19,7 +12,6 @@ from workers.analysis_worker import test_retry
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
-
 
 
 @router.get("/task-result/{task_id}", response_model=Msg)
