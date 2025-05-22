@@ -62,6 +62,53 @@ def ping_analysis_worker(word: str) -> str:
     autoretry_for=(Exception,),
     retry_backoff=1,
     retry_jitter=True,
+    max_retries=100,
+    priority=5
+)
+def execute_webhook(document_uuid: str) -> None:
+    document = get_document(document_uuid=document_uuid)
+    webhook_url = document["webhook_url"]
+    logger.info(f"Webhook URL: {webhook_url}")
+    safe_request(
+        request_type="POST",
+        url=webhook_url,
+        data=json.dumps(document),
+        headers={"Content-Type": "application/json"},
+    )
+
+
+@celery_app.task(
+    acks_late=True,
+    queue='ai-analysis-queue',
+    autoretry_for=(Exception,),
+    retry_backoff=1,
+    retry_jitter=True,
+    max_retries=10,
+    priority=5
+)
+def mark_off_document_record_cost(document_uuid: str, output_language: str, tokens_spent: int) -> None:
+    logger.info("Marking document as processed")
+    safe_request(
+        request_type="PATCH",
+        url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
+        data={
+            "analysis_status": "processed",
+            "analysis_completed_at": datetime.datetime.now().isoformat()
+        }
+    )
+    logger.info("Handing over to execute_webhook")
+    execute_webhook.delay(
+        document_uuid=document_uuid
+    )
+
+
+
+@celery_app.task(
+    acks_late=True,
+    queue='ai-analysis-queue',
+    autoretry_for=(Exception,),
+    retry_backoff=1,
+    retry_jitter=True,
     max_retries=10,
     priority=5
 )
@@ -92,10 +139,13 @@ def mark_off_ai_alert(document_uuid: str, output_language: str, tokens_spent: in
         url=f"{config.API_URL}/api/v1/artefact/metadata/{document_uuid}",
         data=payload
     )
-    logger.info("Analysis completed successfully")
+    logger.info("Handing over to mark_off_document_record_cost")
+    mark_off_document_record_cost.delay(
+        document_uuid=document_uuid,
+        output_language=output_language,
+        tokens_spent=tokens_spent
+    )
 
-    # XXX TODO handover
-    ...
 
 
 @celery_app.task(
