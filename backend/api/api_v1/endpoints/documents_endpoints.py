@@ -12,6 +12,7 @@ from backend import config
 from backend.db.schemas.artefacts_schemas import AImode
 from backend.decorators import log_endpoint
 from backend.dependencies import get_db
+from backend.core.celery import celery_app
 
 router = APIRouter()
 
@@ -121,6 +122,16 @@ async def add_document_for_analysis(
         )
     )
     db.commit()
+
+    logger.info("Triggering Celery task for document analysis")
+    try:
+        task = celery_app.send_task(
+            "backend.workers.ai_analysis.analyse_document",
+            args=[file_uuid],
+        )
+    except Exception as e:
+        logger.error(f"Failed to start Celery worker: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to start Celery worker")
 
     logger.info(f"Uploaded file for customer {customer_id}: {filename} ({file_size} bytes)")
     return {
