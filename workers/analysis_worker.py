@@ -66,7 +66,35 @@ def ping_analysis_worker(word: str) -> str:
     priority=5
 )
 def mark_off_ai_alert(document_uuid: str, output_language: str, tokens_spent: int) -> None:
-    # XXX TODO
+    logger.info("Marking off AI alert")
+    document = get_document(document_uuid=document_uuid)
+    ai_alerts_and_actions = document["ai_alerts_and_actions"]
+
+    priority = ['alert', 'action_required', 'reminder', 'insights_available']
+
+    # pick the highest‐priority alert present in the list
+    document_ai_alert = next(
+        (flag for flag in priority
+        if any(item.get('findings_type') == flag for item in ai_alerts_and_actions)),
+        None
+    )
+
+    # build your payload
+    payload = {
+        "ai_alerts_and_actions": json.dumps(ai_alerts_and_actions)
+    }
+    if document_ai_alert:
+        payload["ai_alert_status"] = document_ai_alert
+
+    logger.info("Marking document as processed")
+    safe_request(
+        request_type="PATCH",
+        url=f"{config.API_URL}/api/v1/artefact/metadata/{document_uuid}",
+        data=payload
+    )
+    logger.info("Analysis completed successfully")
+
+    # XXX TODO handover
     ...
 
 
