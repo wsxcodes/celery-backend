@@ -68,12 +68,14 @@ def execute_webhook(document_uuid: str) -> None:
     document = get_document(document_uuid=document_uuid)
     webhook_url = document["webhook_url"]
     logger.info(f"Webhook URL: {webhook_url}")
-    safe_request(
+    response = safe_request(
         request_type="POST",
         url=webhook_url,
         data=json.dumps(document),
         headers={"Content-Type": "application/json"},
     )
+    if response is None:
+        raise Exception(f"API call failed for marking document {document_uuid}")
 
 
 @celery_app.task(
