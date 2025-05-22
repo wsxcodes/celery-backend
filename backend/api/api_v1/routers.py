@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from backend.api.api_v1.endpoints import (artefacts_endpoints,
+                                          celery_endpoints,
                                           documents_endpoints,
                                           generic_endpoints, llm_endpoints,
                                           rag_endpoints, utils_endpoints)
@@ -26,6 +27,13 @@ api_router.include_router(
     llm_endpoints.router,
     prefix="/llm",
     tags=["LLM"]
+)
+
+# Celery Endpoints
+api_router.include_router(
+    celery_endpoints.router,
+    prefix="/celery",
+    tags=["Celery"]
 )
 
 # Utils Endpoints
