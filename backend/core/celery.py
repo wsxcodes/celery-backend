@@ -13,7 +13,12 @@ default_redis_url = f"redis://:{config.REDIS_PASSWORD}@{config.REDIS_HOST}:{conf
 redis_url = os.getenv("REDIS_URL", default_redis_url)
 
 # Initialize Celery
-celery_app = Celery("worker", broker=broker_url, backend=redis_url)
+celery_app = Celery(
+    "worker",
+    broker=broker_url,
+    backend=redis_url,
+    include=["workers.analysis_worker"]
+)
 
 # Celery Configuration
 celery_app.conf.update(
@@ -37,10 +42,5 @@ celery_app.conf.update(
 
 # Task Routing
 celery_app.conf.task_routes = {
-    "backend.workers.ai_analysis.*": {"queue": "ai-analysis-queue"}
+    "workers.analysis_worker.*": {"queue": "ai-analysis-queue"}
 }
-
-# Autodiscover Tasks
-celery_app.autodiscover_tasks([
-    "workers.analysis_worker",
-], related_name="tasks", force=True)
