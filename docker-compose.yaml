@@ -38,9 +38,9 @@ services:
       - "5672:5672"
       - "15672:15672"
     environment:
-      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
-      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASS}
       - RABBITMQ_VHOST=${RABBITMQ_VHOST}
+      - RABBITMQ_USER=${RABBITMQ_USER}
+      - RABBITMQ_PASS=${RABBITMQ_PASS}
       - RABBITMQ_NODENAME=rabbit@eternyiq-rabbitmq
       - RABBITMQ_MNESIA_DIR=/var/lib/rabbitmq/mnesia
       - RABBITMQ_LOG_DIR=/var/lib/rabbitmq/log
@@ -93,7 +93,12 @@ services:
   eternyiq-flower:
     build: .
     container_name: eternyiq-flower
-    command: /usr/local/bin/celery -A backend.core.celery flower --broker=amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@${RABBITMQ_HOST}:5672/${RABBITMQ_VHOST} --broker_api=http://${RABBITMQ_USER}:${RABBITMQ_PASS}@${RABBITMQ_HOST}:15672/api/ --basic_auth=${RABBITMQ_USER}:${RABBITMQ_PASS}
+    command: >
+      /usr/local/bin/celery -A backend.core.celery \
+        --broker=amqp://${RABBITMQ_USER}:${RABBITMQ_PASS}@${RABBITMQ_HOST}:5672/${RABBITMQ_VHOST} \
+        --broker_api=http://${RABBITMQ_USER}:${RABBITMQ_PASS}@${RABBITMQ_HOST}:15672/api/ \
+        flower \
+        --basic_auth=${RABBITMQ_USER}:${RABBITMQ_PASS}
     ports:
       - "5555:5555"
     env_file:
