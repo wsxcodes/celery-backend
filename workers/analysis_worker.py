@@ -67,8 +67,22 @@ def ping_analysis_worker(word: str) -> str:
     priority=5
 )
 def extract_text_from_document(document_uuid: str, tokens_spent: int) -> None:
-    # XXX TODO
-    ...
+    logger.info("Extracting text from document")
+    document_raw_text = safe_request(
+        request_type="GET",
+        url=config.API_URL + f"/api/v1/utils/extract_text_from_file?uuid={document_uuid}",
+        data={},
+    )
+    document_raw_text = document_raw_text.json()
+
+    logger.info("Saving extracted text to database")
+    safe_request(
+        request_type="PATCH",
+        url=config.API_URL + f"/api/v1/artefact/metadata/{document_uuid}",
+        data={"document_raw_text": document_raw_text},
+    )
+
+    # XXX hand over to generate_smart_summary
 
 
 @celery_app.task(
