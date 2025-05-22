@@ -127,7 +127,7 @@ async def add_document_for_analysis(
     logger.info("Triggering Celery task for document analysis")
     try:
         task = celery_app.send_task(
-            "backend.workers.ai_analysis.analyse_document",
+            "workers.analysis_worker.analyse_document",
             args=[file_uuid],
         )
     except Exception as e:
