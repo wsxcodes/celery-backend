@@ -49,6 +49,9 @@ RUN pip install --upgrade pip \
   && pip install poetry \
   && pip install psycopg2-binary
 
+# Copy NGINX configuration file
+COPY config/nginx.conf /etc/nginx/conf.d/nginx.conf
+
 # Copy the entire project directory
 COPY . /code
 WORKDIR /code
