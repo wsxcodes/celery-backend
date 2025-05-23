@@ -49,7 +49,7 @@
     const usr = encodeURIComponent(document.getElementById('question').value);
     const doc = encodeURIComponent(document.getElementById('document_uuid').value);
     const cust = encodeURIComponent(document.getElementById('customer_id').value);
-    const url = `http://localhost:8880/api/v1/rag/ask?customer_id=${cust}&document_uuid=${doc}&question=${usr}`;
+    const url = `http://localhost:8080/api/v1/rag/ask?customer_id=${cust}&document_uuid=${doc}&question=${usr}`;
 
     const out = document.getElementById('output');
     out.textContent = '[Streaming started]\n';
