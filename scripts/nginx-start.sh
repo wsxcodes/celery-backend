@@ -17,7 +17,7 @@ sleep 1
 service cron start
 
 # Start Gunicorn app server
-gunicorn frontend.main:app \
+gunicorn backend.main:app \
   --worker-class uvicorn.workers.UvicornWorker \
   --bind 127.0.0.1:8880 \
   --workers 1 \
