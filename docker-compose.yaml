@@ -4,7 +4,7 @@ services:
     container_name: eternyiq-api
     ports:
       - 80:80
-      - 8880:8880
+      - 8080:8080
     env_file:
       - .env
     extra_hosts:
