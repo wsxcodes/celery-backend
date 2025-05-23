@@ -18,15 +18,7 @@ services:
       - TZ=Europe/Prague
     volumes:
       - ./data:/code/data
-    command:
-      - /bin/sh
-      - -c
-      - |
-        scripts/run-worker.sh &
-        exec gunicorn --worker-class uvicorn.workers.UvicornWorker \
-          --workers ${NEURAL_API_WORKERS:-1} \
-          --bind 0.0.0.0:8880 \
-          backend.main:app
+    command: /code/scripts/nginx-start.sh
     healthcheck:
       interval: 10s
       timeout: 5s
